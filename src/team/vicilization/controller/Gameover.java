@@ -1,4 +1,8 @@
 package team.vicilization.controller;
 
-public class Gameover {
+public class Gameover extends State {
+
+    public Gameover(MainWindow mainWindow) {
+        super(mainWindow);
+    }
 }
