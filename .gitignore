@@ -3,6 +3,11 @@
 # Compiled class file
 *.class
 
+# Pictures
+*.png
+*.jpg
+*.jpeg
+
 # Log file
 *.log
 
