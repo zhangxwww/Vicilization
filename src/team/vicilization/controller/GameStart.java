@@ -1,20 +1,30 @@
 package team.vicilization.controller;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GameStart extends State {
 
-    private javax.swing.JButton startGameButton;
+    private static javax.swing.JButton startGameButton;
 
     public GameStart(MainWindow mainWindow) {
         super(mainWindow);
         setNextState(StateType.Setting);
 
         this.startGameButton = new JButton("Start");
-        startGameButton.setBounds(100, 400, 50, 50);
-        startGameButton.validate();
-        startGameButton.setVisible(true);
-        startGameButton.setEnabled(true);
-        panel.add(startGameButton);
+        this.startGameButton.setBounds(100, 200, 100, 50);
+        this.startGameButton.addActionListener(new ButtonClickListener());
+        this.panel.add(startGameButton);
     }
+
+    private class ButtonClickListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            if (event.getSource() == GameStart.startGameButton) {
+                mainWindow.convertToNextState();
+            }
+        }
+    }
+
+
 }
