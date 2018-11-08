@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 
 public class GameStart extends State {
 
-    private static javax.swing.JButton startGameButton;
+    private static JButton startGameButton;
 
     public GameStart(MainWindow mainWindow) {
         super(mainWindow);
@@ -14,11 +14,11 @@ public class GameStart extends State {
 
         this.startGameButton = new JButton("Start");
         this.startGameButton.setBounds(100, 200, 100, 50);
-        this.startGameButton.addActionListener(new ButtonClickListener());
+        this.startGameButton.addActionListener(new ButtonListener());
         this.panel.add(startGameButton);
     }
 
-    private class ButtonClickListener implements ActionListener {
+    private class ButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             if (event.getSource() == GameStart.startGameButton) {
                 mainWindow.convertToNextState();

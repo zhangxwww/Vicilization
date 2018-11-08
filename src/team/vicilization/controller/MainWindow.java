@@ -3,10 +3,13 @@ package team.vicilization.controller;
 import javax.swing.*;
 import java.awt.*;
 
+import team.vicilization.mechanics.*;
+import team.vicilization.country.*;
+
 public class MainWindow extends javax.swing.JFrame {
 
     private State currentState;
-    private javax.swing.JPanel currentPanel;
+    private JPanel currentPanel;
 
     public MainWindow() {
         super("MainWindow");
@@ -17,8 +20,15 @@ public class MainWindow extends javax.swing.JFrame {
         this.currentState = new GameStart(this);
         this.currentPanel = currentState.getPanel();
         this.add(currentPanel);
+    }
 
-//        this.convertToNextState();
+    public void convertToNextState(CountryName[] countryNames) {
+        this.remove(currentPanel);
+        this.repaint();
+        this.currentState = new MainGame(this, countryNames);
+        this.currentPanel = currentState.getPanel();
+        this.add(currentPanel);
+        this.revalidate();
     }
 
     public void convertToNextState() {
@@ -31,7 +41,6 @@ public class MainWindow extends javax.swing.JFrame {
                 this.add(currentPanel);
                 break;
             case MainGame:
-                // TODO
                 break;
             default:
                 break;
