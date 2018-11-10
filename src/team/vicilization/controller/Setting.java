@@ -21,9 +21,8 @@ public class Setting extends State {
         super(mainWindow);
         this.setNextState(StateType.MainGame);
 
-        this.addConfirmButton();
-        this.addChooseCountryLabel();
-        this.addChooseCountryButton();
+        this.addLabels();
+        this.addButtons();
         this.selectedCountryNames = new CountryName[2];
     }
 
@@ -38,14 +37,19 @@ public class Setting extends State {
         }
     }
 
+    private void addButtons() {
+        this.addConfirmButton();
+        this.addChooseCountryButton();
+    }
+
     private void addConfirmButton() {
         this.confirmButton = new JButton("Confirm");
-        this.confirmButton.setBounds(100, 400, 100, 50);
+        this.confirmButton.setBounds(-50, 400, 100, 50);
         this.confirmButton.addActionListener(new ButtonListener());
         this.panel.add(confirmButton);
     }
 
-    private void addChooseCountryLabel() {
+    private void addLabels() {
         this.chooseCountryLabel = new JLabel("Choose leader");
         this.chooseCountryLabel.setBounds(100, 100, 200, 200);
         this.panel.add(chooseCountryLabel);

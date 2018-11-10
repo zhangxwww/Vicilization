@@ -8,7 +8,7 @@ public class LandSquare {
     private LandformType landformType;
     private ResourceType resourceType;
     private Position location;
-    private Cityname governor;
+    private CityName governor;
     private boolean isMarked;
     private int mobilityCost;
     private int defenceBuff;
@@ -101,7 +101,7 @@ public class LandSquare {
         return location;
     }
 
-    public Cityname getGovernor() {
+    public CityName getGovernor() {
         return governor;
     }
 
