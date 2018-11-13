@@ -13,7 +13,7 @@ public class Country {
     private int occupiedTradeRoutes;
     private int totalTradeRoutes;
 
-    private HashMap<String, Integer> countryResource; //TODO int??
+    private HashMap<String, Integer> countryResource;
     private Vector<ScienceName> learntScience;
 
     private CountryFlowValue flowValue;
@@ -24,6 +24,7 @@ public class Country {
     public Leader getLeader() {
         return leader;
     }
+
     public void setLeader(Leader leader) {
         this.leader = leader;
     }
@@ -44,6 +45,7 @@ public class Country {
     public int getOccupiedTradeRoutes() {
         return occupiedTradeRoutes;
     }
+
     public void setOccupiedTradeRoutes(int occupiedTradeRoutes) {
         this.occupiedTradeRoutes = occupiedTradeRoutes;
     }
@@ -51,6 +53,7 @@ public class Country {
     public int getTotalTradeRoutes() {
         return totalTradeRoutes;
     }
+
     public void setTotalTradeRoutes(int totalTradeRoutes) {
         this.totalTradeRoutes = totalTradeRoutes;
     }
