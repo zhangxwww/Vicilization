@@ -1,7 +1,15 @@
 package team.vicilization.country;
 
+import team.vicilization.gameitem.City;
+import team.vicilization.gameitem.Unit;
+
 import java.util.HashMap;
 import java.util.Vector;
+
+import team.vicilization.gameitem.*;
+import team.vicilization.mechanics.Leader;
+import team.vicilization.mechanics.ScienceName;
+import team.vicilization.mechanics.Trader;
 
 public class Country {
     //========================Attributes======================//
