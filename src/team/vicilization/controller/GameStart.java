@@ -10,12 +10,9 @@ public class GameStart extends State {
 
     public GameStart(MainWindow mainWindow) {
         super(mainWindow);
-        setNextState(StateType.Setting);
+        this.setNextState(StateType.Setting);
 
-        this.startGameButton = new JButton("Start");
-        this.startGameButton.setBounds(100, 200, 100, 50);
-        this.startGameButton.addActionListener(new ButtonListener());
-        this.panel.add(startGameButton);
+        this.addStartGameButton();
     }
 
     private class ButtonListener implements ActionListener {
@@ -26,5 +23,11 @@ public class GameStart extends State {
         }
     }
 
+    private void addStartGameButton() {
+        this.startGameButton = new JButton("Start");
+        this.startGameButton.setBounds(100, 200, 100, 50);
+        this.startGameButton.addActionListener(new ButtonListener());
+        this.panel.add(startGameButton);
+    }
 
 }

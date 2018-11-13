@@ -37,14 +37,14 @@ public class MainWindow extends javax.swing.JFrame {
         switch (currentState.getNextState()) {
             case Setting:
                 this.currentState = new Setting(this);
-                this.currentPanel = currentState.getPanel();
-                this.add(currentPanel);
                 break;
             case MainGame:
                 break;
             default:
                 break;
         }
+        this.currentPanel = currentState.getPanel();
+        this.add(currentPanel);
         this.revalidate();
     }
 
