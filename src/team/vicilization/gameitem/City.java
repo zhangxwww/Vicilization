@@ -43,9 +43,9 @@ public class City extends JButton {
 
     }
     private boolean belongsTo(Country country){
-
+        return false;
     }
-    private boolean hasLandform(Landform landform){
-
+    private boolean hasLandSquare(LandSquare landform){
+        return false;
     }
 }
