@@ -1,5 +1,8 @@
 package team.vicilization.gameitem;
 
+import team.vicilization.mechanics.ScienceName;
+import team.vicilization.gamemap.*;
+
 public class UnitInfo {
     //========================Attributes======================//
     int attack;
@@ -9,7 +12,7 @@ public class UnitInfo {
     int moneyCost;
 
     ScienceName requiredScience;
-    ResourceName requiresResource;
+    ResourceType requiredResource;
 
     //========================Get-Set Methods======================//
 
@@ -29,8 +32,8 @@ public class UnitInfo {
         return productivityCost;
     }
 
-    public ResourceName getRequiresResource() {
-        return requiresResource;
+    public ResourceType getRequiredResource() {
+        return requiredResource;
     }
     public ScienceName getRequiredScience() {
         return requiredScience;

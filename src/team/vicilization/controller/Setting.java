@@ -24,15 +24,24 @@ public class Setting extends State {
         super(mainWindow);
         setNextState(StateType.MainGame);
 
+        this.addButtons();
+        this.addLabels();
+    }
+
+    private void addLabels() {
+        this.chooseLeaderLabel = new JLabel("Choose leader");
+        this.chooseLeaderLabel.setBounds(100, 100, 200, 200);
+        this.panel.add(chooseLeaderLabel);
+    }
+
+    private void addConfirmButton() {
         this.confirmButton = new JButton("Confirm");
         this.confirmButton.setBounds(100, 400, 100, 50);
         this.confirmButton.addActionListener(new ButtonListener());
         this.panel.add(confirmButton);
+    }
 
-        this.chooseLeaderLabel = new JLabel("Choose leader");
-        this.chooseLeaderLabel.setBounds(100, 100, 200, 200);
-        this.panel.add(chooseLeaderLabel);
-
+    private void addChooseCountryButtons() {
         this.chooseCountryButtonGroup_1 = new ButtonGroup();
         this.chooseCountryButtonGroup_2 = new ButtonGroup();
         this.chooseCountryButton_1 = new Vector<JRadioButton>(CountryName.values().length);
@@ -40,25 +49,33 @@ public class Setting extends State {
 
         for (int i = 0; i < CountryName.values().length; i++) {
             String name = CountryName.values()[i].toString();
-            JRadioButton btn = new JRadioButton(name);
-            btn.setBounds(200 * i + 200, 300, 100, 50);
-            this.chooseCountryButton_1.add(btn);
-            this.chooseCountryButtonGroup_1.add(btn);
-            this.panel.add(btn);
-        }
+            JRadioButton btn_1 = new JRadioButton(name);
+            JRadioButton btn_2 = new JRadioButton(name);
+            btn_1.setBounds(200 * i + 200, 300, 100, 50);
+            btn_2.setBounds(200 * i + 200, 400, 100, 50);
+            if (i == 0) {
+                btn_1.setSelected(true);
+                btn_2.setSelected(true);
+            }
+            this.chooseCountryButton_1.add(btn_1);
+            this.chooseCountryButton_2.add(btn_2);
 
-        for (int i = 0; i < CountryName.values().length; i++) {
-            String name = CountryName.values()[i].toString();
-            JRadioButton btn = new JRadioButton(name);
-            btn.setBounds(200 * i + 200, 400, 100, 50);
-            this.chooseCountryButton_2.add(btn);
-            this.chooseCountryButtonGroup_2.add(btn);
-            this.panel.add(btn);
+            this.chooseCountryButtonGroup_1.add(btn_1);
+            this.chooseCountryButtonGroup_2.add(btn_2);
+
+            this.panel.add(btn_1);
+            this.panel.add(btn_2);
+
         }
 
         this.selectedCountryNames = new CountryName[2];
         this.selectedCountryNames[0] = CountryName.values()[0];
         this.selectedCountryNames[1] = CountryName.values()[1];
+    }
+
+    private void addButtons() {
+        this.addConfirmButton();
+        this.addChooseCountryButtons();
     }
 
     private class ButtonListener implements ActionListener {
