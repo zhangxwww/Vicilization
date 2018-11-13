@@ -2,13 +2,14 @@ package team.vicilization.gamemap;
 
 import team.vicilization.util.Position;
 
-public class LandSquare {
+import javax.swing.JLabel;
+
+public class LandSquare extends JLabel {
     //========================Attributes======================//
     private TerrainType terrainType;
     private LandformType landformType;
     private ResourceType resourceType;
-    private Position location;
-    private Cityname governor;
+    private Position position;
     private boolean isMarked;
     private int mobilityCost;
     private int defenceBuff;
@@ -97,12 +98,8 @@ public class LandSquare {
         return resourceType;
     }
 
-    public Position getLocation() {
-        return location;
-    }
-
-    public Cityname getGovernor() {
-        return governor;
+    public Position getPosition() {
+        return position;
     }
 
     public boolean getMark() {
