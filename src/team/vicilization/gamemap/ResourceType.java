@@ -1,6 +1,6 @@
 package team.vicilization.gamemap;
 
-enum ResourceType {
+public enum ResourceType {
     NONE,
     HORSE,
     IRON,
