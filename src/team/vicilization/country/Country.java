@@ -27,6 +27,10 @@ public class Country {
     private CountryFlowValue flowValue;
     private CountryStockValue stockValue;  //TODO 接口文件中首字母？
 
+    public Country(CountryName name) {
+
+    }
+
     //========================Get-Set Methods======================//
 
     public Leader getLeader() {

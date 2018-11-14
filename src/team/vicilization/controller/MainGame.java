@@ -9,19 +9,41 @@ import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Vector;
 import javax.swing.Timer;
+
+import static team.vicilization.country.CountryName.*;
 
 public class MainGame extends State {
 
     private MapArea mapArea;
+    private Vector<Country> countries;
+    private Country currentPlayer;
 
     public MainGame(MainWindow mainWindow, CountryName[] countrys) {
         super(mainWindow);
         setNextState(StateType.Gameover);
 
+        this.initMapArea();
+        this.initCountrys(countrys);
+    }
+
+    private void initCountrys(CountryName[] countrys) {
+        this.countries = new Vector<Country>(2);
+        for (int i = 0; i < 2; i++) {
+            Country country = new Country(countrys[i]);
+            this.countries.add(country);
+            this.initUnitsForOneCountry(country);
+        }
+    }
+
+    private void initMapArea() {
         this.mapArea = new MapArea();
         this.panel.add(mapArea);
+    }
 
+    private void initUnitsForOneCountry(Country country) {
+        // TODO
     }
 
     private class MapArea extends JPanel {
@@ -142,7 +164,6 @@ public class MainGame extends State {
                 public void mouseMoved(MouseEvent event) {
                 }
             }
-
         }
     }
 }
