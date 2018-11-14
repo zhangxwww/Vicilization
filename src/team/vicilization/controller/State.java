@@ -3,7 +3,7 @@ package team.vicilization.controller;
 import javax.swing.*;
 import java.awt.*;
 
-public abstract class State {
+abstract class State {
 
     protected MainWindow mainWindow;
     protected JPanel panel;
