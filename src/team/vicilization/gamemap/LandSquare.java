@@ -9,7 +9,6 @@ public class LandSquare extends JLabel {
     private TerrainType terrainType;
     private LandformType landformType;
     private ResourceType resourceType;
-    private Position position;
     private boolean isMarked;
     private int mobilityCost;
     private int defenceBuff;
@@ -19,9 +18,13 @@ public class LandSquare extends JLabel {
     private int scienceYield;
 
     //一旦初始化，terrain, landform 都不再变化
-    void initLandSquare(Position pos) {
+    void initLandSquare(TerrainType terrain,
+                        LandformType landform,
+                        ResourceType resource) {
         //TODO Relationship to GameMap
         //TODO Calculate
+        this.terrainType = terrain;
+        this.landformType = landform;
     }
 
     ResourceType exploit(){
@@ -96,10 +99,6 @@ public class LandSquare extends JLabel {
 
     public ResourceType getResourceType() {
         return resourceType;
-    }
-
-    public Position getPosition() {
-        return position;
     }
 
     public boolean getMark() {
