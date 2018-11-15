@@ -53,7 +53,7 @@ public class MainGame extends State {
         public MapArea() {
             super();
             this.setBounds(20, 50, 1240, 600);
-            this.setBackground(Color.GRAY);
+            this.setBackground(Color.BLUE);
             this.setLayout(null);
 
             mapPanel = new MapPanel();
@@ -66,13 +66,9 @@ public class MainGame extends State {
 
             public MapPanel() {
                 super();
-                /*this.bias = new Position();
-                this.bias.setX(0);
-                this.bias.setY(0);*/
                 this.map = new GameMap();
 
                 this.setLayout(null);
-                this.setBackground(Color.GREEN);
 
                 // TODO this will change later
                 this.setBounds(0, 0,
@@ -94,7 +90,7 @@ public class MainGame extends State {
                         if ((i + j) % 2 == 0) {
                             square.setBackground(Color.BLACK);
                         } else {
-                            square.setBackground(Color.BLUE);
+                            square.setBackground(Color.WHITE);
                         }
                         square.setText("" + i + "" + j);
                         square.setBounds(
