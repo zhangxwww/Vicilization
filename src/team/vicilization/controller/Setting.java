@@ -34,6 +34,11 @@ public class Setting extends State {
         this.panel.add(chooseLeaderLabel);
     }
 
+    private void addButtons() {
+        this.addConfirmButton();
+        this.addChooseCountryButtons();
+    }
+
     private void addConfirmButton() {
         this.confirmButton = new JButton("Confirm");
         this.confirmButton.setBounds(100, 400, 100, 50);
@@ -73,11 +78,6 @@ public class Setting extends State {
         this.selectedCountryNames[1] = CountryName.values()[1];
     }
 
-    private void addButtons() {
-        this.addConfirmButton();
-        this.addChooseCountryButtons();
-    }
-
     private class ButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             if (event.getSource() == Setting.confirmButton) {
@@ -88,11 +88,16 @@ public class Setting extends State {
 
     private class RadioButtonListener implements ItemListener {
         public void itemStateChanged(ItemEvent event) {
-            if (chooseCountryButton_1.contains(event.getSource())) {
-
+            if (event.getStateChange() == ItemEvent.SELECTED) {
+                if (chooseCountryButton_1.contains(event.getSource())) {
+                    String country = ((JRadioButton) event.getSource()).getText();
+                    selectedCountryNames[0] = CountryName.valueOf(country);
+                } else if (chooseCountryButton_2.contains(event.getSource())) {
+                    String country = ((JRadioButton) event.getSource()).getText();
+                    selectedCountryNames[1] = CountryName.valueOf(country);
+                }
             }
         }
-
     }
 
 }

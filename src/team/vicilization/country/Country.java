@@ -27,6 +27,27 @@ public class Country {
     private CountryFlowValue flowValue;
     private CountryStockValue stockValue;  //TODO 接口文件中首字母？
 
+    public Country(CountryName name) {
+        // TODO
+    }
+
+    public void readyForNewRound() {
+        // TODO 这里要执行计算存量流量、推进项目、城市恢复等一系列会在每一回合开始执行的任务
+    }
+
+    private void calculateFlowValue() {
+        // TODO
+    }
+
+    private void calculateStockValue() {
+        // TODO
+    }
+
+    public boolean judgeVectory() {
+        // TODO
+        return false;
+    }
+
     //========================Get-Set Methods======================//
 
     public Leader getLeader() {

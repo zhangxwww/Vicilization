@@ -1,11 +1,9 @@
 package team.vicilization.controller;
 
-import org.jetbrains.annotations.Contract;
-
 import javax.swing.*;
 import java.awt.*;
 
-public abstract class State {
+abstract class State {
 
     protected MainWindow mainWindow;
     protected JPanel panel;
@@ -23,7 +21,6 @@ public abstract class State {
         return panel;
     }
 
-    @Contract(pure = true)
     public StateType getNextState() {
         return nextState;
     }

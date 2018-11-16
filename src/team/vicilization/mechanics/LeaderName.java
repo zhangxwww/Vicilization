@@ -1,12 +1,9 @@
 package team.vicilization.mechanics;
 
-import org.jetbrains.annotations.NotNull;
-
 public enum LeaderName {
     GANDHI,
     ALEXANDER;
 
-    @NotNull
     @Override
     public String toString() {
         String name = super.toString().toLowerCase();

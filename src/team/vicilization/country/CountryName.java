@@ -1,12 +1,9 @@
 package team.vicilization.country;
 
-import org.jetbrains.annotations.NotNull;
-
 public enum CountryName {
     INDIA,
     MACEDONIA;
 
-    @NotNull
     @Override
     public String toString() {
         String name = super.toString().toLowerCase();

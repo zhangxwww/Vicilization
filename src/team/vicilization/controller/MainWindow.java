@@ -17,6 +17,7 @@ public class MainWindow extends javax.swing.JFrame {
         this.setVisible(true);
         this.setLayout(null);
         this.setSize(1920, 1080);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.currentState = new GameStart(this);
         this.currentPanel = currentState.getPanel();
         this.add(currentPanel);
