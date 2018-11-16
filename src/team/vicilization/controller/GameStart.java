@@ -16,11 +16,23 @@ public class GameStart extends State {
         this.setNextState(StateType.Setting);
 
         this.addStartGameButton();
+        this.setBackgournd();
+    }
 
+    private class ButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            if (event.getSource() == GameStart.startGameButton) {
+                mainWindow.convertToNextState();
+            }
+        }
+    }
+
+    private void setBackgournd() {
         this.backGroundPanel = new JPanel() {
             public void paintComponent(Graphics graphics) {
                 super.paintComponent(graphics);
-                ImageIcon background = new ImageIcon("./Resource/Background/start_game_background.jpg");
+                ImageIcon background = new ImageIcon(
+                        "./Resource/Background/start_game_background.jpg");
                 graphics.drawImage(background.getImage(), 0, 0,
                         background.getIconWidth(),
                         background.getIconHeight(),
@@ -30,15 +42,6 @@ public class GameStart extends State {
         this.backGroundPanel.setBounds(0,0,1920,1080);
         this.backGroundPanel.setLayout(null);
         this.panel.add(this.backGroundPanel);
-
-    }
-
-    private class ButtonListener implements ActionListener {
-        public void actionPerformed(ActionEvent event) {
-            if (event.getSource() == GameStart.startGameButton) {
-                mainWindow.convertToNextState();
-            }
-        }
     }
 
     private void addStartGameButton() {
