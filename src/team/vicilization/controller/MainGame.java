@@ -26,6 +26,8 @@ public class MainGame extends State {
     private Vector<Country> countries;
     private Country currentPlayer;
 
+    private static JButton nextRoundButton;
+
     public MainGame(MainWindow mainWindow, CountryName[] countrys) {
         super(mainWindow);
         setNextState(StateType.Gameover);
@@ -33,6 +35,7 @@ public class MainGame extends State {
         this.round = 0;
         this.initMapArea();
         this.initCountrys(countrys);
+        this.initButtons();
     }
 
     private void initUnitsForOneCountry(Country country) {
@@ -72,10 +75,6 @@ public class MainGame extends State {
     }
 
     private void showScienceTree() {
-        // TODO
-    }
-
-    private void changePlayer() {
         // TODO
     }
 
@@ -124,6 +123,7 @@ public class MainGame extends State {
                     .elementAt(round % 2);
             this.currentPlayer.readyForNewRound();
             // TODO update upper info area
+            System.out.println(round);
         }
         // TODO
     }
@@ -135,11 +135,28 @@ public class MainGame extends State {
             this.countries.add(country);
             this.initUnitsForOneCountry(country);
         }
+        this.currentPlayer = this.countries.elementAt(0);
     }
 
     private void initMapArea() {
         this.mapArea = new MapArea();
         this.panel.add(mapArea);
+    }
+
+    private void initButtons() {
+        this.nextRoundButton = new JButton("Next Round");
+        this.nextRoundButton.setBounds(1060, 650, 200, 50);
+        this.nextRoundButton.addActionListener(new GameButtonsListener());
+        this.panel.add(nextRoundButton);
+    }
+
+    private class GameButtonsListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            if (event.getSource() == MainGame.nextRoundButton) {
+                nextRound();
+            }
+            // TODO finish with other actions
+        }
     }
 
     private class UpperInfoArea extends JPanel {
@@ -170,15 +187,14 @@ public class MainGame extends State {
         }
     }
 
-
-    private class DropdownButtonList extends JPanel {
-        // TODO show dropdown buttons when units or cities being selected
-        public DropdownButtonList(Unit unit) {
+    private class SelectedButtonList extends JPanel {
+        // TODO show buttons when units or cities being selected
+        public SelectedButtonList(Unit unit) {
             super();
             // TODO
         }
 
-        public DropdownButtonList(City city) {
+        public SelectedButtonList(City city) {
             super();
             // TODO
         }
