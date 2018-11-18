@@ -22,7 +22,10 @@ import static team.vicilization.country.CountryName.*;
 public class MainGame extends State {
 
     private int round;
+
     private MapArea mapArea;
+    private UpperInfoArea upperInfoArea;
+
     private Vector<Country> countries;
     private Country currentPlayer;
 
@@ -36,6 +39,7 @@ public class MainGame extends State {
         this.initMapArea();
         this.initCountrys(countrys);
         this.initButtons();
+        this.initUpperInfoArea();
     }
 
     private void initUnitsForOneCountry(Country country) {
@@ -123,7 +127,7 @@ public class MainGame extends State {
                     .elementAt(round % 2);
             this.currentPlayer.readyForNewRound();
             // TODO update upper info area
-            System.out.println(round);
+            this.upperInfoArea.update();
         }
         // TODO
     }
@@ -145,9 +149,14 @@ public class MainGame extends State {
 
     private void initButtons() {
         this.nextRoundButton = new JButton("Next Round");
-        this.nextRoundButton.setBounds(1060, 650, 200, 50);
+        this.nextRoundButton.setBounds(1060, 600, 200, 100);
         this.nextRoundButton.addActionListener(new GameButtonsListener());
         this.panel.add(nextRoundButton);
+    }
+
+    private void initUpperInfoArea() {
+        this.upperInfoArea = new UpperInfoArea();
+        this.panel.add(upperInfoArea);
     }
 
     private class GameButtonsListener implements ActionListener {
@@ -161,13 +170,51 @@ public class MainGame extends State {
 
     private class UpperInfoArea extends JPanel {
         // TODO show flow value, resource count ... here
+        private JLabel sciencePointInfo;
+        private JLabel moneyInfo;
+        private JLabel roundInfo;
+
+        private JLabel sciencePointIconLabel;
+        private JLabel moneyInfoIconLabel;
+        private JLabel roundInfoIconLabel;
+
         public UpperInfoArea() {
             super();
-            // TODO
+            this.sciencePointInfo = new JLabel();
+            this.moneyInfo = new JLabel();
+            this.roundInfo = new JLabel();
+
+            this.sciencePointInfo.setBounds(20, 0, 80, 50);
+            this.moneyInfo.setBounds(140, 0, 80, 50);
+            this.roundInfo.setBounds(1060, 0, 80, 50);
+
+            this.sciencePointIconLabel = new JLabel("S");
+            this.moneyInfoIconLabel = new JLabel("M");
+            this.roundInfoIconLabel = new JLabel("R");
+
+            this.sciencePointIconLabel.setBounds(0, 0, 20, 50);
+            this.moneyInfoIconLabel.setBounds(120, 0, 20, 50);
+            this.roundInfoIconLabel.setBounds(1040, 0, 20, 50);
+
+            this.update();
+
+            this.setLayout(null);
+
+            this.add(sciencePointIconLabel);
+            this.add(moneyInfoIconLabel);
+            this.add(roundInfoIconLabel);
+            this.add(sciencePointInfo);
+            this.add(moneyInfo);
+            this.add(roundInfo);
+
+            this.setBounds(20, 0, 1240, 50);
         }
 
-        public void update(Country country) {
-            // TODO
+        public void update() {
+            // TODO this should be rewritten later
+            this.sciencePointInfo.setText("3.4");
+            this.moneyInfo.setText("0/6");
+            this.roundInfo.setText(String.valueOf(round));
         }
     }
 
@@ -219,7 +266,7 @@ public class MainGame extends State {
 
         public MapArea() {
             super();
-            this.setBounds(20, 50, 1240, 600);
+            this.setBounds(20, 50, 1240, 550);
             this.setBackground(Color.BLUE);
             this.setLayout(null);
 
