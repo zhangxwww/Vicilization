@@ -1,6 +1,6 @@
 package team.vicilization.gamemap;
 
-enum LandformType {
+public enum LandformType {
     GRASSLANDS,
     FOREST,
     RAINFOREST,
