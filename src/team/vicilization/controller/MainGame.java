@@ -13,11 +13,8 @@ import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.security.PublicKey;
 import java.util.Vector;
 import javax.swing.Timer;
-
-import static team.vicilization.country.CountryName.*;
 
 public class MainGame extends State {
 
@@ -119,14 +116,13 @@ public class MainGame extends State {
     }
 
     private void nextRound() {
-        if (this.currentPlayer.judgeVectory()) {
-            // TODO convert to next state
+        if (this.currentPlayer.judgeVectory() || round == 3 /* TODO delete later */) {
+            this.mainWindow.convertToNextState(currentPlayer);
         } else {
             round++;
             this.currentPlayer = this.countries
                     .elementAt(round % 2);
             this.currentPlayer.readyForNewRound();
-            // TODO update upper info area
             this.upperInfoArea.update();
         }
         // TODO
@@ -169,14 +165,14 @@ public class MainGame extends State {
     }
 
     private class UpperInfoArea extends JPanel {
-        // TODO show flow value, resource count ... here
+        // show flow value, resource count ... here
         private JLabel sciencePointInfo;
         private JLabel moneyInfo;
         private JLabel roundInfo;
 
-        private JLabel sciencePointIconLabel;
-        private JLabel moneyInfoIconLabel;
-        private JLabel roundInfoIconLabel;
+        private JLabel sciencePointSymbolLabel;
+        private JLabel moneySymbolLabel;
+        private JLabel roundSymbolLabel;
 
         public UpperInfoArea() {
             super();
@@ -188,21 +184,21 @@ public class MainGame extends State {
             this.moneyInfo.setBounds(140, 0, 80, 50);
             this.roundInfo.setBounds(1060, 0, 80, 50);
 
-            this.sciencePointIconLabel = new JLabel("S");
-            this.moneyInfoIconLabel = new JLabel("M");
-            this.roundInfoIconLabel = new JLabel("R");
+            this.sciencePointSymbolLabel = new JLabel("S");
+            this.moneySymbolLabel = new JLabel("M");
+            this.roundSymbolLabel = new JLabel("R");
 
-            this.sciencePointIconLabel.setBounds(0, 0, 20, 50);
-            this.moneyInfoIconLabel.setBounds(120, 0, 20, 50);
-            this.roundInfoIconLabel.setBounds(1040, 0, 20, 50);
+            this.sciencePointSymbolLabel.setBounds(0, 0, 20, 50);
+            this.moneySymbolLabel.setBounds(120, 0, 20, 50);
+            this.roundSymbolLabel.setBounds(1040, 0, 20, 50);
 
             this.update();
 
             this.setLayout(null);
 
-            this.add(sciencePointIconLabel);
-            this.add(moneyInfoIconLabel);
-            this.add(roundInfoIconLabel);
+            this.add(sciencePointSymbolLabel);
+            this.add(moneySymbolLabel);
+            this.add(roundSymbolLabel);
             this.add(sciencePointInfo);
             this.add(moneyInfo);
             this.add(roundInfo);

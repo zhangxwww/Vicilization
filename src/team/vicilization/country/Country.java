@@ -17,6 +17,8 @@ public class Country {
     private Vector<City> cities;
     private Vector<Unit> units;
 
+    private CountryName countryName;
+
     private Vector<Trader> traders;
     private int occupiedTradeRoutes;
     private int totalTradeRoutes;
@@ -70,6 +72,11 @@ public class Country {
         return traders;
     }
     //TODO 没有Set cities/units/traders 等Vector或其他类?
+
+    public CountryName getCountryName() {
+        return CountryName.INDIA;
+        // return countryName;
+    }
 
     public int getOccupiedTradeRoutes() {
         return occupiedTradeRoutes;

@@ -32,6 +32,15 @@ public class MainWindow extends javax.swing.JFrame {
         this.revalidate();
     }
 
+    public void convertToNextState(Country country) {
+        this.remove(currentPanel);
+        this.repaint();
+        this.currentState = new Gameover(this, country);
+        this.currentPanel = currentState.getPanel();
+        this.add(currentPanel);
+        this.revalidate();
+    }
+
     public void convertToNextState() {
         this.remove(currentPanel);
         this.repaint();
@@ -40,6 +49,11 @@ public class MainWindow extends javax.swing.JFrame {
                 this.currentState = new Setting(this);
                 break;
             case MainGame:
+                break;
+            case Gameover:
+                break;
+            case GameStart:
+                this.currentState = new GameStart(this);
                 break;
             default:
                 break;
