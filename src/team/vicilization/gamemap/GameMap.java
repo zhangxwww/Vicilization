@@ -4,66 +4,98 @@ import java.util.Vector;
 
 public class GameMap {
     //先取一列，再取列中每一行
-    private Vector<Vector<LandSquare>> landSquares = new Vector<>(50);
-    private Vector<Vector<LandformType>> landformMap = new Vector<>(50);
-    private Vector<Vector<TerrainType>> terrainMap = new Vector<>(50);
-    private Vector<Vector<ResourceType>> resourceMap = new Vector<>(50);
+    private Vector<Vector<LandSquare>> landSquares;
+    private Vector<Vector<LandformType>> landformMap;
+    private Vector<Vector<TerrainType>> terrainMap;
+    private Vector<Vector<ResourceType>> resourceMap;
 
+    //=====================构造函数=========================//
+    public GameMap() {
+        this.landSquares = new Vector<>(GameMapConfig.MAP_WIDTH);
+        this.landformMap = new Vector<>(GameMapConfig.MAP_WIDTH);
+        this.terrainMap = new Vector<>(GameMapConfig.MAP_WIDTH);
+        this.resourceMap = new Vector<>(GameMapConfig.MAP_WIDTH);
+        for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
+            this.landSquares.set(i, new Vector<>(GameMapConfig.MAP_HEIGHT));
+            this.landformMap.set(i, new Vector<>(GameMapConfig.MAP_HEIGHT));
+            this.terrainMap.set(i, new Vector<>(GameMapConfig.MAP_HEIGHT));
+            this.resourceMap.set(i, new Vector<>(GameMapConfig.MAP_HEIGHT));
+        }
+        //TODO all the other initializings
+    }
+
+    //=====================取某一元素=========================//
     public LandSquare getSquare(int x, int y) {
         return this.landSquares.get(x).get(y);
     }
 
-    //=====================随机生成冻土=========================//
+    //=====================生成普通地形=========================//
+    //TODO plain, hill
+    private void initTerrainMap_PLAIN_HILL() {
+
+    }
+
+    //=====================随机生成地貌=========================//
     private void initLandformMap_FROZE() {
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
             this.landformMap.get(i).set(0, LandformType.FROZENGROUND);
-            this.landformMap.get(i).set(1, LandformType.FROZENGROUND);
-            this.landformMap.get(i).set(28, LandformType.FROZENGROUND);
-            this.landformMap.get(i).set(29, LandformType.FROZENGROUND);
+            this.landformMap.get(i).set(GameMapConfig.MAP_HEIGHT - 1, LandformType.FROZENGROUND);
 
-            if (Math.random() > 0.3) {
-                this.landformMap.get(i).set(2, LandformType.FROZENGROUND);
-                if (Math.random() > 0.5) {
-                    this.landformMap.get(i).set(3, LandformType.FROZENGROUND);
+            if (Math.random() > GameMapConfig.RAND_LEVEL1) {
+                this.landformMap.get(i).set(1, LandformType.FROZENGROUND);
+                if (Math.random() > GameMapConfig.RAND_LEVEL2) {
+                    this.landformMap.get(i).set(2, LandformType.FROZENGROUND);
                 } else {
-                    this.landformMap.get(i).set(3, LandformType.GRASSLANDS);
+                    this.landformMap.get(i).set(2, LandformType.GRASSLANDS);
                 }
             } else {
-                this.landformMap.get(i).set(2, LandformType.GRASSLANDS);
-                if (Math.random() > 0.95) {
-                    this.landformMap.get(i).set(3, LandformType.FROZENGROUND);
+                this.landformMap.get(i).set(1, LandformType.GRASSLANDS);
+                if (Math.random() > GameMapConfig.RAND_LEVEL3) {
+                    this.landformMap.get(i).set(2, LandformType.FROZENGROUND);
                 } else {
-                    this.landformMap.get(i).set(3, LandformType.GRASSLANDS);
+                    this.landformMap.get(i).set(2, LandformType.GRASSLANDS);
                 }
             }
 
-            if (Math.random() > 0.3) {
-                this.landformMap.get(i).set(26, LandformType.FROZENGROUND);
-                if (Math.random() > 0.5) {
-                    this.landformMap.get(i).set(27, LandformType.FROZENGROUND);
+            if (Math.random() > GameMapConfig.RAND_LEVEL1) {
+                this.landformMap.get(i).set(GameMapConfig.MAP_HEIGHT - 3, LandformType.FROZENGROUND);
+                if (Math.random() > GameMapConfig.RAND_LEVEL2) {
+                    this.landformMap.get(i).set(GameMapConfig.MAP_HEIGHT - 2, LandformType.FROZENGROUND);
                 } else {
-                    this.landformMap.get(i).set(27, LandformType.GRASSLANDS);
+                    this.landformMap.get(i).set(GameMapConfig.MAP_HEIGHT - 2, LandformType.GRASSLANDS);
                 }
             } else {
-                this.landformMap.get(i).set(26, LandformType.GRASSLANDS);
-                if (Math.random() > 0.95) {
-                    this.landformMap.get(i).set(27, LandformType.FROZENGROUND);
+                this.landformMap.get(i).set(GameMapConfig.MAP_HEIGHT - 3, LandformType.GRASSLANDS);
+                if (Math.random() > GameMapConfig.RAND_LEVEL3) {
+                    this.landformMap.get(i).set(GameMapConfig.MAP_HEIGHT - 2, LandformType.FROZENGROUND);
                 } else {
-                    this.landformMap.get(i).set(27, LandformType.GRASSLANDS);
+                    this.landformMap.get(i).set(GameMapConfig.MAP_HEIGHT - 2, LandformType.GRASSLANDS);
                 }
             }
-
+            /*
             //TODO TRIAL GENERATION
-            for (int j = 4; j < 26; j++) {
+            for (int j = 3; j < 27; j++) {
                 this.landformMap.get(i).set(j, LandformType.GRASSLANDS);
             }
+            */
         }
     }
 
+    private void initLandformMap_RAIN_DESERT() {
+        int desertX = (int) (Math.random() * GameMapConfig.MAP_WIDTH);
+
+        //TODO double to int
+    }
+
+    //=====================随机生成资源==========================//
+    //TODO resources
+    //=====================山河湖 抵消其他==========================//
+    //TODO ridge, river, lake
+
     //=====================强行地形/资源=========================//
     private void test_initTerrainResource() {
-        for (int i = 0; i < 50; i++) {
-            for (int j = 0; j < 30; j++) {
+        for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
+            for (int j = 0; j < GameMapConfig.MAP_HEIGHT; j++) {
                 this.terrainMap.get(i).set(j, TerrainType.PLAIN);
                 this.resourceMap.get(i).set(j, ResourceType.IRON);
             }
@@ -76,13 +108,13 @@ public class GameMap {
         this.initLandformMap_FROZE();
         this.test_initTerrainResource();
 
-        for (int i = 0; i < 50; i++) {
-            for (int j = 0; j < 30; j++) {
+        for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
+            for (int j = 0; j < GameMapConfig.MAP_HEIGHT; j++) {
                 this.landSquares.get(i).get(j).
                         initLandSquare(
-                        this.terrainMap.get(i).get(j),
-                        this.landformMap.get(i).get(j),
-                        this.resourceMap.get(i).get(j)
+                                this.terrainMap.get(i).get(j),
+                                this.landformMap.get(i).get(j),
+                                this.resourceMap.get(i).get(j)
                         );
             }
         }

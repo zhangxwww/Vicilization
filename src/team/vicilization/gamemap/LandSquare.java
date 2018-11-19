@@ -1,8 +1,6 @@
 package team.vicilization.gamemap;
 
-import team.vicilization.util.Position;
-
-import javax.swing.JLabel;
+import javax.swing.*;
 
 public class LandSquare extends JLabel {
     //========================Attributes======================//
@@ -21,10 +19,10 @@ public class LandSquare extends JLabel {
     void initLandSquare(TerrainType terrain,
                         LandformType landform,
                         ResourceType resource) {
-        //TODO Relationship to GameMap
         //TODO Calculate
         this.terrainType = terrain;
         this.landformType = landform;
+        this.resourceType = resource;
     }
 
     ResourceType exploit(){
