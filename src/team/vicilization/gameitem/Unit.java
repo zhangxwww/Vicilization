@@ -13,6 +13,10 @@ public class Unit extends JButton {
     int health;
     UnitInfo unitInfo;
 
+    public Unit() {
+
+    }
+
     public void delete(){
         setVisible(false);
         setEnabled(false);

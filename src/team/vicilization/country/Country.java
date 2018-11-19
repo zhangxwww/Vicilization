@@ -10,12 +10,15 @@ import team.vicilization.gameitem.*;
 import team.vicilization.mechanics.Leader;
 import team.vicilization.mechanics.ScienceName;
 import team.vicilization.mechanics.Trader;
+import team.vicilization.util.Position;
 
 public class Country {
     //========================Attributes======================//
     private Leader leader;
     private Vector<City> cities;
     private Vector<Unit> units;
+
+    private CountryName countryName;
 
     private Vector<Trader> traders;
     private int occupiedTradeRoutes;
@@ -33,6 +36,14 @@ public class Country {
 
     public void readyForNewRound() {
         // TODO 这里要执行计算存量流量、推进项目、城市恢复等一系列会在每一回合开始执行的任务
+    }
+
+    public void addNewUnit(Unit unit, Position position) {
+
+    }
+
+    public void buildNewCity(Position position) {
+
     }
 
     private void calculateFlowValue() {
@@ -70,6 +81,11 @@ public class Country {
         return traders;
     }
     //TODO 没有Set cities/units/traders 等Vector或其他类?
+
+    public CountryName getCountryName() {
+        return CountryName.INDIA;
+        // return countryName;
+    }
 
     public int getOccupiedTradeRoutes() {
         return occupiedTradeRoutes;
