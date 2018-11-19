@@ -66,5 +66,4 @@ public class MainWindow extends javax.swing.JFrame {
     public static void main(String[] args) {
         MainWindow mainWindow = new MainWindow();
     }
-
 }

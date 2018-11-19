@@ -24,28 +24,39 @@ public class City extends JButton {
     Vector<BuildingType> allowedBuildings;
     Vector<Unit> allowedUnits;
 
-    private void updateStock(){
+    public City(Country country, Position position) {
 
     }
-    private void recover(){
+
+    public void updateStock() {
 
     }
-    private  void produce(Producable production){
+
+    public void recover() {
 
     }
-    private void calculateFlowValue(){
+
+    public void produce(Producable production) {
 
     }
-    private void addNewUnit(Unit unit){
+
+    public void calculateFlowValue() {
 
     }
-    private void addNewBuilding(BuildingType buildingType){
+
+    public void addNewUnit(Unit unit) {
 
     }
-    private boolean belongsTo(Country country){
+
+    public void addNewBuilding(BuildingType buildingType) {
+
+    }
+
+    public boolean belongsTo(Country country) {
         return false;
     }
-    private boolean hasLandSquare(LandSquare landform){
+
+    public boolean hasLandSquare(LandSquare landform) {
         return false;
     }
 }

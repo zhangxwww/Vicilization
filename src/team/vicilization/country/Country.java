@@ -10,6 +10,7 @@ import team.vicilization.gameitem.*;
 import team.vicilization.mechanics.Leader;
 import team.vicilization.mechanics.ScienceName;
 import team.vicilization.mechanics.Trader;
+import team.vicilization.util.Position;
 
 public class Country {
     //========================Attributes======================//
@@ -35,6 +36,14 @@ public class Country {
 
     public void readyForNewRound() {
         // TODO 这里要执行计算存量流量、推进项目、城市恢复等一系列会在每一回合开始执行的任务
+    }
+
+    public void addNewUnit(Unit unit, Position position) {
+
+    }
+
+    public void buildNewCity(Position position) {
+
     }
 
     private void calculateFlowValue() {
