@@ -19,10 +19,11 @@ public class LandSquare extends JLabel {
     void initLandSquare(TerrainType terrain,
                         LandformType landform,
                         ResourceType resource) {
-        //TODO Calculate
         this.terrainType = terrain;
         this.landformType = landform;
         this.resourceType = resource;
+
+        this.calculateAll();
     }
 
     ResourceType exploit(){
@@ -41,7 +42,7 @@ public class LandSquare extends JLabel {
     }
 
     //========================Calculate Methods======================//
-    public void calculateAll(){
+    private void calculateAll(){
         this.calMobilityCost();
         this.calDefenceBuff();
         this.calFoodYield();
