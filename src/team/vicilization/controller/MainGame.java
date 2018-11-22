@@ -45,7 +45,6 @@ public class MainGame extends State {
         this.initUpperInfoArea();
 
         this.cities = new Vector<City>();
-        this.units = new Vector<Unit>();
     }
 
     private void nextRound() {
@@ -63,6 +62,7 @@ public class MainGame extends State {
 
     private void initCountrys(CountryName[] countrys) {
         this.countries = new Vector<Country>(2);
+        this.units = new Vector<Unit>();
         for (int i = 0; i < 2; i++) {
             Country country = new Country(countrys[i]);
             this.countries.add(country);
@@ -76,19 +76,22 @@ public class MainGame extends State {
         while (true) {
             int x = initPosition.nextInt(40);
             int y = initPosition.nextInt(30);
-            LandSquare landSquare = mapArea.at(x, y);
-            if ((landSquare.getTerrainType() == TerrainType.PLAIN
+            // TODO add following later
+//            LandSquare landSquare = mapArea.at(x, y);
+            if (true/*(landSquare.getTerrainType() == TerrainType.PLAIN
                     || landSquare.getTerrainType() == TerrainType.HILL)
                     && (landSquare.getLandformType() == LandformType.GRASSLANDS)
-                    && (landSquare.getResourceType() == ResourceType.NONE)) {
+                    && (landSquare.getResourceType() == ResourceType.NONE)*/) {
 
-                Unit explorer = new Explorer();
-                country.addNewUnit(explorer, new Position(x, y));
+                Position initPos = new Position(x, y);
+                Unit explorer = new Explorer(initPos);
+                country.addNewUnit(explorer, initPos);
                 this.units.add(explorer);
-                // TODO add to maparea
+                this.mapArea.addUnitInMap(explorer, initPos);
                 break;
             }
         }
+
     }
 
     private void initMapArea() {
@@ -110,6 +113,7 @@ public class MainGame extends State {
 
     private void selectUnit(Unit unit) {
         // TODO
+        System.out.println("select");
     }
 
     private void selectCity(City city) {
@@ -367,14 +371,14 @@ public class MainGame extends State {
                 this.setBounds(0, 0,
                         40 * 50, 30 * 50);
 
-                DragScreen dragScreen = new DragScreen();
+                MapMouseEventListener dragScreen = new MapMouseEventListener();
                 this.addMouseListener(dragScreen);
                 this.addMouseMotionListener(dragScreen);
 
-                this.addMap();
+                this.drawMapWithoutUnits();
             }
 
-            private void addMap() {
+            private void drawMapWithoutUnits() {
                 // TODO this will be rewriten later
                 for (int i = 0; i < 40; i++) {
                     for (int j = 0; j < 50; j++) {
@@ -394,12 +398,21 @@ public class MainGame extends State {
                 }
             }
 
+            public void drawUnits() {
+                // TODO
+            }
+
 
             private void addUnit(Unit unit, Position position) {
-
+                // TODO rewrite later
+                JLabel square = (JLabel) getComponentAt(
+                        position.getX() * 50, position.getY() * 50);
+                square.setBackground(Color.ORANGE);
+                square.setText("unit");
             }
-            
-            private class DragScreen implements MouseInputListener {
+
+            private class MapMouseEventListener implements MouseInputListener {
+
                 private boolean moving = false;
                 private int xinit = 0;
                 private int yinit = 0;
@@ -409,6 +422,17 @@ public class MainGame extends State {
 
                 @Override
                 public void mouseClicked(MouseEvent event) {
+                    JLabel square = (JLabel) getComponentAt(event.getX(), event.getY());
+                    if (square.getText() == "unit") {
+                        for (Unit u : units) {
+                            if (u.getPosition().getX() == event.getX() / 50
+                                    && u.getPosition().getY() == event.getY() / 50) {
+
+                                selectUnit(u);
+                                break;
+                            }
+                        }
+                    }
                 }
 
                 @Override

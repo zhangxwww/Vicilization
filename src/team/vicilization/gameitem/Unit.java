@@ -5,7 +5,7 @@ import team.vicilization.util.Position;
 
 import javax.swing.*;
 
-public class Unit extends JButton {
+public abstract class Unit extends JButton {
     UnitType type;
     UnitSubType subType;
     Country country;
@@ -16,6 +16,14 @@ public class Unit extends JButton {
 
     public Unit() {
 
+    }
+
+    public Unit(Position position) {
+        this.position = position;
+    }
+
+    public Position getPosition() {
+        return position;
     }
 
     public void delete(){
