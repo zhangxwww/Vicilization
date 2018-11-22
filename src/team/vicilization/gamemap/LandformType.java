@@ -1,6 +1,7 @@
 package team.vicilization.gamemap;
 
 public enum LandformType {
+    NONE, //Specially for ridge, river and lake
     GRASSLANDS,
     FOREST,
     RAINFOREST,

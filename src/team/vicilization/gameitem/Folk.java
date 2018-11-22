@@ -5,5 +5,4 @@ public class Folk extends Unit{
     public Folk() {
         super();
     }
-
 }
