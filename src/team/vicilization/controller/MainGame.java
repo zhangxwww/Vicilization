@@ -16,11 +16,9 @@ import javax.swing.Timer;
 import java.util.Random;
 
 
-
 public class MainGame extends State {
 
     private int round;
-
 
     private MapArea mapArea;
     private UpperInfoArea upperInfoArea;
@@ -91,12 +89,6 @@ public class MainGame extends State {
                 break;
             }
         }
-
-    }
-
-    private void initMapArea() {
-        this.mapArea = new MapArea();
-        this.panel.add(mapArea);
     }
 
     private void initButtons() {
@@ -189,44 +181,11 @@ public class MainGame extends State {
         // TODO
     }
 
-
-    private void nextRound() {
-        if (this.currentPlayer.judgeVectory()) {
-            // TODO convert to next state
-        } else {
-            round++;
-            this.currentPlayer = this.countries
-                    .elementAt(round % 2);
-            this.currentPlayer.readyForNewRound();
-            // TODO update upper info area
-        }
-        // TODO
-    }
-
-    private void initCountrys(CountryName[] countrys) {
-        this.countries = new Vector<Country>(2);
-        for (int i = 0; i < 2; i++) {
-            Country country = new Country(countrys[i]);
-            this.countries.add(country);
-            this.initUnitsForOneCountry(country);
-        }
-    }
-
     private void initMapArea() {
         this.mapArea = new MapArea();
         this.panel.add(mapArea);
     }
 
-    private class UpperInfoArea extends JPanel {
-        // TODO show flow value, resource count ... here
-        public UpperInfoArea() {
-            super();
-            // TODO
-        }
-
-        public void update(Country country) {
-            // TODO
-            
     private class GameButtonsListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             if (event.getSource() == MainGame.nextRoundButton) {
@@ -401,7 +360,6 @@ public class MainGame extends State {
             public void drawUnits() {
                 // TODO
             }
-
 
             private void addUnit(Unit unit, Position position) {
                 // TODO rewrite later
