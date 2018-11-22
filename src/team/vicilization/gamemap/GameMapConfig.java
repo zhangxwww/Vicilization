@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 class GameMapConfig {
+
     public static final int MAP_WIDTH = 40;
     public static final int MAP_HEIGHT = 30;
 
@@ -223,6 +224,7 @@ class GameMapConfig {
     public static final HashMap<ResourceType, Integer> RESOURCE_SCIENCE = new HashMap<ResourceType, Integer>() {
         {
             put(ResourceType.NONE, 0);
+
         }
     };
 }

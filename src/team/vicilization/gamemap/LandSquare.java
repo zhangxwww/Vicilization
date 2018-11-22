@@ -7,6 +7,7 @@ public class LandSquare extends JLabel {
     private TerrainType terrainType;
     private LandformType landformType;
     private ResourceType resourceType;
+    private Position position;
     private boolean isMarked;
     private int mobilityCost;
     private int defenceBuff;
@@ -98,6 +99,14 @@ public class LandSquare extends JLabel {
 
     public ResourceType getResourceType() {
         return resourceType;
+    }
+
+
+
+
+    public Position getPosition() {
+        return position;
+
     }
 
     public boolean getMark() {

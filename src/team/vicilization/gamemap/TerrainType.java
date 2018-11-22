@@ -1,6 +1,6 @@
 package team.vicilization.gamemap;
 
-enum TerrainType {
+public enum TerrainType {
     PLAIN,
     HILL,
     RIDGE,

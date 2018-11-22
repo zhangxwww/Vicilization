@@ -3,8 +3,9 @@ package team.vicilization.gameitem;
 public enum BuildingType {
 
     ACADEMY,
-    COMMERCIALCERTER,
-    INDUSTRIALPARK;
+
+    COMMERCIAL_CERTER,
+    INDUSTRIAL_PARK;
 
     @Override
     public String toString() {
