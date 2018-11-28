@@ -5,6 +5,8 @@ import team.vicilization.util.Position;
 
 import java.util.Vector;
 
+
+
 public interface Movable {
     Position currentLocation();
     int getMobility();
