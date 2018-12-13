@@ -528,13 +528,12 @@ public class MainGame extends State {
                 @Override
                 public void mouseClicked(MouseEvent event) {
                     JLabel square = (JLabel) getComponentAt(event.getX(), event.getY());
-                    if (square.getText() == "unit") {
-                        for (Unit u : units) {
-                            if (u.getPosition().getX() == event.getX() / 50
-                                    && u.getPosition().getY() == event.getY() / 50) {
-
+                    int posx = event.getX() / 50;
+                    int posy = event.getY() / 50;
+                    for (Unit u : units) {
+                        if (u.getPosition().equals(new Position(posx, posy))) {
+                            if (u.getCountry() == currentPlayer) {
                                 selectUnit(u);
-                                break;
                             }
                         }
                     }
