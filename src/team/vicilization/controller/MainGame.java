@@ -64,22 +64,25 @@ public class MainGame extends State {
         for (int i = 0; i < 2; i++) {
             Country country = new Country(countrys[i]);
             this.countries.add(country);
-            this.initUnitsForOneCountry(country);
+            this.initUnitsForOneCountry(country, i);
         }
         this.currentPlayer = this.countries.elementAt(0);
     }
 
-    private void initUnitsForOneCountry(Country country) {
+    private void initUnitsForOneCountry(Country country, int order) {
         Random initPosition = new Random();
         while (true) {
-            int x = initPosition.nextInt(40);
-            int y = initPosition.nextInt(30);
-            // TODO add following later
-//            LandSquare landSquare = mapArea.at(x, y);
-            if (true/*(landSquare.getTerrainType() == TerrainType.PLAIN
+            int xbias = order * GameMapConfig.MAP_WIDTH / 2;
+            int ybias = order * GameMapConfig.MAP_HEIGHT / 2;
+            int x = initPosition.nextInt(GameMapConfig.MAP_WIDTH / 2) + xbias;
+            int y = initPosition.nextInt(GameMapConfig.MAP_HEIGHT / 2) + ybias;
+            LandSquare landSquare = mapArea.at(x, y);
+            if ((landSquare.getTerrainType() == TerrainType.PLAIN
                     || landSquare.getTerrainType() == TerrainType.HILL)
-                    && (landSquare.getLandformType() == LandformType.GRASSLANDS)
-                    && (landSquare.getResourceType() == ResourceType.NONE)*/) {
+                    && (landSquare.getLandformType() == LandformType.GRASSLANDS
+                    || landSquare.getLandformType() == LandformType.RAINFOREST
+                    || landSquare.getLandformType() == LandformType.FOREST)
+                    && (landSquare.getResourceType() == ResourceType.NONE)) {
 
                 Position initPos = new Position(x, y);
                 Unit explorer = new Explorer(initPos);
@@ -313,12 +316,36 @@ public class MainGame extends State {
         }
 
         public LandSquare at(int x, int y) {
-            return mapPanel.map.getSquare(y, x);
+            return mapPanel.map.getSquare(x, y);
         }
 
         private class MapPanel extends JPanel {
             private Position bias;
             private GameMap map;
+
+            private ImageIcon hill_desert_icon;
+            private ImageIcon hill_frozenground_icon;
+            private ImageIcon hills_forest_icon;
+            private ImageIcon hills_grasslands_icon;
+            private ImageIcon hills_rainforest_icon;
+            private ImageIcon lake_icon;
+            private ImageIcon plain_desert_icon;
+            private ImageIcon plain_forest_icon;
+            private ImageIcon plain_frozenground_icon;
+            private ImageIcon plain_grasslands_icon;
+            private ImageIcon plain_marsh_icon;
+            private ImageIcon plain_rainforest_icon;
+            private ImageIcon ridge_icon;
+            private ImageIcon river_col_icon;
+            private ImageIcon river_ne_icon;
+            private ImageIcon river_nw_icon;
+            private ImageIcon river_row_icon;
+            private ImageIcon river_se_icon;
+            private ImageIcon river_sw_icon;
+
+            private ImageIcon constructor_icon;
+            private ImageIcon explorer_icon;
+            private ImageIcon footman_icon;
 
             public MapPanel() {
                 super();
@@ -326,21 +353,144 @@ public class MainGame extends State {
 
                 this.setLayout(null);
 
+                this.initIcons();
+
                 // TODO this will change later
                 this.setBounds(0, 0,
-                        40 * 50, 30 * 50);
+                        GameMapConfig.MAP_WIDTH * 50,
+                        GameMapConfig.MAP_HEIGHT * 50);
 
                 MapMouseEventListener dragScreen = new MapMouseEventListener();
                 this.addMouseListener(dragScreen);
                 this.addMouseMotionListener(dragScreen);
 
+                this.initSquares();
                 this.drawMapWithoutUnits();
+                this.repaint();
+            }
+
+            private void initIcons() {
+                this.hill_desert_icon = new ImageIcon("./Resource/terrain/hill_desert.png");
+                this.hill_frozenground_icon = new ImageIcon("./Resource/terrain/hill_frozenground.png");
+                this.hills_forest_icon = new ImageIcon("./Resource/terrain/hills_forest.png");
+                this.hills_grasslands_icon = new ImageIcon("./Resource/terrain/hills_grasslands.png");
+                this.hills_rainforest_icon = new ImageIcon("./Resource/terrain/hills_rainforest.png");
+                this.lake_icon = new ImageIcon("./Resource/terrain/lake.png");
+                this.plain_desert_icon = new ImageIcon("./Resource/terrain/plain_desert.png");
+                this.plain_forest_icon = new ImageIcon("./Resource/terrain/plain_forest.png");
+                this.plain_frozenground_icon = new ImageIcon("./Resource/terrain/plain_frozenground.png");
+                this.plain_grasslands_icon = new ImageIcon("./Resource/terrain/plain_grasslands.png");
+                this.plain_marsh_icon = new ImageIcon("./Resource/terrain/plain_marsh.png");
+                this.plain_rainforest_icon = new ImageIcon("./Resource/terrain/plain_rainforest.png");
+                this.ridge_icon = new ImageIcon("./Resource/terrain/ridge.png");
+                this.river_col_icon = new ImageIcon("./Resource/terrain/river_col.png");
+                this.river_ne_icon = new ImageIcon("./Resource/terrain/river_ne.png");
+                this.river_nw_icon = new ImageIcon("./Resource/terrain/river_nw.png");
+                this.river_row_icon = new ImageIcon("./Resource/terrain/river_row.png");
+                this.river_se_icon = new ImageIcon("./Resource/terrain/river_se.png");
+                this.river_sw_icon = new ImageIcon("./Resource/terrain/river_sw.png");
+
+                this.constructor_icon = new ImageIcon("./Resource/unit/constructor.png");
+                this.explorer_icon = new ImageIcon("./Resource/unit/explorer.png");
+                this.footman_icon = new ImageIcon("./Resource/unit/footman.png");
+            }
+
+            private void initSquares() {
+                for (int i = 0; i < GameMapConfig.MAP_HEIGHT; i++) {
+                    for (int j = 0; j < GameMapConfig.MAP_WIDTH; j++) {
+                        JLabel square = new JLabel();
+                        square.setOpaque(true);
+                        square.setBounds(
+                                j * 50, i * 50,
+                                50, 50);
+                        this.add(square);
+                    }
+                }
             }
 
             private void drawMapWithoutUnits() {
+                for (int i = 0; i < GameMapConfig.MAP_HEIGHT; i++) {
+                    for (int j = 0; j < GameMapConfig.MAP_WIDTH; j++) {
+                        JLabel square = (JLabel) getComponentAt(
+                                j * 50, i * 50);
+                        switch (map.getSquare(j, i).getTerrainType()) {
+                            case HILL:
+                                switch (map.getSquare(j, i).getLandformType()) {
+                                    case DESERT:
+                                        square.setIcon(hill_desert_icon);
+                                        break;
+                                    case FROZENGROUND:
+                                        square.setIcon(hill_frozenground_icon);
+                                        break;
+                                    case FOREST:
+                                        square.setIcon(hills_forest_icon);
+                                        break;
+                                    case GRASSLANDS:
+                                        square.setIcon(hills_grasslands_icon);
+                                        break;
+                                    case RAINFOREST:
+                                        square.setIcon(hills_rainforest_icon);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case LAKE:
+                                square.setIcon(lake_icon);
+                                break;
+                            case PLAIN:
+                                switch (map.getSquare(j, i).getLandformType()) {
+                                    case DESERT:
+                                        square.setIcon(plain_desert_icon);
+                                        break;
+                                    case FOREST:
+                                        square.setIcon(plain_forest_icon);
+                                        break;
+                                    case FROZENGROUND:
+                                        square.setIcon(plain_frozenground_icon);
+                                        break;
+                                    case GRASSLANDS:
+                                        square.setIcon(plain_grasslands_icon);
+                                        break;
+                                    case MARSH:
+                                        square.setIcon(plain_marsh_icon);
+                                        break;
+                                    case RAINFOREST:
+                                        square.setIcon(plain_rainforest_icon);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case RIDGE:
+                                square.setIcon(ridge_icon);
+                                break;
+                            case RIVER_COL:
+                                square.setIcon(river_col_icon);
+                                break;
+                            case RIVER_NE:
+                                square.setIcon(river_ne_icon);
+                                break;
+                            case RIVER_NW:
+                                square.setIcon(river_nw_icon);
+                                break;
+                            case RIVER_ROW:
+                                square.setIcon(river_row_icon);
+                                break;
+                            case RIVER_SE:
+                                square.setIcon(river_se_icon);
+                                break;
+                            case RIVER_SW:
+                                square.setIcon(river_sw_icon);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
                 // TODO this will be rewriten later
-                for (int i = 0; i < 40; i++) {
-                    for (int j = 0; j < 50; j++) {
+                /*for (int i = 0; i < GameMapConfig.MAP_HEIGHT; i++) {
+                    for (int j = 0; j < GameMapConfig.MAP_WIDTH; j++) {
                         JLabel square = new JLabel();
                         square.setOpaque(true);
                         if ((i + j) % 2 == 0) {
@@ -354,7 +504,7 @@ public class MainGame extends State {
                                 50, 50);
                         this.add(square);
                     }
-                }
+                }*/
             }
 
             public void drawUnits() {
@@ -362,11 +512,16 @@ public class MainGame extends State {
             }
 
             private void addUnit(Unit unit, Position position) {
-                // TODO rewrite later
                 JLabel square = (JLabel) getComponentAt(
                         position.getX() * 50, position.getY() * 50);
-                square.setBackground(Color.ORANGE);
-                square.setText("unit");
+                switch (unit.getSubType()) {
+                    case EXPLORER:
+                        square.setIcon(explorer_icon);
+                        break;
+                    // TODO add other
+                    default:
+                        break;
+                }
             }
 
             private class MapMouseEventListener implements MouseInputListener {
