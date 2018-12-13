@@ -5,6 +5,7 @@ public interface Selectable {
     SelectableType type = SelectableType.CITY;
     SelectableSubType subType = SelectableSubType.CITY;
 
-    boolean ableToSelect();
-    void setAbleToSelect(boolean able);
+    public boolean ableToSelect();
+
+    public void setAbleToSelect(boolean able);
 }

@@ -5,14 +5,14 @@ import team.vicilization.gamemap.*;
 
 public class UnitInfo {
     //========================Attributes======================//
-    int attack;
-    int defence;
-    int mobility;
-    int productivityCost;
-    int moneyCost;
+    private int attack;
+    private int defence;
+    private int mobility;
+    private int productivityCost;
+    private int moneyCost;
 
-    ScienceName requiredScience;
-    ResourceType requiredResource;
+    private ScienceName requiredScience;
+    private ResourceType requiredResource;
 
     //========================Get-Set Methods======================//
 

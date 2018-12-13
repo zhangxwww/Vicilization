@@ -1,6 +1,7 @@
 package team.vicilization.gameitem;
 
 public interface Producable {
-    int moneyCost();
-    int productivityCost();
+    public int moneyCost();
+
+    public int productivityCost();
 }

@@ -502,6 +502,12 @@ public class MainGame extends State {
                     case EXPLORER:
                         square.setIcon(explorer_icon);
                         break;
+                    case CONSTRUCTOR:
+                        square.setIcon(constructor_icon);
+                        break;
+                    case FOOTMAN:
+                        square.setIcon(footman_icon);
+                        break;
                     // TODO add other
                     default:
                         break;
