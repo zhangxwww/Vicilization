@@ -10,6 +10,7 @@ import team.vicilization.gameitem.*;
 import team.vicilization.mechanics.Leader;
 import team.vicilization.mechanics.ScienceName;
 import team.vicilization.mechanics.Trader;
+
 import team.vicilization.util.Position;
 
 public class Country {
@@ -31,12 +32,13 @@ public class Country {
     private CountryStockValue stockValue;  //TODO 接口文件中首字母？
 
     public Country(CountryName name) {
-        // TODO
+        this.countryName = name;
     }
 
     public void readyForNewRound() {
         // TODO 这里要执行计算存量流量、推进项目、城市恢复等一系列会在每一回合开始执行的任务
     }
+
 
     public void addNewUnit(Unit unit, Position position) {
 
@@ -83,8 +85,7 @@ public class Country {
     //TODO 没有Set cities/units/traders 等Vector或其他类?
 
     public CountryName getCountryName() {
-        return CountryName.INDIA;
-        // return countryName;
+        return countryName;
     }
 
     public int getOccupiedTradeRoutes() {

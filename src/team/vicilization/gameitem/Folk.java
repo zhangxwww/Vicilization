@@ -1,9 +1,13 @@
 package team.vicilization.gameitem;
 
-public class Folk extends Unit{
 
-    public Folk() {
-        super();
+import team.vicilization.country.Country;
+import team.vicilization.util.Position;
+
+public abstract class Folk extends Unit {
+
+    public Folk(Position position, Country country) {
+        super(position, country);
+        setType(UnitType.FOLK);
     }
-
 }
