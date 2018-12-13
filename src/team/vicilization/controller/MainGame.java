@@ -85,7 +85,7 @@ public class MainGame extends State {
                     && (landSquare.getResourceType() == ResourceType.NONE)) {
 
                 Position initPos = new Position(x, y);
-                Unit explorer = new Explorer(initPos);
+                Unit explorer = new Explorer(initPos, country);
                 country.addNewUnit(explorer, initPos);
                 this.units.add(explorer);
                 this.mapArea.addUnitInMap(explorer, initPos);
@@ -413,6 +413,7 @@ public class MainGame extends State {
                     for (int j = 0; j < GameMapConfig.MAP_WIDTH; j++) {
                         JLabel square = (JLabel) getComponentAt(
                                 j * 50, i * 50);
+                        square.setBackground(Color.WHITE);
                         switch (map.getSquare(j, i).getTerrainType()) {
                             case HILL:
                                 switch (map.getSquare(j, i).getLandformType()) {
@@ -488,23 +489,6 @@ public class MainGame extends State {
                         }
                     }
                 }
-                // TODO this will be rewriten later
-                /*for (int i = 0; i < GameMapConfig.MAP_HEIGHT; i++) {
-                    for (int j = 0; j < GameMapConfig.MAP_WIDTH; j++) {
-                        JLabel square = new JLabel();
-                        square.setOpaque(true);
-                        if ((i + j) % 2 == 0) {
-                            square.setBackground(Color.BLACK);
-                        } else {
-                            square.setBackground(Color.WHITE);
-                        }
-                        square.setText("" + i + "" + j);
-                        square.setBounds(
-                                j * 50, i * 50,
-                                50, 50);
-                        this.add(square);
-                    }
-                }*/
             }
 
             public void drawUnits() {
@@ -522,6 +506,8 @@ public class MainGame extends State {
                     default:
                         break;
                 }
+                square.setBackground(CountryConfig.COLOR_OF_COUNTRY
+                        .get(unit.getCountry().getCountryName()));
             }
 
             private class MapMouseEventListener implements MouseInputListener {

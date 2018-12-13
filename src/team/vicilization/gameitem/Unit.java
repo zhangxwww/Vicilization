@@ -14,12 +14,9 @@ public abstract class Unit {
     protected UnitInfo unitInfo;
 
 
-    public Unit() {
-
-    }
-
-    public Unit(Position position) {
+    public Unit(Position position, Country country) {
         this.position = position;
+        this.country = country;
     }
 
     public Position getPosition() {
@@ -27,6 +24,10 @@ public abstract class Unit {
     }
 
     public void delete() {
+    }
+
+    public Country getCountry() {
+        return country;
     }
 
     public UnitType getType() {

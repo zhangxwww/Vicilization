@@ -18,26 +18,26 @@ public class GameMapConfig {
     public static final int MOUNTAIN_NUM = 4;
     public static final int MOUNTAIN_SERIAL = 2;
     public static final int[][][] RIDGE_XY = {
-            {{0,0},{1,0},{1,1},{2,1},{2,2}},
-            {{0,0},{0,1},{0,2},{1,2}}
+            {{0, 0}, {1, 0}, {1, 1}, {2, 1}, {2, 2}},
+            {{0, 0}, {0, 1}, {0, 2}, {1, 2}}
     };
 
     public static final int RIVER_SERIAL = 2;
     public static final int[][][] RIVER_XY = {
-            {{0,0},{1,0},{2,0},{3,0},{3,1},{4,1}},
-            {{0,0},{0,1},{0,2},{-1,2}}
+            {{0, 0}, {1, 0}, {2, 0}, {3, 0}, {3, 1}, {4, 1}},
+            {{0, 0}, {0, 1}, {0, 2}, {-1, 2}}
     };
     public static final TerrainType[][] RIVER_KIND = {
             {TerrainType.RIVER_ROW,
-            TerrainType.RIVER_ROW,
-            TerrainType.RIVER_ROW,
-            TerrainType.RIVER_SW,
-            TerrainType.RIVER_NE,
-            TerrainType.LAKE},
+                    TerrainType.RIVER_ROW,
+                    TerrainType.RIVER_ROW,
+                    TerrainType.RIVER_SW,
+                    TerrainType.RIVER_NE,
+                    TerrainType.LAKE},
             {TerrainType.RIVER_COL,
-            TerrainType.RIVER_COL,
-            TerrainType.RIVER_NW,
-            TerrainType.LAKE}
+                    TerrainType.RIVER_COL,
+                    TerrainType.RIVER_NW,
+                    TerrainType.LAKE}
     };
 
     public static final double RAND_LEVEL0 = 0.50;
@@ -227,4 +227,7 @@ public class GameMapConfig {
 
         }
     };
+
+    private GameMapConfig() {
+    }
 }
