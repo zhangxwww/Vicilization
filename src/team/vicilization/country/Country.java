@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import team.vicilization.gameitem.*;
+import team.vicilization.gamemap.LandformType;
+import team.vicilization.gamemap.ResourceType;
+import team.vicilization.mechanics.GiantName;
 import team.vicilization.mechanics.Leader;
 import team.vicilization.mechanics.ScienceName;
 import team.vicilization.mechanics.Trader;
@@ -27,6 +30,7 @@ public class Country {
 
     private HashMap<String, Integer> countryResource;
     private Vector<ScienceName> learntScience;
+    private ScienceName currentScience;
 
     private CountryFlowValue flowValue;
     private CountryStockValue stockValue;  //TODO 接口文件中首字母？
@@ -39,13 +43,15 @@ public class Country {
         // TODO 这里要执行计算存量流量、推进项目、城市恢复等一系列会在每一回合开始执行的任务
     }
 
-
-    public void addNewUnit(Unit unit, Position position) {
-
+    public void updateStock() {
+        // TODO
+        // TODO private?
+        // TODO city stock/flow and country stock/flow
     }
 
-    public void buildNewCity(Position position) {
-
+    public void pushProject() {
+        // TODO
+        // TODO private?
     }
 
     private void calculateFlowValue() {
@@ -56,9 +62,83 @@ public class Country {
         // TODO
     }
 
-    public boolean judgeVectory() {
+    /*
+    private void calculateTradeMoney() {
+        // delete or not
+    }
+    */
+
+    public void buildNewCity(Position position) {
+        // TODO return city?
+    }
+
+    public void occupyCity(City city) {
+        this.cities.remove(city);
+        // TODO need for position?
+        // TODO need for re calculating?
+    }
+
+    public void loseCity(City city) {
+
+    }
+
+    public void addNewUnit(Unit unit, Position position) {
+        this.units.add(unit);
+        // TODO need for position?
+        // TODO need for re calculating?
+        // TODO call city add?
+    }
+
+    public void deleteUnit(Unit unit) {
+        this.units.remove(unit);
+        // TODO need for position?
+        // TODO need for re calculating?
+    }
+
+    public void selectScience(ScienceName scienceName) {
+
+    }
+
+    public ScienceName finishScience() {
+        return ScienceName.MATH;
+        // TODO other science
+        // TODO private
+    }
+
+    /*
+    public ResourceType harvestResource(LandformType landformType){
+        // TODO modify in 接口？
+        // TODO private
+    }
+
+    public void addTradeRoute(){
+        // TODO private
+    }
+
+    public void startTradeRoute(){
+        // TODO private
+    }
+
+    public void tradeAdvance(){
+        // TODO private
+    }
+
+    public void endTrade(){
+        // TODO private
+    }
+    */
+
+    public void recruitGiant(GiantName giantName){
+        // TODO giantname??
+    }
+
+    public boolean judgeVictory() {
         // TODO
         return false;
+    }
+
+    public boolean hasCity(City city) {
+        return this.cities.contains(city);
     }
 
     //========================Get-Set Methods======================//
@@ -122,5 +202,6 @@ public class Country {
         return stockValue;
     }
 
+    //=========================remove add========================//
     //TODO 向量的remove add等
 }
