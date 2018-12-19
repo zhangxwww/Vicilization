@@ -9,10 +9,7 @@ import java.util.Vector;
 import team.vicilization.gameitem.*;
 import team.vicilization.gamemap.LandformType;
 import team.vicilization.gamemap.ResourceType;
-import team.vicilization.mechanics.GiantName;
-import team.vicilization.mechanics.Leader;
-import team.vicilization.mechanics.ScienceName;
-import team.vicilization.mechanics.Trader;
+import team.vicilization.mechanics.*;
 
 import team.vicilization.util.Position;
 
@@ -30,13 +27,15 @@ public class Country {
 
     private HashMap<String, Integer> countryResource;
     private Vector<ScienceName> learntScience;
-    private ScienceName currentScience;
+    private ScienceName currentScience = null;
+    // TODO current science name? Science是否常量？枚举？如何检索？
 
     private CountryFlowValue flowValue;
-    private CountryStockValue stockValue;  //TODO 接口文件中首字母？
+    private CountryStockValue stockValue;
 
     public Country(CountryName name) {
-        // TODO
+        this.countryName = name;
+        // TODO 有
     }
 
     public void readyForNewRound() {
@@ -46,16 +45,21 @@ public class Country {
     public void updateStock() {
         // TODO
         // TODO private?
+        // TODO duplicate with calculateStockValue?
         // TODO city stock/flow and country stock/flow
     }
 
     public void pushProject() {
+
         // TODO
         // TODO private?
     }
 
     private void calculateFlowValue() {
-        // TODO
+        for(City city:this.cities){
+            city.calculateFlowValue();
+        }
+        // TODO 如何拿到cityFlow? 一致性？
     }
 
     private void calculateStockValue() {
@@ -73,13 +77,15 @@ public class Country {
     }
 
     public void occupyCity(City city) {
-        this.cities.remove(city);
+        this.cities.add(city);
         // TODO need for position?
         // TODO need for re calculating?
     }
 
     public void loseCity(City city) {
-
+        this.cities.remove(city);
+        // TODO need for position?
+        // TODO need for re calculating?
     }
 
     public void addNewUnit(Unit unit, Position position) {
@@ -96,13 +102,24 @@ public class Country {
     }
 
     public void selectScience(ScienceName scienceName) {
-
+        this.currentScience = scienceName;
     }
 
     public ScienceName finishScience() {
-        return ScienceName.MATH;
+        if(this.currentScience == null){
+            return null;
+        }else if(this.stockValue.getScience() < this.currentScience){
+            return null;
+        }else{
+            ScienceName result = this.currentScience;
+            this.currentScience = null;
+            return result;
+        }
         // TODO other science
         // TODO private
+        // TODO how to find science?
+        // TODO 一旦调用，科技就不见？null试探和返回值如何处理?
+        // TODO 要求玩家必须选择在研究的science
     }
 
     /*
@@ -128,12 +145,12 @@ public class Country {
     }
     */
 
-    public void recruitGiant(GiantName giantName){
+    public void recruitGiant(Giant giant){
         // TODO giantname??
     }
 
     public boolean judgeVictory() {
-        // TODO
+        // TODO 什么是胜利条件
         return false;
     }
 
@@ -165,7 +182,7 @@ public class Country {
     //TODO 没有Set cities/units/traders 等Vector或其他类?
 
     public CountryName getCountryName() {
-        return CountryName.INDIA;
+        return this.countryName;
         // return countryName;
     }
 
