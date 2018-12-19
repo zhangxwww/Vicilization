@@ -28,7 +28,7 @@ public class Country {
     private HashMap<String, Integer> countryResource;
     private Vector<ScienceName> learntScience;
     private ScienceName currentScience = null;
-    // TODO current science name? Science是否常量？枚举？如何检索？
+    // TODO science map
 
     private CountryFlowValue flowValue;
     private CountryStockValue stockValue;
@@ -62,10 +62,6 @@ public class Country {
             city.calculateFlowValue();
         }
         // TODO 如何拿到cityFlow? 一致性？
-    }
-
-    private void calculateStockValue() {
-        // TODO
     }
 
     /*
@@ -110,9 +106,10 @@ public class Country {
     public ScienceName finishScience() {
         if(this.currentScience == null){
             return null;
-        }else if(this.stockValue.getScience() < this.currentScience){
+        }else if(this.stockValue.getScience() < ScienceConfig.SCIENCE_COST.get(this.currentScience)){
             return null;
         }else{
+            this.stockValue.setScience(this.stockValue.getScience() - ScienceConfig.SCIENCE_COST.get(this.currentScience));
             ScienceName result = this.currentScience;
             this.currentScience = null;
             return result;
