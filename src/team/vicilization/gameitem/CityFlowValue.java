@@ -2,13 +2,14 @@ package team.vicilization.gameitem;
 
 public class CityFlowValue {
 
-    private int productivity;
-    private int money;
-    private int food;
-    private int science;
-    private int scientistValue;
-    private int traderValue;
-    private int engineerValue;
+
+    private int productivity = 1;
+    private int money = 1;
+    private int food = 1;
+    private int science = 1;
+    private int scientistValue = 0;
+    private int traderValue = 0;
+    private int engineerValue = 0;
 
     public int getProductivity() {
         return productivity;
@@ -64,5 +65,6 @@ public class CityFlowValue {
 
     public void setEngineerValue(int engineerValue) {
         this.engineerValue = engineerValue;
+
     }
 }

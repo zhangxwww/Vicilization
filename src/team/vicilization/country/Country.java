@@ -13,6 +13,8 @@ import team.vicilization.mechanics.*;
 
 import team.vicilization.util.Position;
 
+import team.vicilization.util.Position;
+
 public class Country {
     //========================Attributes======================//
     private Leader leader;
@@ -34,6 +36,7 @@ public class Country {
     private CountryStockValue stockValue;
 
     public Country(CountryName name) {
+
         this.countryName = name;
 
         // TODO 有
@@ -43,6 +46,7 @@ public class Country {
     public void readyForNewRound() {
         // TODO 这里要执行计算存量流量、推进项目、城市恢复等一系列会在每一回合开始执行的任务
     }
+
 
     public void updateStock() {
         // TODO

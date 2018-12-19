@@ -69,6 +69,7 @@ public class MainGame extends State {
         this.currentPlayer = this.countries.elementAt(0);
     }
 
+
     private void initUnitsForOneCountry(Country country, int order) {
         Random initPosition = new Random();
         while (true) {
@@ -316,6 +317,7 @@ public class MainGame extends State {
         }
 
         public LandSquare at(int x, int y) {
+
             return mapPanel.map.getSquare(x, y);
         }
 
@@ -354,6 +356,7 @@ public class MainGame extends State {
                 this.setLayout(null);
 
                 this.initIcons();
+
 
                 // TODO this will change later
                 this.setBounds(0, 0,
@@ -528,6 +531,7 @@ public class MainGame extends State {
                 @Override
                 public void mouseClicked(MouseEvent event) {
                     JLabel square = (JLabel) getComponentAt(event.getX(), event.getY());
+
                     int posx = event.getX() / 50;
                     int posy = event.getY() / 50;
                     for (Unit u : units) {

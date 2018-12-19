@@ -21,10 +21,12 @@ public class LandSquare extends JLabel {
     //一旦初始化，terrain, landform 都不再变化
     void initLandSquare(TerrainType terrain,
                         LandformType landform,
-                        ResourceType resource) {
+                        ResourceType resource,
+                        Position position) {
         this.terrainType = terrain;
         this.landformType = landform;
         this.resourceType = resource;
+        this.position = position;
 
         this.calculateAll();
     }
