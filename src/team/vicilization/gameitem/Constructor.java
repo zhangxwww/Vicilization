@@ -1,18 +1,13 @@
 package team.vicilization.gameitem;
 
 import team.vicilization.country.Country;
-import team.vicilization.gamemap.ResourceType;
 import team.vicilization.util.Position;
-
-public class Constructor extends  Folk{
-    int times;
-    void reduceTimes(){
-        this.times-=1;
-    }
-
-    public Constructor(Country country, Position position){
-        this.type=UnitType.FOLK;
-        this.subType=UnitSubType.CONSTRUCTOR;
+import team.vicilization.gamemap.ResourceType;
+      
+public class Constructor extends Folk {
+    public Constructor(Position position, Country country) {
+        super(position, country);
+        setSubType(UnitSubType.CONSTRUCTOR);
         this.country=country;
         this.position=position;
         this.health=100;
@@ -25,7 +20,7 @@ public class Constructor extends  Folk{
         this.unitInfo.requiredResource= ResourceType.NONE;
         //this.unitInfo.requiredScience;
     }
-
+  
     public int getTimes() {
         return times;
     }

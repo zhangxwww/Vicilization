@@ -162,6 +162,7 @@ public class GameMap {
         int moistureY1 = (int) (Math.random() * GameMapConfig.MAP_HEIGHT);
         int moistureY2 = (int) (Math.random() * GameMapConfig.MAP_HEIGHT);
 
+
         for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
             for (int j = 0; j < GameMapConfig.MAP_HEIGHT; j++) {
                 this.moistureMap.get(i).set(j,
@@ -292,6 +293,7 @@ public class GameMap {
                                 this.landformMap.get(i).get(j),
                                 this.resourceMap.get(i).get(j),
                                 new Position(i, j)
+
                         );
             }
         }

@@ -8,23 +8,24 @@ import javax.swing.*;
 import java.util.Vector;
 
 public class City extends JButton {
-    CityName name;
-    int population;
-    Position location;
-    Country country;
-    CityFlowValue flowValue;
-    CityStockValue stockValue;
-    Vector<LandSquare> territory;
-    Vector<BuildingType> constructedBuildings;
-    Producable productingItem;
-    int cityAttack;
-    int cityDefence;
-    int cityHealth;
-    int recovery;
-    Vector<BuildingType> allowedBuildings;
-    Vector<Unit> allowedUnits;
+    private CityName name;
+    private int population;
+    private Position location;
+    private Country country;
+    private CityFlowValue flowValue;
+    private CityStockValue stockValue;
+    private Vector<LandSquare> territory;
+    private Vector<BuildingType> constructedBuildings;
+    private Producable productingItem;
+    private int cityAttack;
+    private int cityDefence;
+    private int cityHealth;
+    private int recovery;
+    private Vector<BuildingType> allowedBuildings;
+    private Vector<Unit> allowedUnits;
 
     public City(Country country, Position position) {
+
         this.name=CityName.BOMBAY;
         this.population=1;
         this.location=position;
@@ -44,7 +45,9 @@ public class City extends JButton {
     }
 
     public void recover() {
+
         this.cityHealth+=this.recovery;
+
     }
 
     public void produce(Producable production) {

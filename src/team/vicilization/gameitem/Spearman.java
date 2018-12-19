@@ -5,12 +5,9 @@ import team.vicilization.gamemap.ResourceType;
 import team.vicilization.util.Position;
 
 public class Spearman extends Fighter {
-
-    public Spearman(Country country, Position position){
-        this.type=UnitType.FIGHTER;
-        this.subType=UnitSubType.SPEARMAN;
-        this.country=country;
-        this.position=position;
+    public Spearman(Position position, Country country) {
+        super(position, country);
+        setSubType(UnitSubType.SPEARMAN);
         this.health=100;
         this.unitInfo.attack=5;
         this.unitInfo.defence=3;

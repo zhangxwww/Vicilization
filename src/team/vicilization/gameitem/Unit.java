@@ -9,18 +9,23 @@ import javax.swing.*;
 import java.lang.annotation.Annotation;
 import java.util.Vector;
 
-public class Unit implements Movable,Selectable,Producable,Affiliable{
-    UnitType type;
-    UnitSubType subType;
-    Country country;
-    Position position;
-    int health;
-    UnitInfo unitInfo=new UnitInfo();
+public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
+    protected UnitType type;
+    protected UnitSubType subType;
+    protected Country country;
+    protected Position position;
+    protected int health;
+    protected UnitInfo unitInfo=new UnitInfo();
 
 
-    boolean movedThisTurn;
-    boolean attackedThisTurn;
+    protected boolean movedThisTurn;
+    protected boolean attackedThisTurn;
 
+    public Unit(Position position, Country country) {
+        this.position = position;
+        this.country = country;
+    }
+    
     public void delete(){
 
     }
@@ -125,6 +130,7 @@ public class Unit implements Movable,Selectable,Producable,Affiliable{
     public void moveTo(Position pos) {
         this.setPosition(pos);
     }
+    
 
 //------------------------------------------Fightable
 
@@ -156,16 +162,25 @@ public class Unit implements Movable,Selectable,Producable,Affiliable{
         this.position = position;
     }
 
-    public Unit() {
 
+    public Country getCountry() {
+        return country;
     }
 
-    public Unit(Position position) {
-        this.position = position;
+    public UnitType getType() {
+        return type;
     }
 
-    public Position getPosition() {
-        return position;
+    public UnitSubType getSubType() {
+        return subType;
+    }
+
+    public void setType(UnitType type) {
+        this.type = type;
+    }
+
+    public void setSubType(UnitSubType subType) {
+        this.subType = subType;
     }
 
 }

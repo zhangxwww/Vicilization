@@ -1,13 +1,13 @@
 package team.vicilization.gameitem;
 
 public class CityStockValue {
-    int producticity;
-    int money;
-    int food;
-    int science;
-    int scientistValue;
-    int traderValue;
-    int engineerValue;
+    private int producticity;
+    private int money;
+    private int food;
+    private int science;
+    private int scientistValue;
+    private int traderValue;
+    private int engineerValue;
 
     public CityStockValue(){
         this.producticity=0;

@@ -5,12 +5,9 @@ import team.vicilization.gamemap.ResourceType;
 import team.vicilization.util.Position;
 
 public class Knight extends Fighter {
-
-    public Knight(Country country, Position position){
-        this.type=UnitType.FIGHTER;
-        this.subType=UnitSubType.KNIGHT;
-        this.country=country;
-        this.position=position;
+    public Knight(Position position, Country country) {
+        super(position, country);
+        setSubType(UnitSubType.KNIGHT);
         this.health=100;
         this.unitInfo.attack=4;
         this.unitInfo.defence=3;

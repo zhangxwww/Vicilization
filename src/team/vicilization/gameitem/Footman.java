@@ -4,14 +4,12 @@ import team.vicilization.country.Country;
 import team.vicilization.gamemap.ResourceType;
 import team.vicilization.util.Position;
 
+
+
 public class Footman extends Fighter {
-
-
-    public Footman(Country country, Position position){
-        this.type=UnitType.FIGHTER;
-        this.subType=UnitSubType.FOOTMAN;
-        this.country=country;
-        this.position=position;
+    public Footman(Position position, Country country) {
+        super(position, country);
+        setSubType(UnitSubType.FOOTMAN);
         this.health=100;
         this.unitInfo.attack=3;
         this.unitInfo.defence=4;

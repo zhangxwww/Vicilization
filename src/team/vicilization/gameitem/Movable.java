@@ -6,11 +6,14 @@ import team.vicilization.util.Position;
 
 import java.util.Vector;
 
-
-
 public interface Movable {
-    Position currentLocation();
-    int getMobility();
-    Vector<LandSquare> getAvailableLocation(GameMap map);
-    void moveTo(Position pos);
+
+    public Position currentLocation();
+
+    public int getMobility();
+
+    public Vector<LandSquare> getAvailableLocation(GameMap map);
+
+    public void moveTo(Position pos);
+
 }
