@@ -24,9 +24,9 @@ public class City extends JButton {
     private Vector<BuildingType> allowedBuildings;
     private Vector<Unit> allowedUnits;
 
-    public City(Country country, Position position) {
+    public City(Country country, Position position,CityName name) {
 
-        this.name=CityName.BOMBAY;
+        this.name=name;
         this.population=1;
         this.location=position;
         this.country=country;
@@ -40,23 +40,60 @@ public class City extends JButton {
 
     }
 
-    public void updateStock() {
+    private void calculateFlowValue() {
+        this.flowValue=new CityFlowValue();
+        //地块产出
+        CityFlowValue territoryFlowValue=new CityFlowValue();
+        for(LandSquare land:territory){
+            territoryFlowValue.setFood(land.getFoodYield());
+            territoryFlowValue.setMoney(land.getMoneyYield());
+            territoryFlowValue.setScience(land.getScienceYield());
+            territoryFlowValue.setProductivity(land.getProductivityYield());
+        }
+        this.flowValue.addValue(territoryFlowValue);
+        //人口产出
+        CityFlowValue populationFlowValue=new CityFlowValue();
+        populationFlowValue.setProductivity(this.population);
+        populationFlowValue.setScience(this.population);
+        populationFlowValue.setMoney(this.population);
+        populationFlowValue.setFood(-this.population);
+        this.flowValue.addValue(populationFlowValue);
+        //建筑产出
+        CityFlowValue buildingFlowValue=new CityFlowValue();
+        if(constructedBuildings.contains(BuildingType.ACADEMY)){
+            buildingFlowValue.setScience(5);
+            buildingFlowValue.setScientistValue(5);
+        }else if(constructedBuildings.contains(BuildingType.COMMERCIAL_CERTER)){
+            buildingFlowValue.setMoney(5);
+            buildingFlowValue.setTraderValue(5);
+        }else if(constructedBuildings.contains(BuildingType.INDUSTRIAL_PARK)){
+            buildingFlowValue.setProductivity(5);
+            buildingFlowValue.setEngineerValue(5);
+        }
+        this.flowValue.addValue(buildingFlowValue);
+
 
     }
 
-    public void recover() {
 
-        this.cityHealth+=this.recovery;
+    public void updateStock() {
+        stockValue.addFlow(flowValue);
+    }
 
+    public void recover(){
+        int initHealth=100;
+        if (cityHealth<initHealth-recovery){
+            cityHealth+=recovery;
+        }else {
+            cityHealth=initHealth;
+        }
     }
 
     public void produce(Producable production) {
 
     }
 
-    public void calculateFlowValue() {
 
-    }
 
     public void addNewUnit(Unit unit) {
 

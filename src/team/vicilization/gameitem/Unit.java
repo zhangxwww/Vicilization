@@ -10,16 +10,19 @@ import java.lang.annotation.Annotation;
 import java.util.Vector;
 
 public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
+
     protected UnitType type;
     protected UnitSubType subType;
     protected Country country;
     protected Position position;
     protected int health;
     protected UnitInfo unitInfo;
+    protected static int unitRecover;
 
 
     protected boolean movedThisTurn;
     protected boolean attackedThisTurn;
+
 
     public Unit(Position position, Country country,UnitType unitType,UnitSubType unitSubType) {
         this.position = position;
@@ -32,6 +35,14 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
     
     public void delete(){
 
+    }
+    public void recover(){
+        int initHealth=GameItemConfig.UNIT_HEALTH.get(this.subType);
+        if (health<initHealth-unitRecover){
+            health+=unitRecover;
+        }else {
+            health=initHealth;
+        }
     }
 
 
