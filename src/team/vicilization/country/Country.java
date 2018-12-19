@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import team.vicilization.gameitem.*;
-import team.vicilization.mechanics.Leader;
-import team.vicilization.mechanics.ScienceName;
-import team.vicilization.mechanics.Trader;
+import team.vicilization.gamemap.LandformType;
+import team.vicilization.gamemap.ResourceType;
+import team.vicilization.mechanics.*;
 
 import team.vicilization.util.Position;
 
@@ -27,38 +27,137 @@ public class Country {
 
     private HashMap<String, Integer> countryResource;
     private Vector<ScienceName> learntScience;
+    private ScienceName currentScience = null;
+    // TODO current science name? Science是否常量？枚举？如何检索？
 
     private CountryFlowValue flowValue;
-    private CountryStockValue stockValue;  //TODO 接口文件中首字母？
+    private CountryStockValue stockValue;
 
     public Country(CountryName name) {
         this.countryName = name;
+
+        // TODO 有
+
     }
 
     public void readyForNewRound() {
         // TODO 这里要执行计算存量流量、推进项目、城市恢复等一系列会在每一回合开始执行的任务
     }
 
-
-    public void addNewUnit(Unit unit, Position position) {
-
+    public void updateStock() {
+        // TODO
+        // TODO private?
+        // TODO duplicate with calculateStockValue?
+        // TODO city stock/flow and country stock/flow
     }
 
-    public void buildNewCity(Position position) {
+    public void pushProject() {
 
+        // TODO
+        // TODO private?
     }
 
     private void calculateFlowValue() {
-        // TODO
+        for(City city:this.cities){
+            city.calculateFlowValue();
+        }
+        // TODO 如何拿到cityFlow? 一致性？
     }
 
     private void calculateStockValue() {
         // TODO
     }
 
-    public boolean judgeVectory() {
-        // TODO
+    /*
+    private void calculateTradeMoney() {
+        // delete or not
+    }
+    */
+
+    public void buildNewCity(Position position) {
+        // TODO return city?
+    }
+
+    public void occupyCity(City city) {
+        this.cities.add(city);
+        // TODO need for position?
+        // TODO need for re calculating?
+    }
+
+    public void loseCity(City city) {
+        this.cities.remove(city);
+        // TODO need for position?
+        // TODO need for re calculating?
+    }
+
+    public void addNewUnit(Unit unit, Position position) {
+        this.units.add(unit);
+        // TODO need for position?
+        // TODO need for re calculating?
+        // TODO call city add?
+    }
+
+    public void deleteUnit(Unit unit) {
+        this.units.remove(unit);
+        // TODO need for position?
+        // TODO need for re calculating?
+    }
+
+    public void selectScience(ScienceName scienceName) {
+        this.currentScience = scienceName;
+    }
+
+    public ScienceName finishScience() {
+        if(this.currentScience == null){
+            return null;
+        }else if(this.stockValue.getScience() < this.currentScience){
+            return null;
+        }else{
+            ScienceName result = this.currentScience;
+            this.currentScience = null;
+            return result;
+        }
+        // TODO other science
+        // TODO private
+        // TODO how to find science?
+        // TODO 一旦调用，科技就不见？null试探和返回值如何处理?
+        // TODO 要求玩家必须选择在研究的science
+    }
+
+    /*
+    public ResourceType harvestResource(LandformType landformType){
+        // TODO modify in 接口？
+        // TODO private
+    }
+
+    public void addTradeRoute(){
+        // TODO private
+    }
+
+    public void startTradeRoute(){
+        // TODO private
+    }
+
+    public void tradeAdvance(){
+        // TODO private
+    }
+
+    public void endTrade(){
+        // TODO private
+    }
+    */
+
+    public void recruitGiant(Giant giant){
+        // TODO giantname??
+    }
+
+    public boolean judgeVictory() {
+        // TODO 什么是胜利条件
         return false;
+    }
+
+    public boolean hasCity(City city) {
+        return this.cities.contains(city);
     }
 
     //========================Get-Set Methods======================//
@@ -85,7 +184,10 @@ public class Country {
     //TODO 没有Set cities/units/traders 等Vector或其他类?
 
     public CountryName getCountryName() {
-        return countryName;
+
+        return this.countryName;
+        // return countryName;
+
     }
 
     public int getOccupiedTradeRoutes() {
@@ -121,5 +223,6 @@ public class Country {
         return stockValue;
     }
 
+    //=========================remove add========================//
     //TODO 向量的remove add等
 }
