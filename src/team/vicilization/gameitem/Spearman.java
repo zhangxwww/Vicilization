@@ -17,7 +17,7 @@ public class Spearman extends Fighter {
         this.unitInfo.mobility=3;
         this.unitInfo.productivityCost=2;
         this.unitInfo.moneyCost=70;
-        this.unitInfo.requiredResource= ResourceType.STONE;
+        this.unitInfo.requiredResource= ResourceType.NONE;
         //this.unitInfo.requiredScience;
     }
 }

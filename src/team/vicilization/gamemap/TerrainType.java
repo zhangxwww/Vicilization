@@ -1,11 +1,17 @@
 package team.vicilization.gamemap;
 
-enum TerrainType {
+public enum TerrainType {
     PLAIN,
     HILL,
     RIDGE,
     LAKE,
-    RIVER;
+    RIVER_ROW,
+    RIVER_COL,
+    RIVER_NE,
+    RIVER_NW,
+    RIVER_SE,
+    RIVER_SW,
+    ;
 
     public int getMobilityCost() {
         return GameMapConfig.TERRAIN_MOBILITY_COST.get(this);

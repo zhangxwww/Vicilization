@@ -17,7 +17,7 @@ public class Knight extends Fighter {
         this.unitInfo.mobility=5;
         this.unitInfo.productivityCost=5;
         this.unitInfo.moneyCost=150;
-        this.unitInfo.requiredResource= ResourceType.HORSE;
+        this.unitInfo.requiredResource= ResourceType.NONE;
         //this.unitInfo.requiredScience;
     }
 }

@@ -24,28 +24,50 @@ public class City extends JButton {
     Vector<BuildingType> allowedBuildings;
     Vector<Unit> allowedUnits;
 
-    private void updateStock(){
+    public City(Country country, Position position) {
+        this.name=CityName.BOMBAY;
+        this.population=1;
+        this.location=position;
+        this.country=country;
+        this.flowValue=new CityFlowValue();
+        this.stockValue=new CityStockValue();
+        this.cityAttack=2;
+        this.cityDefence=2;
+        this.cityHealth=100;
+        this.recovery=10;
+
 
     }
-    private void recover(){
+
+    public void updateStock() {
 
     }
-    private  void produce(Producable production){
+
+    public void recover() {
+        this.cityHealth+=this.recovery;
+    }
+
+    public void produce(Producable production) {
 
     }
-    private void calculateFlowValue(){
+
+    public void calculateFlowValue() {
 
     }
-    private void addNewUnit(Unit unit){
+
+    public void addNewUnit(Unit unit) {
 
     }
-    private void addNewBuilding(BuildingType buildingType){
+
+    public void addNewBuilding(BuildingType buildingType) {
 
     }
-    private boolean belongsTo(Country country){
+
+    public boolean belongsTo(Country country) {
         return false;
     }
-    private boolean hasLandSquare(LandSquare landform){
+
+    public boolean hasLandSquare(LandSquare landform) {
         return false;
     }
 }

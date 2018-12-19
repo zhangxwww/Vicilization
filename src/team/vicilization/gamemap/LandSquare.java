@@ -2,16 +2,14 @@ package team.vicilization.gamemap;
 
 import team.vicilization.util.Position;
 
-import javax.swing.JLabel;
+import javax.swing.*;
 
 public class LandSquare extends JLabel {
     //========================Attributes======================//
     private TerrainType terrainType;
     private LandformType landformType;
     private ResourceType resourceType;
-
     private Position position;
-
     private boolean isMarked;
     private int mobilityCost;
     private int defenceBuff;
@@ -21,9 +19,16 @@ public class LandSquare extends JLabel {
     private int scienceYield;
 
     //一旦初始化，terrain, landform 都不再变化
-    void initLandSquare(Position pos) {
-        //TODO Relationship to GameMap
-        //TODO Calculate
+    void initLandSquare(TerrainType terrain,
+                        LandformType landform,
+                        ResourceType resource,
+                        Position position) {
+        this.terrainType = terrain;
+        this.landformType = landform;
+        this.resourceType = resource;
+        this.position = position;
+
+        this.calculateAll();
     }
 
     ResourceType exploit(){
@@ -42,7 +47,7 @@ public class LandSquare extends JLabel {
     }
 
     //========================Calculate Methods======================//
-    public void calculateAll(){
+    private void calculateAll(){
         this.calMobilityCost();
         this.calDefenceBuff();
         this.calFoodYield();
@@ -99,6 +104,7 @@ public class LandSquare extends JLabel {
     public ResourceType getResourceType() {
         return resourceType;
     }
+
 
 
 

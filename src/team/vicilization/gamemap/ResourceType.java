@@ -1,11 +1,12 @@
 package team.vicilization.gamemap;
 
 public enum ResourceType {
-    NONE,
+
+    NONE/*,
     HORSE,
     IRON,
     STONE,
-    COPPER;
+    COPPER*/;
 
     public int getMobilityCost() {
         return GameMapConfig.RESOURCE_MOBILITY_COST.get(this);

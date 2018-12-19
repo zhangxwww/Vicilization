@@ -1,6 +1,7 @@
 package team.vicilization.gameitem;
 
 import team.vicilization.country.Country;
+import team.vicilization.gamemap.GameMap;
 import team.vicilization.gamemap.LandSquare;
 import team.vicilization.util.Position;
 
@@ -8,7 +9,7 @@ import javax.swing.*;
 import java.lang.annotation.Annotation;
 import java.util.Vector;
 
-public class Unit extends JButton implements Movable,Selectable,Producable,Affiliable{
+public class Unit implements Movable,Selectable,Producable,Affiliable{
     UnitType type;
     UnitSubType subType;
     Country country;
@@ -21,18 +22,11 @@ public class Unit extends JButton implements Movable,Selectable,Producable,Affil
     boolean attackedThisTurn;
 
     public void delete(){
-        setVisible(false);
-        setEnabled(false);
+
     }
 
 
-    class availablePositionInfo{
-        int lowestMobilityCost;
-        //boolean available;
-        public availablePositionInfo(int cost){
-            lowestMobilityCost=cost;
-        }
-    }
+    //--------------------------------------Movable
     @Override
     public Position currentLocation() {
         return position;
@@ -42,43 +36,99 @@ public class Unit extends JButton implements Movable,Selectable,Producable,Affil
         return unitInfo.mobility;
     }
     @Override
-    public Vector<LandSquare> getAvailableLocation() {
-      /*  Position currentLocation=currentLocation();
-        int Mobility=getMobility();
-        Vector<Position> availableLocation=new Vector<Position>();
-        Vector<availablePositionInfo> availablePositionInfos=new Vector<availablePositionInfo>();
-        //Vector<Position> adjacentLocations=new Vector<Position>();
-        availableLocation.add(currentLocation());
-        availablePositionInfos.add(new availablePositionInfo(0));
-        int cost=0;
-        while (cost<Mobility+1){
-            for (Position position:availableLocation){
-                Vector<Position> adjacentLocations=new Vector<Position>();
-                Position p1=new Position(position.getX()+1,position.getY()+1);
-                Position p2=new Position(position.getX()+1,position.getY()-1);
-                Position p3=new Position(position.getX()-1,position.getY()+1);
-                Position p4=new Position(position.getX()-1,position.getY()-1);
-
+    public Vector<LandSquare> getAvailableLocation(GameMap map) {
+        class locationStack{
+            LandSquare[] stackLandsquare;
+            int[] resiMobility;
+            int landPtr=0;
+            int resiPtr=0;
+            public void push(int a){
+                resiMobility[resiPtr]=a;
+                resiPtr++;
             }
-        }*/
+            public void push(LandSquare land){
+                stackLandsquare[landPtr]=land;
+                landPtr++;
+            }
+            public LandSquare popLandsquare(){
+                if (landPtr==0){
+                    return null;
+                }else {
+                    landPtr--;
+                    LandSquare landSqr = stackLandsquare[landPtr];
+                    return landSqr;
+                }
+            }
+            public int popResimobility(){
+                if(resiPtr==0){
+                    return -100;
+                }else {
+                    resiPtr--;
+                    return resiMobility[resiPtr];
+                }
+            }
 
 
-        //将可能到达的加入vector
-        //逐层赋值
-        //判断
-        return null;
+            public Vector<LandSquare> getStackAvailableLocation(){
+                Vector<LandSquare> availableSquare=new Vector<LandSquare>();
+                int Mobility=getMobility();
+                Position currPosition=getPosition();
+                while (true){
+                    LandSquare A=popLandsquare();
+                    int B=popResimobility();
+                    if(B==-100){
+                        break;
+                    }else if(B>=0){
+                        if(!availableSquare.contains(A)) {
+                            availableSquare.add(A);
+                        }
+                        Position p=A.getPosition();
+
+                        Position p1=new Position(p.getX()+1,p.getY()+0);
+                        LandSquare L1=map.getSquare(p.getX()+1,p.getY()+0);
+                        if(map.getSquare(p.getX()+1,p.getY()+0).getMobilityCost()<=B){
+                            push(L1);
+                            push(B-map.getSquare(p.getX()+1,p.getY()+0).getMobilityCost());
+                        }
+
+                        Position p2=new Position(p.getX()-1,p.getY()+0);
+                        LandSquare L2=map.getSquare(p.getX()-1,p.getY()+0);
+                        if(map.getSquare(p.getX()-1,p.getY()+0).getMobilityCost()<=B){
+                            push(L2);
+                            push(B-map.getSquare(p.getX()-1,p.getY()+0).getMobilityCost());
+                        }
+
+                        Position p3=new Position(p.getX()+0,p.getY()+1);
+                        LandSquare L3=map.getSquare(p.getX()+0,p.getY()+1);
+                        if(map.getSquare(p.getX()+0,p.getY()+1).getMobilityCost()<=B){
+                            push(L3);
+                            push(B-map.getSquare(p.getX()+0,p.getY()+1).getMobilityCost());
+                        }
+
+                        Position p4=new Position(p.getX()+0,p.getY()-1);
+                        LandSquare L4=map.getSquare(p.getX()+0,p.getY()-1);
+                        if(map.getSquare(p.getX()+0,p.getY()-1).getMobilityCost()<=B){
+                            push(L4);
+                            push(B-map.getSquare(p.getX()+0,p.getY()-1).getMobilityCost());
+                        }
+
+                    }
+                }
+                return availableSquare;
+            }
+        }
+        locationStack myStack=new locationStack();
+        return myStack.getStackAvailableLocation();
+        //待验证
     }
     @Override
     public void moveTo(Position pos) {
-
+        this.setPosition(pos);
     }
 
+//------------------------------------------Fightable
 
 
-    @Override
-    public Class<? extends Annotation> annotationType() {
-        return null;
-    }
 
 
 
@@ -102,4 +152,23 @@ public class Unit extends JButton implements Movable,Selectable,Producable,Affil
 
     }
 
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public Unit() {
+
+    }
+
+    public Unit(Position position) {
+        this.position = position;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
 }
+
+
+

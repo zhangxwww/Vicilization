@@ -16,6 +16,7 @@ public class Constructor extends  Folk{
         this.country=country;
         this.position=position;
         this.health=100;
+        this.times=3;
         this.unitInfo.attack=0;
         this.unitInfo.defence=0;
         this.unitInfo.mobility=3;
@@ -23,5 +24,9 @@ public class Constructor extends  Folk{
         this.unitInfo.moneyCost=100;
         this.unitInfo.requiredResource= ResourceType.NONE;
         //this.unitInfo.requiredScience;
+    }
+
+    public int getTimes() {
+        return times;
     }
 }

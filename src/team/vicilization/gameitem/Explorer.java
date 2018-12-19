@@ -24,5 +24,18 @@ public class Explorer extends Folk{
         this.unitInfo.requiredResource= ResourceType.NONE;
         //this.unitInfo.requiredScience;
     }
+    public Explorer(Position position){
+        this.type=UnitType.FOLK;
+        this.subType=UnitSubType.EXPLORER;
+        this.position=position;
+        this.health=100;
+        this.unitInfo.attack=0;
+        this.unitInfo.defence=0;
+        this.unitInfo.mobility=3;
+        this.unitInfo.productivityCost=5;
+        this.unitInfo.moneyCost=200;
+        this.unitInfo.requiredResource= ResourceType.NONE;
+        //this.unitInfo.requiredScience;
+    }
 
 }
