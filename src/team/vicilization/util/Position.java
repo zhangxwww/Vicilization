@@ -35,4 +35,13 @@ public class Position {
         this.y = y;
     }
 
+    public boolean equals(Object object) {
+        if (object.getClass() == this.getClass()) {
+            Position pos = (Position) object;
+            if (pos.getX() == x && pos.getY() == y) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

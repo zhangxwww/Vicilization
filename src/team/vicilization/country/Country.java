@@ -35,7 +35,9 @@ public class Country {
 
     public Country(CountryName name) {
         this.countryName = name;
+
         // TODO 有
+
     }
 
     public void readyForNewRound() {
@@ -182,8 +184,10 @@ public class Country {
     //TODO 没有Set cities/units/traders 等Vector或其他类?
 
     public CountryName getCountryName() {
+
         return this.countryName;
         // return countryName;
+
     }
 
     public int getOccupiedTradeRoutes() {

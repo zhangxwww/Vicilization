@@ -1,6 +1,7 @@
 package team.vicilization.gameitem;
 
 public class CityFlowValue {
+
     private int productivity;
     private int money;
     private int food;
