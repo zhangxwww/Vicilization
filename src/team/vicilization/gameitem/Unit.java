@@ -10,24 +10,39 @@ import java.lang.annotation.Annotation;
 import java.util.Vector;
 
 public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
+
     protected UnitType type;
     protected UnitSubType subType;
     protected Country country;
     protected Position position;
     protected int health;
-    protected UnitInfo unitInfo=new UnitInfo();
+    protected UnitInfo unitInfo;
+    protected static int unitRecover;
 
 
     protected boolean movedThisTurn;
     protected boolean attackedThisTurn;
 
-    public Unit(Position position, Country country) {
+
+    public Unit(Position position, Country country,UnitType unitType,UnitSubType unitSubType) {
         this.position = position;
         this.country = country;
+        this.type= unitType;
+        this.subType=unitSubType;
+        this.unitInfo=new UnitInfo(unitSubType);
+        this.health=GameItemConfig.UNIT_HEALTH.get(unitSubType);
     }
     
     public void delete(){
 
+    }
+    public void recover(){
+        int initHealth=GameItemConfig.UNIT_HEALTH.get(this.subType);
+        if (health<initHealth-unitRecover){
+            health+=unitRecover;
+        }else {
+            health=initHealth;
+        }
     }
 
 
@@ -38,7 +53,7 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
     }
     @Override
     public int getMobility() {
-        return unitInfo.mobility;
+        return unitInfo.getMobility();
     }
     @Override
     public Vector<LandSquare> getAvailableLocation(GameMap map) {
@@ -183,6 +198,9 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
         this.subType = subType;
     }
 
+    public Position getPosition() {
+        return position;
+    }
 }
 
 
