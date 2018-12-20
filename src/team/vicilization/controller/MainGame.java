@@ -46,7 +46,7 @@ public class MainGame extends State {
     }
 
     private void nextRound() {
-        if (this.currentPlayer.judgeVectory() || round == 3 /* TODO delete later */) {
+        if (this.currentPlayer.judgeVictory() || round == 3 /* TODO delete later */) {
             this.mainWindow.convertToNextState(currentPlayer);
         } else {
             round++;
@@ -116,7 +116,7 @@ public class MainGame extends State {
         // TODO
     }
 
-    private void selectScience(Science science) {
+    private void selectScience(ScienceName scienceName) {
         // TODO
     }
 
@@ -136,7 +136,7 @@ public class MainGame extends State {
         // TODO
     }
 
-    private void showScienceInfo(Science science) {
+    private void showScienceInfo(ScienceName scienceName) {
         // TODO
     }
 
@@ -262,7 +262,7 @@ public class MainGame extends State {
 
     private class ScienceArea extends JPanel {
         // TODO show and select the sciences here
-        public ScienceArea(Science science) {
+        public ScienceArea(ScienceName scienceName) {
             super();
             // TODO
         }
