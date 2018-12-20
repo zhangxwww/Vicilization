@@ -21,6 +21,7 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
     protected static int unitRecover;
 
 
+    // TODO 这两个东西要在回合结束的时候重置
     protected boolean movedThisTurn;
     protected boolean attackedThisTurn;
 
@@ -32,6 +33,8 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
         this.subType=unitSubType;
         this.unitInfo=new UnitInfo(unitSubType);
         this.health=GameItemConfig.UNIT_HEALTH.get(unitSubType);
+        this.movedThisTurn = false;
+        this.attackedThisTurn = false;
     }
     
     public void delete(){
@@ -158,6 +161,7 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
     @Override
     public void moveTo(Position pos) {
         this.setPosition(pos);
+        movedThisTurn = true;
     }
     
 
@@ -219,6 +223,14 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
 
     public UnitInfo getUnitInfo() {
         return unitInfo;
+    }
+
+    public boolean isAttackedThisTurn() {
+        return attackedThisTurn;
+    }
+
+    public boolean isMovedThisTurn() {
+        return movedThisTurn;
     }
 }
 

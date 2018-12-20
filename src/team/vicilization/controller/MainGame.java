@@ -46,16 +46,30 @@ public class MainGame extends State {
         this.unitSeleted = false;
         this.unitMoving = false;
         this.initMapArea();
-        this.initCountrys(countrys);
 
         this.initButtons();
         this.initUpperInfoArea();
         this.initLowerInfoArea();
 
+        this.initCountrys(countrys);
+
         this.cities = new Vector<City>();
     }
 
     private void nextRound() {
+        this.unitSeleted = false;
+        this.unitMoving = false;
+        this.mapArea.mapPanel.updateMap();
+        try {
+            System.out.println("remove");
+            this.panel.remove(unitMoveButton);
+        } catch (Exception e) {
+
+        }
+        this.panel.repaint();
+        this.seletedUnit = null;
+        this.lowerInfoArea.unshowUnitInfo();
+
         if (this.currentPlayer.judgeVictory() || round == 3 /* TODO delete later */) {
             this.mainWindow.convertToNextState(currentPlayer);
         } else {
@@ -113,7 +127,7 @@ public class MainGame extends State {
         this.panel.add(nextRoundButton);
 
         this.unitMoveButton = new JButton("Move / Fight");
-        this.unitMoveButton.setBounds(20, 600, 100, 50);
+        this.unitMoveButton.setBounds(20, 600, 200, 50);
         this.unitMoveButton.addActionListener(listener);
     }
 
@@ -129,10 +143,12 @@ public class MainGame extends State {
 
     private void selectUnit(Unit unit) {
         this.unitSeleted = true;
-        this.panel.add(unitMoveButton);
-        this.panel.repaint();
         this.seletedUnit = unit;
         this.lowerInfoArea.showUnitInfo(unit);
+        if (!seletedUnit.isMovedThisTurn()) { // 没有移动，显示移动按钮
+            this.panel.add(unitMoveButton);
+            this.panel.repaint();
+        }
     }
 
     private void unselectUnit() {
@@ -211,11 +227,11 @@ public class MainGame extends State {
             if (event.getSource() == MainGame.nextRoundButton) {
                 nextRound();
             }
-            // TODO finish with other actions
             else if (event.getSource() == MainGame.unitMoveButton) {
                 mapArea.drawAccessableSquares();
                 unitMoving = true;
             }
+            // TODO finish with other actions
         }
     }
 
@@ -303,7 +319,7 @@ public class MainGame extends State {
 
         public LowerInfoArea() {
             super();
-            this.setBounds(150, 600, 600, 100);
+            this.setBounds(250, 600, 600, 100);
             this.setLayout(null);
 
             this.attackLabel = new JLabel("Attack : ");
@@ -323,13 +339,6 @@ public class MainGame extends State {
             this.unitHealthInfo.setBounds(80, 25, 80, 25);
             this.unitAttackInfo.setBounds(80, 50, 80, 25);
             this.unitDefenceInfo.setBounds(80, 75, 80, 25);
-        }
-
-        public void showUnitInfo(Unit unit) {
-            this.unitTypeInfo.setText(unit.getSubType().toString());
-            this.unitAttackInfo.setText(String.valueOf(unit.getUnitInfo().getAttack()));
-            this.unitDefenceInfo.setText(String.valueOf(unit.getUnitInfo().getDefence()));
-            this.unitHealthInfo.setText(String.valueOf(unit.getHealth()));
 
             this.add(attackLabel);
             this.add(defenceLabel);
@@ -340,8 +349,18 @@ public class MainGame extends State {
             this.add(unitDefenceInfo);
         }
 
+        public void showUnitInfo(Unit unit) {
+            this.unitTypeInfo.setText(unit.getSubType().toString());
+            this.unitAttackInfo.setText(String.valueOf(unit.getUnitInfo().getAttack()));
+            this.unitDefenceInfo.setText(String.valueOf(unit.getUnitInfo().getDefence()));
+            this.unitHealthInfo.setText(String.valueOf(unit.getHealth()));
+        }
+
         public void unshowUnitInfo() {
-            this.removeAll();
+            this.unitTypeInfo.setText("");
+            this.unitAttackInfo.setText("");
+            this.unitDefenceInfo.setText("");
+            this.unitHealthInfo.setText("");
         }
     }
 
