@@ -26,6 +26,18 @@ public class City extends JButton {
 
     public City(Country country, Position position) {
 
+        this.name=CityName.BOMBAY;
+        this.population=1;
+        this.location=position;
+        this.country=country;
+        this.flowValue=new CityFlowValue();
+        this.stockValue=new CityStockValue();
+        this.cityAttack=2;
+        this.cityDefence=2;
+        this.cityHealth=100;
+        this.recovery=10;
+
+
     }
 
     public void updateStock() {
@@ -33,6 +45,8 @@ public class City extends JButton {
     }
 
     public void recover() {
+
+        this.cityHealth+=this.recovery;
 
     }
 
