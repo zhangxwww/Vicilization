@@ -3,6 +3,7 @@ package team.vicilization.gamemap;
 import java.util.HashMap;
 import java.util.Vector;
 
+
 public class GameMapConfig {
 
     public static final int MAP_WIDTH = 40;

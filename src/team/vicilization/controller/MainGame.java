@@ -46,7 +46,7 @@ public class MainGame extends State {
     }
 
     private void nextRound() {
-        if (this.currentPlayer.judgeVectory() || round == 3 /* TODO delete later */) {
+        if (this.currentPlayer.judgeVictory() || round == 3 /* TODO delete later */) {
             this.mainWindow.convertToNextState(currentPlayer);
         } else {
             round++;
@@ -69,6 +69,7 @@ public class MainGame extends State {
         this.currentPlayer = this.countries.elementAt(0);
     }
 
+
     private void initUnitsForOneCountry(Country country, int order) {
         Random initPosition = new Random();
         while (true) {
@@ -86,7 +87,7 @@ public class MainGame extends State {
 
                 Position initPos = new Position(x, y);
                 Unit explorer = new Explorer(initPos, country);
-                country.addNewUnit(explorer, initPos);
+                country.addNewUnit(explorer);
                 this.units.add(explorer);
                 this.mapArea.addUnitInMap(explorer, initPos);
                 break;
@@ -115,7 +116,7 @@ public class MainGame extends State {
         // TODO
     }
 
-    private void selectScience(Science science) {
+    private void selectScience(ScienceName scienceName) {
         // TODO
     }
 
@@ -135,7 +136,7 @@ public class MainGame extends State {
         // TODO
     }
 
-    private void showScienceInfo(Science science) {
+    private void showScienceInfo(ScienceName scienceName) {
         // TODO
     }
 
@@ -261,7 +262,7 @@ public class MainGame extends State {
 
     private class ScienceArea extends JPanel {
         // TODO show and select the sciences here
-        public ScienceArea(Science science) {
+        public ScienceArea(ScienceName scienceName) {
             super();
             // TODO
         }
@@ -316,6 +317,7 @@ public class MainGame extends State {
         }
 
         public LandSquare at(int x, int y) {
+
             return mapPanel.map.getSquare(x, y);
         }
 
@@ -354,6 +356,7 @@ public class MainGame extends State {
                 this.setLayout(null);
 
                 this.initIcons();
+
 
                 // TODO this will change later
                 this.setBounds(0, 0,
@@ -406,6 +409,10 @@ public class MainGame extends State {
                         this.add(square);
                     }
                 }
+            }
+
+            private void drawAccessableSquares() {
+                // TODO
             }
 
             private void drawMapWithoutUnits() {
@@ -528,6 +535,7 @@ public class MainGame extends State {
                 @Override
                 public void mouseClicked(MouseEvent event) {
                     JLabel square = (JLabel) getComponentAt(event.getX(), event.getY());
+
                     int posx = event.getX() / 50;
                     int posy = event.getY() / 50;
                     for (Unit u : units) {

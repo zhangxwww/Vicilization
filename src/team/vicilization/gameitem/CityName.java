@@ -4,7 +4,19 @@ public enum CityName {
     DELHI,
     NEWDELHI,
     BOMBAY,
-    CALCUTTA;
+    CALCUTTA,
+    KERALA,
+    TELANGANA,
+    PUNJUB,
+    UTTARAKHAND,
+    CHICAGO,
+    COLUMBIA,
+    DALLAS,
+    DETROIT,
+    HAWAII,
+    SANFRANCISCO,
+    WASHINGTON,
+    HARRISBURG;
 
     @Override
     public String toString() {
