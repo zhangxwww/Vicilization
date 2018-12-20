@@ -87,7 +87,7 @@ public class MainGame extends State {
 
                 Position initPos = new Position(x, y);
                 Unit explorer = new Explorer(initPos, country);
-                country.addNewUnit(explorer, initPos);
+                country.addNewUnit(explorer);
                 this.units.add(explorer);
                 this.mapArea.addUnitInMap(explorer, initPos);
                 break;

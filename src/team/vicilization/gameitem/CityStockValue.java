@@ -2,6 +2,7 @@ package team.vicilization.gameitem;
 
 public class CityStockValue {
     private int producticity;
+    private int money;
     private int food;
     private int science;
     private int scientistValue;

@@ -47,11 +47,6 @@ public class Country {
                 CountryConfig.CITIES_OF_COUNTRY.get(this.countryName)
         );
         Collections.shuffle(availableNames);
-        // testing copy
-        for(CityName i : availableNames){
-            System.out.println(i);
-        }
-
     }
 
     public void endOfCurrentRound() {
@@ -76,9 +71,9 @@ public class Country {
     }
 
     private void calculateFlowValue() {
-        for(City city:this.cities){
-            city.calculateFlowValue();
-        }
+        //for(City city:this.cities){
+        //city.calculateFlowValue();
+        //}
         // TODO 如何拿到cityFlow? 一致性？
     }
 
