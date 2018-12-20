@@ -24,7 +24,7 @@ public class City extends JButton {
     private Vector<BuildingType> allowedBuildings;
     private Vector<Unit> allowedUnits;
 
-    public City(Country country, Position position,CityName name) {
+    public City(Country country, Position position,CityName name, Vector<LandSquare> territory) {
 
         this.name=name;
         this.population=1;
@@ -37,6 +37,7 @@ public class City extends JButton {
         this.cityHealth=100;
         this.recovery=10;
 
+        this.territory = territory;
 
     }
 
