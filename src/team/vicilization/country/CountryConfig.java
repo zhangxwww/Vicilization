@@ -12,7 +12,7 @@ public class CountryConfig {
     public static final HashMap<CountryName, Color> COLOR_OF_COUNTRY = new HashMap<>() {
         {
             put(CountryName.INDIA, Color.PINK);
-            put(CountryName.AMERICA, Color.GREEN);
+            put(CountryName.AMERICA, Color.MAGENTA);
         }
     };
 
