@@ -1,23 +1,16 @@
 package team.vicilization.country;
 
 import team.vicilization.gameitem.City;
+import team.vicilization.gameitem.CityName;
 import team.vicilization.gameitem.Unit;
-
-import java.util.HashMap;
-import java.util.Vector;
-
-import team.vicilization.gameitem.*;
-import team.vicilization.gamemap.LandformType;
-import team.vicilization.gamemap.ResourceType;
 import team.vicilization.mechanics.*;
-
 import team.vicilization.util.Position;
 
-import team.vicilization.util.Position;
+import java.util.*;
 
 public class Country {
     //========================Attributes======================//
-    private Leader leader;
+    private LeaderName leaderName; //TODO change to Leader
     private Vector<City> cities;
     private Vector<Unit> units;
 
@@ -29,18 +22,40 @@ public class Country {
 
     private HashMap<String, Integer> countryResource;
     private Vector<ScienceName> learntScience;
-    private ScienceName currentScience = null;
-    // TODO science map
+    private ScienceName currentScience;
 
     private CountryFlowValue flowValue;
     private CountryStockValue stockValue;
 
-    public Country(CountryName name) {
+    private List<CityName> availableNames;
 
-        this.countryName = name;
+    public Country(CountryName countryName) {
+        this.countryName = countryName;
+        this.leaderName = CountryConfig.LEADER_OF_COUNTRY.get(countryName);
+        this.cities = new Vector<>();
+        this.units = new Vector<>();
+        this.traders = new Vector<>();
+        this.occupiedTradeRoutes = 0;
+        this.totalTradeRoutes = 0;
 
-        // TODO 有
+        this.countryResource = new HashMap<String, Integer>(){};
+        this.currentScience = null;
+        this.flowValue = new CountryFlowValue();
+        this.stockValue = new CountryStockValue();
 
+        this.availableNames = new ArrayList<CityName>(
+                CountryConfig.CITIES_OF_COUNTRY.get(this.countryName)
+        );
+        Collections.shuffle(availableNames);
+        // testing copy
+        for(CityName i : availableNames){
+            System.out.println(i);
+        }
+
+    }
+
+    public void endOfCurrentRound() {
+        // TODO 回血，移动力写哪都行
     }
 
     public void readyForNewRound() {
@@ -56,7 +71,6 @@ public class Country {
     }
 
     public void pushProject() {
-
         // TODO
         // TODO private?
     }
@@ -75,32 +89,26 @@ public class Country {
     */
 
     public void buildNewCity(Position position) {
-        // TODO return city?
+        // TODO 分配地块
+        //CityName cityName =
     }
 
     public void occupyCity(City city) {
         this.cities.add(city);
-        // TODO need for position?
-        // TODO need for re calculating?
     }
 
     public void loseCity(City city) {
         this.cities.remove(city);
-        // TODO need for position?
-        // TODO need for re calculating?
     }
 
-    public void addNewUnit(Unit unit, Position position) {
+    public void addNewUnit(Unit unit) {
         this.units.add(unit);
-        // TODO need for position?
-        // TODO need for re calculating?
         // TODO call city add?
     }
 
     public void deleteUnit(Unit unit) {
         this.units.remove(unit);
-        // TODO need for position?
-        // TODO need for re calculating?
+        // TODO call city delete?
     }
 
     public void selectScience(ScienceName scienceName) {
@@ -163,12 +171,12 @@ public class Country {
 
     //========================Get-Set Methods======================//
 
-    public Leader getLeader() {
-        return leader;
+    public LeaderName getLeaderName() {
+        return leaderName;
     }
 
-    public void setLeader(Leader leader) {
-        this.leader = leader;
+    public void setLeaderName(LeaderName leaderName) {
+        this.leaderName = leaderName;
     }
 
     public Vector<City> getCities() {
@@ -182,7 +190,6 @@ public class Country {
     public Vector<Trader> getTraders() {
         return traders;
     }
-    //TODO 没有Set cities/units/traders 等Vector或其他类?
 
     public CountryName getCountryName() {
 
@@ -224,6 +231,4 @@ public class Country {
         return stockValue;
     }
 
-    //=========================remove add========================//
-    //TODO 向量的remove add等
 }

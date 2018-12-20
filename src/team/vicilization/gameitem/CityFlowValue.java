@@ -2,11 +2,10 @@ package team.vicilization.gameitem;
 
 public class CityFlowValue {
 
-
-    private int productivity = 1;
-    private int money = 1;
-    private int food = 1;
-    private int science = 1;
+    private int productivity = 0;
+    private int money = 0;
+    private int food = 0;
+    private int science = 0;
     private int scientistValue = 0;
     private int traderValue = 0;
     private int engineerValue = 0;

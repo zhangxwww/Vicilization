@@ -38,7 +38,7 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
     }
     @Override
     public int getMobility() {
-        return unitInfo.mobility;
+        return unitInfo.getMobility();
     }
     @Override
     public Vector<LandSquare> getAvailableLocation(GameMap map) {
@@ -183,6 +183,9 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
         this.subType = subType;
     }
 
+    public Position getPosition() {
+        return position;
+    }
 }
 
 

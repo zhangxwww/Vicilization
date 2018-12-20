@@ -7,6 +7,14 @@ public class CountryStockValue {
     private int traderValue;
     private int engineerValue;
 
+    public CountryStockValue(){
+        this.money = 0;
+        this.science = 0;
+        this.scientistValue = 0;
+        this.traderValue = 0;
+        this.engineerValue = 0;
+    }
+
     //=======================get/set methods==================//
     public int getMoney() {
         return money;

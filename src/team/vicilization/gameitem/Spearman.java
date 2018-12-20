@@ -9,12 +9,12 @@ public class Spearman extends Fighter {
         super(position, country);
         setSubType(UnitSubType.SPEARMAN);
         this.health=100;
-        this.unitInfo.attack=5;
-        this.unitInfo.defence=3;
-        this.unitInfo.mobility=3;
-        this.unitInfo.productivityCost=2;
-        this.unitInfo.moneyCost=70;
-        this.unitInfo.requiredResource= ResourceType.NONE;
-        //this.unitInfo.requiredScience;
+        this.unitInfo.setAttack                     (GameItemConfig.UNIT_ATTACK.get(UnitSubType.SPEARMAN));
+        this.unitInfo.setDefence                   (GameItemConfig.UNIT_DEFENCE.get(UnitSubType.SPEARMAN));
+        this.unitInfo.setMobility                 (GameItemConfig.UNIT_MOBILITY.get(UnitSubType.SPEARMAN));
+        this.unitInfo.setProductivityCost  (GameItemConfig.UNIT_PROCTIVITY_COST.get(UnitSubType.SPEARMAN));
+        this.unitInfo.setMoneyCost              (GameItemConfig.UNIT_MONEY_COST.get(UnitSubType.SPEARMAN));
+        this.unitInfo.setRequiredResource(GameItemConfig.UNIT_REQUIRED_RESOURCE.get(UnitSubType.SPEARMAN));
+        this.unitInfo.setRequiredScience  (GameItemConfig.UNIT_REQUIRED_SCIENCE.get(UnitSubType.SPEARMAN));
     }
 }
