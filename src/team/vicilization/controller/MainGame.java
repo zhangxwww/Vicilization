@@ -411,6 +411,10 @@ public class MainGame extends State {
                 }
             }
 
+            private void drawAccessableSquares() {
+                // TODO
+            }
+
             private void drawMapWithoutUnits() {
                 for (int i = 0; i < GameMapConfig.MAP_HEIGHT; i++) {
                     for (int j = 0; j < GameMapConfig.MAP_WIDTH; j++) {
