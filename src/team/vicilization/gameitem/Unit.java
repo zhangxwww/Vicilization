@@ -2,6 +2,7 @@ package team.vicilization.gameitem;
 
 import team.vicilization.country.Country;
 import team.vicilization.gamemap.GameMap;
+import team.vicilization.gamemap.GameMapConfig;
 import team.vicilization.gamemap.LandSquare;
 import team.vicilization.util.Position;
 
@@ -58,8 +59,8 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
     @Override
     public Vector<LandSquare> getAvailableLocation(GameMap map) {
         class locationStack{
-            LandSquare[] stackLandsquare;
-            int[] resiMobility;
+            LandSquare[] stackLandsquare = new LandSquare[100];
+            int[] resiMobility = new int[100];
             int landPtr=0;
             int resiPtr=0;
             public void push(int a){
@@ -93,6 +94,10 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
                 Vector<LandSquare> availableSquare=new Vector<LandSquare>();
                 int Mobility=getMobility();
                 Position currPosition=getPosition();
+                push(map.getSquare(currPosition.getX(), currPosition.getY()));
+                push(Mobility);
+
+
                 while (true){
                     LandSquare A=popLandsquare();
                     int B=popResimobility();
@@ -104,36 +109,45 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
                         }
                         Position p=A.getPosition();
 
-                        Position p1=new Position(p.getX()+1,p.getY()+0);
-                        LandSquare L1=map.getSquare(p.getX()+1,p.getY()+0);
-                        if(map.getSquare(p.getX()+1,p.getY()+0).getMobilityCost()<=B){
-                            push(L1);
-                            push(B-map.getSquare(p.getX()+1,p.getY()+0).getMobilityCost());
+                        if (p.getX() + 1 < GameMapConfig.MAP_WIDTH) {
+                            Position p1 = new Position(p.getX() + 1, p.getY() + 0);
+                            LandSquare L1 = map.getSquare(p.getX() + 1, p.getY() + 0);
+                            if (map.getSquare(p.getX() + 1, p.getY() + 0).getMobilityCost() <= B) {
+                                push(L1);
+                                push(B - map.getSquare(p.getX() + 1, p.getY() + 0).getMobilityCost());
+                            }
                         }
 
-                        Position p2=new Position(p.getX()-1,p.getY()+0);
-                        LandSquare L2=map.getSquare(p.getX()-1,p.getY()+0);
-                        if(map.getSquare(p.getX()-1,p.getY()+0).getMobilityCost()<=B){
-                            push(L2);
-                            push(B-map.getSquare(p.getX()-1,p.getY()+0).getMobilityCost());
+                        if (p.getX() - 1 >= 0) {
+                            Position p2 = new Position(p.getX() - 1, p.getY() + 0);
+                            LandSquare L2 = map.getSquare(p.getX() - 1, p.getY() + 0);
+                            if (map.getSquare(p.getX() - 1, p.getY() + 0).getMobilityCost() <= B) {
+                                push(L2);
+                                push(B - map.getSquare(p.getX() - 1, p.getY() + 0).getMobilityCost());
+                            }
                         }
 
-                        Position p3=new Position(p.getX()+0,p.getY()+1);
-                        LandSquare L3=map.getSquare(p.getX()+0,p.getY()+1);
-                        if(map.getSquare(p.getX()+0,p.getY()+1).getMobilityCost()<=B){
-                            push(L3);
-                            push(B-map.getSquare(p.getX()+0,p.getY()+1).getMobilityCost());
+                        if (p.getY() + 1 < GameMapConfig.MAP_HEIGHT) {
+                            Position p3 = new Position(p.getX() + 0, p.getY() + 1);
+                            LandSquare L3 = map.getSquare(p.getX() + 0, p.getY() + 1);
+                            if (map.getSquare(p.getX() + 0, p.getY() + 1).getMobilityCost() <= B) {
+                                push(L3);
+                                push(B - map.getSquare(p.getX() + 0, p.getY() + 1).getMobilityCost());
+                            }
                         }
 
-                        Position p4=new Position(p.getX()+0,p.getY()-1);
-                        LandSquare L4=map.getSquare(p.getX()+0,p.getY()-1);
-                        if(map.getSquare(p.getX()+0,p.getY()-1).getMobilityCost()<=B){
-                            push(L4);
-                            push(B-map.getSquare(p.getX()+0,p.getY()-1).getMobilityCost());
+                        if (p.getY() - 1 >= 0) {
+                            Position p4 = new Position(p.getX() + 0, p.getY() - 1);
+                            LandSquare L4 = map.getSquare(p.getX() + 0, p.getY() - 1);
+                            if (map.getSquare(p.getX() + 0, p.getY() - 1).getMobilityCost() <= B) {
+                                push(L4);
+                                push(B - map.getSquare(p.getX() + 0, p.getY() - 1).getMobilityCost());
+                            }
                         }
 
                     }
                 }
+                availableSquare.remove(map.getSquare(currPosition.getX(), currPosition.getY()));
                 return availableSquare;
             }
         }
@@ -150,8 +164,9 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
 //------------------------------------------Fightable
 
 
-
-
+    public int getHealth() {
+        return health;
+    }
 
     @Override
     public int moneyCost() {
@@ -200,6 +215,10 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
 
     public Position getPosition() {
         return position;
+    }
+
+    public UnitInfo getUnitInfo() {
+        return unitInfo;
     }
 }
 
