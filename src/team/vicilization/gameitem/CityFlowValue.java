@@ -2,13 +2,35 @@ package team.vicilization.gameitem;
 
 public class CityFlowValue {
 
-    private int productivity = 0;
-    private int money = 0;
-    private int food = 0;
-    private int science = 0;
-    private int scientistValue = 0;
-    private int traderValue = 0;
-    private int engineerValue = 0;
+
+    private int productivity ;
+    private int money ;
+    private int food ;
+    private int science ;
+    private int scientistValue ;
+    private int traderValue ;
+    private int engineerValue ;
+
+    public CityFlowValue(){
+        this.productivity=0;
+        this.money=0;
+        this.science=0;
+        this.food=0;
+        this.scientistValue=0;
+        this.traderValue=0;
+        this.engineerValue=0;
+    }
+
+    public void addValue(CityFlowValue flowValue){
+        this.productivity+=flowValue.productivity;
+        this.money+=flowValue.money;
+        this.science+=flowValue.science;
+        this.food+=flowValue.food;
+        this.scientistValue+=flowValue.scientistValue;
+        this.traderValue+=flowValue.traderValue;
+        this.engineerValue+=flowValue.engineerValue;
+    }
+
 
     public int getProductivity() {
         return productivity;

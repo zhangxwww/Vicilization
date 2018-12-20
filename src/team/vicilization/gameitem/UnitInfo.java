@@ -13,6 +13,17 @@ public class UnitInfo {
 
     private ScienceName requiredScience;
     private ResourceType requiredResource;
+    //========================establish=============================//
+    public UnitInfo(UnitSubType unitSubType){
+        this.attack=GameItemConfig.UNIT_ATTACK.get(unitSubType);
+        this.defence=GameItemConfig.UNIT_DEFENCE.get(unitSubType);
+        this.mobility=GameItemConfig.UNIT_MOBILITY.get(unitSubType);
+        this.productivityCost=GameItemConfig.UNIT_PRODUCTIVITY_COST.get(unitSubType);
+        this.moneyCost=GameItemConfig.UNIT_MONEY_COST.get(unitSubType);
+
+        this.requiredScience=GameItemConfig.UNIT_REQUIRED_SCIENCE.get(unitSubType);
+        this.requiredResource=GameItemConfig.UNIT_REQUIRED_RESOURCE.get(unitSubType);
+    }
 
     //========================Get-Set Methods======================//
 
@@ -71,4 +82,5 @@ public class UnitInfo {
     public void setRequiredScience(ScienceName requiredScience) {
         this.requiredScience = requiredScience;
     }
+
 }
