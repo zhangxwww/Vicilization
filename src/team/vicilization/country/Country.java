@@ -3,6 +3,7 @@ package team.vicilization.country;
 import team.vicilization.gameitem.City;
 import team.vicilization.gameitem.CityName;
 import team.vicilization.gameitem.Unit;
+import team.vicilization.gamemap.LandSquare;
 import team.vicilization.mechanics.*;
 import team.vicilization.util.Position;
 
@@ -27,7 +28,7 @@ public class Country {
     private CountryFlowValue flowValue;
     private CountryStockValue stockValue;
 
-    private List<CityName> availableNames;
+    private Vector<CityName> availableNames;
 
     public Country(CountryName countryName) {
         this.countryName = countryName;
@@ -43,7 +44,7 @@ public class Country {
         this.flowValue = new CountryFlowValue();
         this.stockValue = new CountryStockValue();
 
-        this.availableNames = new ArrayList<CityName>(
+        this.availableNames = new Vector<CityName>(
                 CountryConfig.CITIES_OF_COUNTRY.get(this.countryName)
         );
         Collections.shuffle(availableNames);
@@ -71,10 +72,6 @@ public class Country {
     }
 
     private void calculateFlowValue() {
-        //for(City city:this.cities){
-        //city.calculateFlowValue();
-        //}
-        // TODO 如何拿到cityFlow? 一致性？
     }
 
     /*
@@ -83,9 +80,13 @@ public class Country {
     }
     */
 
-    public void buildNewCity(Position position) {
+    public City buildNewCity(Position position, Vector<LandSquare> territory) {
         // TODO 分配地块
-        //CityName cityName =
+        CityName tempName = this.availableNames.get(0);
+        Vector<LandSquare> terrSquare = new Vector<>();
+        City tempCity = new City(this, position, tempName, territory);
+        cities.add(tempCity);
+        return tempCity;
     }
 
     public void occupyCity(City city) {
@@ -98,12 +99,10 @@ public class Country {
 
     public void addNewUnit(Unit unit) {
         this.units.add(unit);
-        // TODO call city add?
     }
 
     public void deleteUnit(Unit unit) {
         this.units.remove(unit);
-        // TODO call city delete?
     }
 
     public void selectScience(ScienceName scienceName) {
@@ -187,10 +186,7 @@ public class Country {
     }
 
     public CountryName getCountryName() {
-
         return this.countryName;
-        // return countryName;
-
     }
 
     public int getOccupiedTradeRoutes() {
