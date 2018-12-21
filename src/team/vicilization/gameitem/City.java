@@ -18,6 +18,9 @@ public class City extends JButton {
     private Vector<BuildingType> constructedBuildings;
 
     private ProducableInfo producingItem;
+    private BuildingType producingBuilding;
+    private UnitSubType producingUnit;
+
     //private Producable productingItem;
     private int cityAttack;
     private int cityDefence;
@@ -41,6 +44,10 @@ public class City extends JButton {
         this.cityHealth = 100;
         this.recovery = 10;
 
+        this.producingItem=new ProducableInfo();
+        this.producingUnit=UnitSubType.NONE;
+        this.producingBuilding=BuildingType.NONE;
+
         this.territory=territory;
         this.constructedBuildings=new Vector<BuildingType>();
 
@@ -50,18 +57,18 @@ public class City extends JButton {
     }
 
     //update vectors
-    public void updateConstructedBuildings(BuildingType buildingType){
-        constructedBuildings.add(buildingType);
-    }
     public void calculateAllowedBuildings(){
         Vector<BuildingType> tempAllowedBuildings=new Vector<BuildingType>(3);
         tempAllowedBuildings.add(BuildingType.ACADEMY);
         tempAllowedBuildings.add(BuildingType.COMMERCIAL_CERTER);
         tempAllowedBuildings.add(BuildingType.INDUSTRIAL_PARK);
         for(BuildingType type:tempAllowedBuildings){
+            if(constructedBuildings.contains(type)|this.producingBuilding.equals(type)){
+                tempAllowedBuildings.remove(type);
+            }
             //科技if(GameItemConfig.)
             //已建造
-            tempAllowedBuildings.remove(type);
+            //正在建造
         }
         this.allowedBuildings=tempAllowedBuildings;
     }
@@ -105,25 +112,53 @@ public class City extends JButton {
     }
 
     public void cityEndOfTurn(){
+        this.updateStock();
+        this.recover();
         //重置移动力
 
     }
-    public void cityStartTurn(){
+    public UnitSubType cityStartTurn(){
+        finishProduceBuilding();
+        UnitSubType unitSubType=finishProduceUnit();
+        return unitSubType;
+    }
 
+    private void finishProduceBuilding(){
+        if(stockValue.getProducticity()>=producingItem.getProductivityCost()){
+            stockValue.setProducticity(stockValue.getProducticity()-producingItem.getProductivityCost());
+            if(this.producingUnit==UnitSubType.NONE){
+                constructedBuildings.add(this.producingBuilding);
+                this.producingBuilding=BuildingType.NONE;
+            }
+        }
+    }
+    private UnitSubType finishProduceUnit(){
+        if(stockValue.getProducticity()>=producingItem.getProductivityCost()){
+
+
+            stockValue.setProducticity(stockValue.getProducticity()-producingItem.getProductivityCost());
+            if(this.producingBuilding==BuildingType.NONE){
+                UnitSubType unitSubType=this.producingUnit;
+                this.producingUnit=UnitSubType.NONE;
+                return unitSubType;
+            }else{
+                return UnitSubType.NONE;
+            }
+            //producingItem.finish;
+        }
+        return UnitSubType.NONE;
     }
 
 
-
-    public void updateStock() {
-        //TO DO details
+    private void updateStock() {
         calculateFlowValue();
         stockValue.addFlow(flowValue);
+
         //处理生产力  产出
-        if(stockValue.getProducticity()>=producingItem.getProductivityCost()){
-            System.out.println("Unit Complete");
-            stockValue.setProducticity(stockValue.getProducticity()-producingItem.getProductivityCost());
-            //producingItem.finish;
-        }
+
+
+
+
         //处理食物  人口
         if(stockValue.getFood()>=5){
             while (stockValue.getFood()>=5) {
@@ -146,7 +181,7 @@ public class City extends JButton {
 
     }
 
-    public void recover() {
+    private void recover() {
         int initHealth = 100;
         if (cityHealth < initHealth - recovery) {
             cityHealth += recovery;
@@ -162,11 +197,13 @@ public class City extends JButton {
 
     public void produce(UnitSubType type){
         this.producingItem=new UnitInfo(type);
+        this.producingUnit=type;
         this.setIsProducing(true);
     }
     public void produce(BuildingType type){
         this.producingItem=new BuildingInfo(type);
         this.setIsProducing(true);
+        this.producingBuilding=type;
     }
 
 

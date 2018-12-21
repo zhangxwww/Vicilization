@@ -31,6 +31,9 @@ public abstract class Unit implements Movable,Selectable,Affiliable{
         this.subType=unitSubType;
         this.unitInfo=new UnitInfo(unitSubType);
         this.health=GameItemConfig.UNIT_HEALTH.get(unitSubType);
+
+        this.movedThisTurn=false;
+        this.attackedThisTurn=false;
     }
     
     public void delete(){
@@ -144,6 +147,7 @@ public abstract class Unit implements Movable,Selectable,Affiliable{
     @Override
     public void moveTo(Position pos) {
         this.setPosition(pos);
+        this.movedThisTurn=true;
     }
     
 
@@ -151,7 +155,14 @@ public abstract class Unit implements Movable,Selectable,Affiliable{
 
 
 
+//------------------------------------------End/Start Turn
+    public void unitEndOfTurn(){
+        this.recover();
+        this.movedThisTurn=false;
+    }
+    public void startTurn(){
 
+    }
 
 
 
