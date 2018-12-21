@@ -1,23 +1,17 @@
 package team.vicilization.country;
 
 import team.vicilization.gameitem.City;
+import team.vicilization.gameitem.CityName;
 import team.vicilization.gameitem.Unit;
-
-import java.util.HashMap;
-import java.util.Vector;
-
-import team.vicilization.gameitem.*;
-import team.vicilization.gamemap.LandformType;
-import team.vicilization.gamemap.ResourceType;
+import team.vicilization.gamemap.LandSquare;
 import team.vicilization.mechanics.*;
-
 import team.vicilization.util.Position;
 
-import team.vicilization.util.Position;
+import java.util.*;
 
 public class Country {
     //========================Attributes======================//
-    private Leader leader;
+    private LeaderName leaderName; //TODO change to Leader
     private Vector<City> cities;
     private Vector<Unit> units;
 
@@ -29,18 +23,35 @@ public class Country {
 
     private HashMap<String, Integer> countryResource;
     private Vector<ScienceName> learntScience;
-    private ScienceName currentScience = null;
-    // TODO current science name? Science是否常量？枚举？如何检索？
+    private ScienceName currentScience;
 
     private CountryFlowValue flowValue;
     private CountryStockValue stockValue;
 
-    public Country(CountryName name) {
+    private Vector<CityName> availableNames;
 
-        this.countryName = name;
+    public Country(CountryName countryName) {
+        this.countryName = countryName;
+        this.leaderName = CountryConfig.LEADER_OF_COUNTRY.get(countryName);
+        this.cities = new Vector<>();
+        this.units = new Vector<>();
+        this.traders = new Vector<>();
+        this.occupiedTradeRoutes = 0;
+        this.totalTradeRoutes = 0;
 
-        // TODO 有
+        this.countryResource = new HashMap<String, Integer>(){};
+        this.currentScience = null;
+        this.flowValue = new CountryFlowValue();
+        this.stockValue = new CountryStockValue();
 
+        this.availableNames = new Vector<CityName>(
+                CountryConfig.CITIES_OF_COUNTRY.get(this.countryName)
+        );
+        Collections.shuffle(availableNames);
+    }
+
+    public void endOfCurrentRound() {
+        // TODO 回血，移动力写哪都行
     }
 
     public void readyForNewRound() {
@@ -56,20 +67,11 @@ public class Country {
     }
 
     public void pushProject() {
-
         // TODO
         // TODO private?
     }
 
     private void calculateFlowValue() {
-        for(City city:this.cities){
-            city.calculateFlowValue();
-        }
-        // TODO 如何拿到cityFlow? 一致性？
-    }
-
-    private void calculateStockValue() {
-        // TODO
     }
 
     /*
@@ -78,33 +80,29 @@ public class Country {
     }
     */
 
-    public void buildNewCity(Position position) {
-        // TODO return city?
+    public City buildNewCity(Position position, Vector<LandSquare> territory) {
+        // TODO 分配地块
+        CityName tempName = this.availableNames.get(0);
+        Vector<LandSquare> terrSquare = new Vector<>();
+        City tempCity = new City(this, position, tempName, territory);
+        cities.add(tempCity);
+        return tempCity;
     }
 
     public void occupyCity(City city) {
         this.cities.add(city);
-        // TODO need for position?
-        // TODO need for re calculating?
     }
 
     public void loseCity(City city) {
         this.cities.remove(city);
-        // TODO need for position?
-        // TODO need for re calculating?
     }
 
-    public void addNewUnit(Unit unit, Position position) {
+    public void addNewUnit(Unit unit) {
         this.units.add(unit);
-        // TODO need for position?
-        // TODO need for re calculating?
-        // TODO call city add?
     }
 
     public void deleteUnit(Unit unit) {
         this.units.remove(unit);
-        // TODO need for position?
-        // TODO need for re calculating?
     }
 
     public void selectScience(ScienceName scienceName) {
@@ -114,9 +112,10 @@ public class Country {
     public ScienceName finishScience() {
         if(this.currentScience == null){
             return null;
-        }else if(this.stockValue.getScience() < this.currentScience){
+        }else if(this.stockValue.getScience() < ScienceConfig.SCIENCE_COST.get(this.currentScience)){
             return null;
         }else{
+            this.stockValue.setScience(this.stockValue.getScience() - ScienceConfig.SCIENCE_COST.get(this.currentScience));
             ScienceName result = this.currentScience;
             this.currentScience = null;
             return result;
@@ -166,12 +165,12 @@ public class Country {
 
     //========================Get-Set Methods======================//
 
-    public Leader getLeader() {
-        return leader;
+    public LeaderName getLeaderName() {
+        return leaderName;
     }
 
-    public void setLeader(Leader leader) {
-        this.leader = leader;
+    public void setLeaderName(LeaderName leaderName) {
+        this.leaderName = leaderName;
     }
 
     public Vector<City> getCities() {
@@ -185,13 +184,9 @@ public class Country {
     public Vector<Trader> getTraders() {
         return traders;
     }
-    //TODO 没有Set cities/units/traders 等Vector或其他类?
 
     public CountryName getCountryName() {
-
         return this.countryName;
-        // return countryName;
-
     }
 
     public int getOccupiedTradeRoutes() {
@@ -227,6 +222,4 @@ public class Country {
         return stockValue;
     }
 
-    //=========================remove add========================//
-    //TODO 向量的remove add等
 }

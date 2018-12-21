@@ -29,6 +29,7 @@ public class City extends JButton {
     private Vector<BuildingType> allowedBuildings;
     private Vector<Unit> allowedUnits;
 
+
     public boolean isProducing;
 
     //--------------------------------------------构造函数
