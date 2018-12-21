@@ -173,8 +173,8 @@ public class GameMap {
                         GameMapConfig.MOISTRURE
                                 - (Math.abs(i - moistureX1)
                                 + Math.abs(j - moistureY1)) / 2.0);
-                this.moistureMap.get(i).add(j,
-                        GameMapConfig.MOISTRURE
+                this.moistureMap.get(i).set(j,
+                        GameMapConfig.MOISTRURE + this.moistureMap.get(i).get(j)
                                 - (Math.abs(i - moistureX2)
                                 + Math.abs(j - moistureY2)) / 2.0);
             }
@@ -206,7 +206,7 @@ public class GameMap {
                     }
                 } else {
                     if ((this.moistureMap.get(i).get(j) > GameMapConfig.MOISTURE_BOUND) &&
-                            (sqrt(this.moistureMap.get(i).get(j) / 50) * Math.random() > (1 - GameMapConfig.RAND_LEVEL1))) {
+                            ((this.moistureMap.get(i).get(j) / GameMapConfig.MOISTRURE) * Math.random() > (1 - GameMapConfig.RAND_LEVEL1))) {
                         this.landformMap.get(i).set(j, LandformType.FOREST);
                     } else {
                         this.landformMap.get(i).set(j, LandformType.GRASSLANDS);
@@ -274,7 +274,7 @@ public class GameMap {
                 int deltaY = GameMapConfig.RIDGE_XY[serial][GameMapConfig.RIDGE_XY[serial].length - 1][1];
 
                 applyRidge(serial, ridgeX, ridgeY);
-                while (cycle < GameMapConfig.RIVER_NUM) {
+                if (cycle < GameMapConfig.RIVER_NUM) {
                     applyRiver((int) (Math.random() * GameMapConfig.RIVER_SERIAL),
                             ridgeX + (int) (Math.random() * deltaX),
                             ridgeY + (int) (Math.random() * deltaY));

@@ -10,10 +10,10 @@ public class GameMapConfig {
     public static final int MAP_HEIGHT = 30;
 
     public static final int TEMPERATURE = 25;
-    public static final int MOISTRURE = 35; //30 Recommended!
+    public static final int MOISTRURE = 25; //Must be > 0
 
-    public static final double MOISTURE_BOUND = 25;
-    public static final double TEMPERATURE_BOUND_COLD = 5;
+    public static final double MOISTURE_BOUND = 15;
+    public static final double TEMPERATURE_BOUND_COLD = 3;
     public static final double TEMPERATURE_BOUND_HOT = 18;
 
     public static final int MOUNTAIN_NUM = 8;
@@ -45,24 +45,24 @@ public class GameMapConfig {
                     TerrainType.RIVER_NE,
                     TerrainType.LAKE},
             {TerrainType.RIVER_COL,
-                    TerrainType.RIVER_SW,
-                    TerrainType.RIVER_ROW,
-                    TerrainType.RIVER_NW,
-                    TerrainType.RIVER_COL,
                     TerrainType.RIVER_COL,
                     TerrainType.RIVER_NW,
-                    TerrainType.RIVER_ROW,
-                    TerrainType.RIVER_ROW,
-                    TerrainType.RIVER_SE,
-                    TerrainType.RIVER_NW,
-                    TerrainType.RIVER_ROW,
-                    TerrainType.RIVER_ROW,
-                    TerrainType.RIVER_ROW,
-                    TerrainType.RIVER_NE,
                     TerrainType.LAKE},
             {TerrainType.RIVER_COL,
-                    TerrainType.RIVER_COL,
+                    TerrainType.RIVER_NE,
+                    TerrainType.RIVER_ROW,
                     TerrainType.RIVER_NW,
+                    TerrainType.RIVER_COL,
+                    TerrainType.RIVER_COL,
+                    TerrainType.RIVER_SE,
+                    TerrainType.RIVER_ROW,
+                    TerrainType.RIVER_ROW,
+                    TerrainType.RIVER_NW,
+                    TerrainType.RIVER_SE,
+                    TerrainType.RIVER_ROW,
+                    TerrainType.RIVER_ROW,
+                    TerrainType.RIVER_ROW,
+                    TerrainType.RIVER_SW,
                     TerrainType.LAKE},
             {TerrainType.RIVER_ROW,
                     TerrainType.RIVER_ROW,
@@ -70,13 +70,13 @@ public class GameMapConfig {
                     TerrainType.RIVER_ROW,
                     TerrainType.RIVER_SW,
                     TerrainType.RIVER_COL,
-                    TerrainType.RIVER_SE,
+                    TerrainType.RIVER_NW,
                     TerrainType.LAKE},
     };
 
     public static final double RAND_LEVEL0 = 0.50;
     public static final double RAND_LEVEL1 = 0.75;
-    public static final double RAND_LEVEL2 = 0.95;
+    public static final double RAND_LEVEL2 = 0.98;
 
     public static final HashMap<TerrainType, Integer> TERRAIN_MOBILITY_COST = new HashMap<TerrainType, Integer>() {
         {
