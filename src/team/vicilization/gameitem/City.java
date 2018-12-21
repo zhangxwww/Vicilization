@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.util.Vector;
 
 public class City extends JButton {
+    //-------------------------------------Attributes
     private CityName name;
     private int population;
     private Position location;
@@ -18,7 +19,9 @@ public class City extends JButton {
     private Vector<BuildingType> constructedBuildings;
 
     private ProducableInfo producingItem;
-    //private Producable productingItem;
+    private BuildingType producingBuilding;
+    private UnitSubType producingUnit;
+
     private int cityAttack;
     private int cityDefence;
     private int cityHealth;
@@ -29,6 +32,7 @@ public class City extends JButton {
 
     public boolean isProducing;
 
+    //--------------------------------------------构造函数
     public City(Country country, Position position, CityName name,Vector<LandSquare> territory) {
 
         this.name = name;
@@ -37,34 +41,37 @@ public class City extends JButton {
         this.country = country;
         this.flowValue = new CityFlowValue();
         this.stockValue = new CityStockValue();
+        this.territory=territory;
+        this.constructedBuildings=new Vector<BuildingType>();
+
+        this.producingItem=new ProducableInfo();
+        this.producingUnit=UnitSubType.NONE;
+        this.producingBuilding=BuildingType.NONE;
+
         this.cityAttack = 2;
         this.cityDefence = 2;
         this.cityHealth = 100;
         this.recovery = 10;
 
-        this.territory=territory;
-        this.constructedBuildings=new Vector<BuildingType>();
-
+        this.calculateAllowedBuildings();
+        this.calculateAllowedUnits();
 
         this.isProducing=false;
-
-        this.territory = territory;
-
     }
 
-    //update vectors
-    public void updateConstructedBuildings(BuildingType buildingType){
-        constructedBuildings.add(buildingType);
-    }
+    //-------------------------------------update Attributes
     public void calculateAllowedBuildings(){
         Vector<BuildingType> tempAllowedBuildings=new Vector<BuildingType>(3);
         tempAllowedBuildings.add(BuildingType.ACADEMY);
         tempAllowedBuildings.add(BuildingType.COMMERCIAL_CERTER);
         tempAllowedBuildings.add(BuildingType.INDUSTRIAL_PARK);
         for(BuildingType type:tempAllowedBuildings){
+            if(constructedBuildings.contains(type)|this.producingBuilding.equals(type)){
+                tempAllowedBuildings.remove(type);
+            }
             //科技if(GameItemConfig.)
             //已建造
-            tempAllowedBuildings.remove(type);
+            //正在建造
         }
         this.allowedBuildings=tempAllowedBuildings;
     }
@@ -79,8 +86,6 @@ public class City extends JButton {
             //科技
         }
     }
-
-
     private void calculateFlowValue() {
         this.flowValue = new CityFlowValue();
         //地块产出
@@ -106,27 +111,15 @@ public class City extends JButton {
         }
         this.flowValue.addValue(buildingFlowValue);
     }
-
-    public void cityEndOfTurn(){
-        //重置移动力
-
-    }
-    public void cityStartTurn(){
-
-    }
-
-
-
-    public void updateStock() {
-        //TO DO details
+    private void updateStock() {
         calculateFlowValue();
         stockValue.addFlow(flowValue);
+
         //处理生产力  产出
-        if(stockValue.getProducticity()>=producingItem.getProductivityCost()){
-            System.out.println("Unit Complete");
-            stockValue.setProducticity(stockValue.getProducticity()-producingItem.getProductivityCost());
-            //producingItem.finish;
-        }
+
+
+
+
         //处理食物  人口
         if(stockValue.getFood()>=5){
             while (stockValue.getFood()>=5) {
@@ -148,8 +141,7 @@ public class City extends JButton {
         //处理科技和各种点数
 
     }
-
-    public void recover() {
+    private void recover() {
         int initHealth = 100;
         if (cityHealth < initHealth - recovery) {
             cityHealth += recovery;
@@ -158,20 +150,61 @@ public class City extends JButton {
         }
     }
 
-    //public void produce(Producable production) {
+    //------------------------------------------End/Start Turn
+    public void cityEndOfTurn(){
+        this.updateStock();
+        this.recover();
+        //重置移动力
 
-    //}
+    }
+    public UnitSubType cityStartTurn(){
+        finishProduceBuilding();
+        UnitSubType unitSubType=finishProduceUnit();
+        return unitSubType;
+    }
 
-
+    //----------------------------------------produce
     public void produce(UnitSubType type){
         this.producingItem=new UnitInfo(type);
+        this.producingUnit=type;
         this.setIsProducing(true);
     }
     public void produce(BuildingType type){
         this.producingItem=new BuildingInfo(type);
         this.setIsProducing(true);
+        this.producingBuilding=type;
+    }
+    private void finishProduceBuilding(){
+        if(stockValue.getProducticity()>=producingItem.getProductivityCost()){
+            stockValue.setProducticity(stockValue.getProducticity()-producingItem.getProductivityCost());
+            if(this.producingUnit==UnitSubType.NONE){
+                constructedBuildings.add(this.producingBuilding);
+                this.isProducing=false;
+                this.producingBuilding=BuildingType.NONE;
+            }
+        }
+    }
+    private UnitSubType finishProduceUnit(){
+        if(stockValue.getProducticity()>=producingItem.getProductivityCost()){
+
+
+            stockValue.setProducticity(stockValue.getProducticity()-producingItem.getProductivityCost());
+            if(this.producingBuilding==BuildingType.NONE){
+                UnitSubType unitSubType=this.producingUnit;
+                this.isProducing=false;
+                this.producingUnit=UnitSubType.NONE;
+                return unitSubType;
+            }else{
+                return UnitSubType.NONE;
+            }
+            //producingItem.finish;
+        }
+        return UnitSubType.NONE;
     }
 
+    //public void produce(Producable production) {
+
+    //}
 
     public void addNewUnit(Unit unit) {
 
@@ -184,10 +217,12 @@ public class City extends JButton {
     public boolean belongsTo(Country country) {
         return false;
     }
-
     public boolean hasLandSquare(LandSquare landform) {
         return false;
     }
+
+
+    //------------------------------------------get/set
     public boolean getIsProducing(){
         return this.isProducing;
     }

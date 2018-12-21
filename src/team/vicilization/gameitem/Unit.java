@@ -11,7 +11,7 @@ import java.lang.annotation.Annotation;
 import java.util.Vector;
 
 public abstract class Unit implements Movable,Selectable,Affiliable{
-
+    //-------------------------------------Attributes
     protected UnitType type;
     protected UnitSubType subType;
     protected Country country;
@@ -19,7 +19,6 @@ public abstract class Unit implements Movable,Selectable,Affiliable{
     protected int health;
     protected UnitInfo unitInfo;
     protected static int unitRecover;
-
 
     // TODO 这两个东西要在回合结束的时候重置
     protected boolean movedThisTurn;
@@ -33,6 +32,7 @@ public abstract class Unit implements Movable,Selectable,Affiliable{
         this.subType=unitSubType;
         this.unitInfo=new UnitInfo(unitSubType);
         this.health=GameItemConfig.UNIT_HEALTH.get(unitSubType);
+
         this.movedThisTurn = false;
         this.attackedThisTurn = false;
     }
@@ -161,12 +161,20 @@ public abstract class Unit implements Movable,Selectable,Affiliable{
     @Override
     public void moveTo(Position pos) {
         this.setPosition(pos);
-        movedThisTurn = true;
+        this.movedThisTurn=true;
     }
     
 
 //------------------------------------------Fightable
 
+
+//------------------------------------------End/Start Turn
+    public void unitEndOfTurn(){
+        this.recover();
+        this.movedThisTurn=false;
+    }
+    public void startTurn(){
+    }
 
     public int getHealth() {
         return health;
