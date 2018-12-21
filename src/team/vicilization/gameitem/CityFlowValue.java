@@ -21,6 +21,16 @@ public class CityFlowValue {
         this.engineerValue=0;
     }
 
+    public CityFlowValue(BuildingType type){
+        this.productivity=GameItemConfig.BUILDING_FLOW_PRODUCTIVITY.get(type);
+        this.money =GameItemConfig.BUILDING_FLOW_MONEY.get(type);
+        this.food =GameItemConfig.BUILDING_FLOW_FOOD.get(type);
+        this.science=GameItemConfig.BUILDING_FLOW_SCIENCE.get(type) ;
+        this.scientistValue=GameItemConfig.BUILDING_FLOW_SCIENTIST_VALUE.get(type) ;
+        this.traderValue=GameItemConfig.BUILDING_FLOW_TRADER_VALUE.get(type) ;
+        this.engineerValue =GameItemConfig.BUILDING_FLOW_ENGINEER_VALUE.get(type);
+    }
+
     public void addValue(CityFlowValue flowValue){
         this.productivity+=flowValue.productivity;
         this.money+=flowValue.money;

@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.lang.annotation.Annotation;
 import java.util.Vector;
 
-public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
+public abstract class Unit implements Movable,Selectable,Affiliable{
 
     protected UnitType type;
     protected UnitSubType subType;
@@ -152,15 +152,6 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
 
 
 
-
-    @Override
-    public int moneyCost() {
-        return 0;
-    }
-    @Override
-    public int productivityCost() {
-        return 0;
-    }
 
 
 
