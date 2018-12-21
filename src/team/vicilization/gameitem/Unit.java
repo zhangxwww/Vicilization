@@ -10,7 +10,7 @@ import java.lang.annotation.Annotation;
 import java.util.Vector;
 
 public abstract class Unit implements Movable,Selectable,Affiliable{
-
+    //-------------------------------------Attributes
     protected UnitType type;
     protected UnitSubType subType;
     protected Country country;
@@ -18,7 +18,6 @@ public abstract class Unit implements Movable,Selectable,Affiliable{
     protected int health;
     protected UnitInfo unitInfo;
     protected static int unitRecover;
-
 
     protected boolean movedThisTurn;
     protected boolean attackedThisTurn;
