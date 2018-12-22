@@ -7,7 +7,7 @@ import team.vicilization.util.Position;
 import javax.swing.*;
 import java.util.Vector;
 
-public class City extends JButton {
+public class City {
     private CityName name;
     private int population;
     private Position location;
@@ -110,5 +110,17 @@ public class City extends JButton {
 
     public boolean hasLandSquare(LandSquare landform) {
         return false;
+    }
+
+    public Vector<LandSquare> getTerritory() {
+        return territory;
+    }
+
+    public Position getLocation() {
+        return location;
+    }
+
+    public CityStockValue getStockValue() {
+        return stockValue;
     }
 }

@@ -1,5 +1,7 @@
 package team.vicilization.gamemap;
 
+import team.vicilization.util.Property;
+
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -227,6 +229,18 @@ public class GameMapConfig {
             put(LandformType.FROZENGROUND, 0);
             put(LandformType.DESERT, 0);
             put(LandformType.MARSH, 0);
+        }
+    };
+
+    public static final HashMap<LandformType, Property> LANDFORM_HARVEST = new HashMap<LandformType, Property>() {
+        {
+            put(LandformType.FOREST,       new Property(8,0,0,0,0,0,0));
+            put(LandformType.RAINFOREST,   new Property(5,0,5,0,0,0,0));
+            put(LandformType.MARSH,        new Property(0,0,8,0,0,0,0));
+            // put(LandformType.NONE,         new Property(0,0,0,0,0,0,0));
+            // put(LandformType.GRASSLANDS,   new Property(0,0,0,0,0,0,0));
+            // put(LandformType.FROZENGROUND, new Property(0,0,0,0,0,0,0));
+            // put(LandformType.DESERT,       new Property(0,0,0,0,0,0,0));
         }
     };
 

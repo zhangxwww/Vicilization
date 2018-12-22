@@ -87,6 +87,20 @@ public class GameMap {
         return this.landSquares.get(x).get(y);
     }
 
+    public LandSquare getSquare(Position position) {
+        return this.landSquares.get(position.getX()).get(position.getY());
+    }
+
+    public boolean isLegalPosition(int x, int y) {
+        return ((x >= 0) && (x < GameMapConfig.MAP_WIDTH)
+                && (y >= 0) && (y < GameMapConfig.MAP_HEIGHT));
+    }
+
+    public boolean isLegalPosition(Position position) {
+        return isLegalPosition(position.getX(), position.getY());
+    }
+
+
     //=====================初始化温度分布=======================//
     private void initTemperature() {
         Vector<Integer> temperatureLoc = new Vector<>(GameMapConfig.MAP_WIDTH);
