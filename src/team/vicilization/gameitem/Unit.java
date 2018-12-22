@@ -19,8 +19,7 @@ public abstract class Unit implements Movable,Selectable,Affiliable{
     protected int health;
     protected UnitInfo unitInfo;
     protected static int unitRecover;
-
-    // TODO 这两个东西要在回合结束的时候重置
+    
     protected boolean movedThisTurn;
     protected boolean attackedThisTurn;
 
@@ -165,22 +164,23 @@ public abstract class Unit implements Movable,Selectable,Affiliable{
     }
     
 
-//------------------------------------------Fightable
-
 
 //------------------------------------------End/Start Turn
     public void unitEndOfTurn(){
         this.recover();
         this.movedThisTurn=false;
+        this.attackedThisTurn=false;
     }
-    public void startTurn(){
+    public void unitStartTurn(){
     }
 
     public int getHealth() {
         return health;
     }
 
-
+    public void setHealth(int health) {
+        this.health = health;
+    }
 
     @Override
     public boolean ableToSelect() {
@@ -223,6 +223,14 @@ public abstract class Unit implements Movable,Selectable,Affiliable{
     public UnitInfo getUnitInfo() {
         return unitInfo;
     }
+
+    public int getAttack(){
+        return this.unitInfo.getAttack();
+    }
+    public int getDefence(){
+        return  this.unitInfo.getDefence();
+    }
+
 
     public boolean isAttackedThisTurn() {
         return attackedThisTurn;
