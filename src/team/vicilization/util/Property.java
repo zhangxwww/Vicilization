@@ -1,13 +1,16 @@
 package team.vicilization.util;
 
+import team.vicilization.gameitem.BuildingType;
+import team.vicilization.gameitem.GameItemConfig;
+
 public class Property {
-    private int productivity = 0;
-    private int money = 0;
-    private int food = 0;
-    private int science = 0;
-    private int scientistValue = 0;
-    private int traderValue = 0;
-    private int engineerValue = 0;
+    private int productivity ;
+    private int money ;
+    private int food ;
+    private int science ;
+    private int scientistValue ;
+    private int traderValue ;
+    private int engineerValue ;
 
     public Property() {
         this.productivity = 0;
@@ -17,6 +20,17 @@ public class Property {
         this.scientistValue = 0;
         this.traderValue = 0;
         this.engineerValue = 0;
+    }
+
+    public Property(BuildingType type){
+        this.productivity= GameItemConfig.BUILDING_FLOW_PRODUCTIVITY.get(type);
+        this.money =GameItemConfig.BUILDING_FLOW_MONEY.get(type);
+        this.food =GameItemConfig.BUILDING_FLOW_FOOD.get(type);
+        this.science=GameItemConfig.BUILDING_FLOW_SCIENCE.get(type) ;
+        this.scientistValue=GameItemConfig.BUILDING_FLOW_SCIENTIST_VALUE.get(type) ;
+        this.traderValue=GameItemConfig.BUILDING_FLOW_TRADER_VALUE.get(type) ;
+        this.engineerValue =GameItemConfig.BUILDING_FLOW_ENGINEER_VALUE.get(type);
+
     }
 
     public Property(int productivity, int money, int food, int science,

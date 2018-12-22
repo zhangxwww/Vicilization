@@ -3,6 +3,7 @@ package team.vicilization.gameitem;
 import team.vicilization.country.Country;
 import team.vicilization.gamemap.LandSquare;
 import team.vicilization.util.Position;
+import team.vicilization.util.Property;
 
 import javax.swing.*;
 import java.util.Vector;
@@ -15,8 +16,8 @@ public class City implements Fightable{
     private int population;
     private Position location;
     private Country country;
-    private CityFlowValue flowValue;
-    private CityStockValue stockValue;
+    private Property flowValue;
+    private Property stockValue;
     private Vector<LandSquare> territory;
     private Vector<BuildingType> constructedBuildings;
 
@@ -41,8 +42,8 @@ public class City implements Fightable{
         this.population = 1;
         this.location = position;
         this.country = country;
-        this.flowValue = new CityFlowValue();
-        this.stockValue = new CityStockValue();
+        this.flowValue = new Property();
+        this.stockValue = new Property();
         this.territory=territory;
         this.constructedBuildings=new Vector<BuildingType>();
 
@@ -89,33 +90,33 @@ public class City implements Fightable{
         }
     }
     private void calculateFlowValue() {
-        this.flowValue = new CityFlowValue();
+        this.flowValue = new Property();
         //地块产出
-        CityFlowValue territoryFlowValue = new CityFlowValue();
+        Property territoryFlowValue = new Property();
         for (LandSquare land : territory) {
             territoryFlowValue.setFood(land.getFoodYield());
             territoryFlowValue.setMoney(land.getMoneyYield());
             territoryFlowValue.setScience(land.getScienceYield());
             territoryFlowValue.setProductivity(land.getProductivityYield());
         }
-        this.flowValue.addValue(territoryFlowValue);
+        this.flowValue.addProperty(territoryFlowValue);
         //人口产出
-        CityFlowValue populationFlowValue = new CityFlowValue();
+        Property populationFlowValue = new Property();
         populationFlowValue.setProductivity(this.population);
         populationFlowValue.setScience(this.population);
         populationFlowValue.setMoney(this.population);
         populationFlowValue.setFood(-this.population);
-        this.flowValue.addValue(populationFlowValue);
+        this.flowValue.addProperty(populationFlowValue);
         //建筑产出
-        CityFlowValue buildingFlowValue = new CityFlowValue();
+        Property buildingFlowValue = new Property();
         for (BuildingType buildingType : constructedBuildings) {
-            buildingFlowValue.addValue(new CityFlowValue(buildingType));
+            buildingFlowValue.addProperty(new Property(buildingType));
         }
-        this.flowValue.addValue(buildingFlowValue);
+        this.flowValue.addProperty(buildingFlowValue);
     }
     private void updateStock() {
         calculateFlowValue();
-        stockValue.addFlow(flowValue);
+        stockValue.addProperty(flowValue);
 
         //处理生产力  产出
 
@@ -177,8 +178,8 @@ public class City implements Fightable{
         this.producingBuilding=type;
     }
     private void finishProduceBuilding(){
-        if(stockValue.getProducticity()>=producingItem.getProductivityCost()){
-            stockValue.setProducticity(stockValue.getProducticity()-producingItem.getProductivityCost());
+        if(stockValue.getProductivity()>=producingItem.getProductivityCost()){
+            stockValue.setProductivity(stockValue.getProductivity()-producingItem.getProductivityCost());
             if(this.producingUnit==UnitSubType.NONE){
                 constructedBuildings.add(this.producingBuilding);
                 this.isProducing=false;
@@ -187,10 +188,10 @@ public class City implements Fightable{
         }
     }
     private UnitSubType finishProduceUnit(){
-        if(stockValue.getProducticity()>=producingItem.getProductivityCost()){
+        if(stockValue.getProductivity()>=producingItem.getProductivityCost()){
 
 
-            stockValue.setProducticity(stockValue.getProducticity()-producingItem.getProductivityCost());
+            stockValue.setProductivity(stockValue.getProductivity()-producingItem.getProductivityCost());
             if(this.producingBuilding==BuildingType.NONE){
                 UnitSubType unitSubType=this.producingUnit;
                 this.isProducing=false;
@@ -272,13 +273,13 @@ public class City implements Fightable{
     }
 
 
-    public CityFlowValue getFlowValue() {
+    public Property getFlowValue() {
         return flowValue;
     }
 
 
 
-    public CityStockValue getStockValue() {
+    public Property getStockValue() {
         return stockValue;
     }
 
