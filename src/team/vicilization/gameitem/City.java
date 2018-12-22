@@ -7,8 +7,10 @@ import team.vicilization.util.Position;
 import javax.swing.*;
 import java.util.Vector;
 
-public class City extends JButton implements Fightable{
+public class City implements Fightable{
+
     //-------------------------------------Attributes
+
     private CityName name;
     private int population;
     private Position location;
@@ -251,6 +253,7 @@ public class City extends JButton implements Fightable{
     @Override
     public void die() {
         //this.country.deleteCity(this);
+
     }
 
     //------------------------------------------get/set
@@ -258,9 +261,7 @@ public class City extends JButton implements Fightable{
     public CityName getCityName() {
         return name;
     }
-    public Position getCityLocation() {
-        return location;
-    }
+
 
 
     public boolean getIsProducing(){
@@ -269,6 +270,7 @@ public class City extends JButton implements Fightable{
     public void setIsProducing(boolean b){
         this.isProducing=b;
     }
+
 
     public CityFlowValue getFlowValue() {
         return flowValue;
@@ -318,5 +320,10 @@ public class City extends JButton implements Fightable{
 
     public void setCityHealth(int cityHealth) {
         this.cityHealth = cityHealth;
+    }
+
+  
+    public Position getLocation() {
+        return location;
     }
 }

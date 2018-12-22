@@ -3,8 +3,11 @@ package team.vicilization.country;
 import team.vicilization.gameitem.City;
 import team.vicilization.gameitem.CityName;
 import team.vicilization.gameitem.Unit;
+import team.vicilization.gamemap.GameMap;
 import team.vicilization.gamemap.LandSquare;
+import team.vicilization.gamemap.LandformType;
 import team.vicilization.mechanics.*;
+import team.vicilization.util.Property;
 import team.vicilization.util.Position;
 
 import java.util.*;
@@ -25,8 +28,8 @@ public class Country {
     private Vector<ScienceName> learntScience;
     private ScienceName currentScience;
 
-    private CountryFlowValue flowValue;
-    private CountryStockValue stockValue;
+    private Property flowValue;
+    private Property stockValue;
 
     private Vector<CityName> availableNames;
 
@@ -39,10 +42,11 @@ public class Country {
         this.occupiedTradeRoutes = 0;
         this.totalTradeRoutes = 0;
 
-        this.countryResource = new HashMap<String, Integer>(){};
+        this.countryResource = new HashMap<String, Integer>() {
+        };
         this.currentScience = null;
-        this.flowValue = new CountryFlowValue();
-        this.stockValue = new CountryStockValue();
+        this.flowValue = new Property();
+        this.stockValue = new Property();
 
         this.availableNames = new Vector<CityName>(
                 CountryConfig.CITIES_OF_COUNTRY.get(this.countryName)
@@ -80,11 +84,36 @@ public class Country {
     }
     */
 
-    public City buildNewCity(Position position, Vector<LandSquare> territory) {
-        // TODO 分配地块
-        CityName tempName = this.availableNames.get(0);
-        Vector<LandSquare> terrSquare = new Vector<>();
-        City tempCity = new City(this, position, tempName, territory);
+    public City buildNewCity(Position position, GameMap map, Country enemyCountry) {
+        Vector<LandSquare> newTerritory = new Vector<>();
+        int x = position.getX();
+        int y = position.getY();
+
+        newTerritory.add(map.getSquare(x, y));
+        for (Position terr : CountryConfig.DEFAULT_TERRITORY) {
+            if (map.isLegalPosition(x + terr.getX(), y + terr.getY())) {
+                newTerritory.add(map.getSquare(x + terr.getX(), y + terr.getY()));
+            }
+        }
+
+        for (City city : this.cities) {
+            for (LandSquare square : city.getTerritory()) {
+                newTerritory.remove(square);
+            }
+        }
+        for (City city : enemyCountry.cities) {
+            for (LandSquare square : city.getTerritory()) {
+                newTerritory.remove(square);
+            }
+        }
+
+        if(availableNames.size() == 0){
+            this.availableNames = CountryConfig.CITIES_OF_COUNTRY.get(this.countryName);
+            Collections.shuffle(availableNames);
+        }
+
+        City tempCity = new City(this, position, this.availableNames.get(0), newTerritory);
+        this.availableNames.remove(0);
         cities.add(tempCity);
         return tempCity;
     }
@@ -105,16 +134,29 @@ public class Country {
         this.units.remove(unit);
     }
 
+    public void harvestResource(Position position, LandformType landformType) {
+        City city = cities.get(0);
+        int distance = 2500;
+        int temp;
+        for (City c : cities) {
+            if ((temp = Position.distanceSquare(position, c.getLocation())) < distance) {
+                city = c;
+                distance = temp;
+            }
+        }
+        // TODO
+        // city.getStockValue().addFlow();
+    }
     public void selectScience(ScienceName scienceName) {
         this.currentScience = scienceName;
     }
 
     public ScienceName finishScience() {
-        if(this.currentScience == null){
+        if (this.currentScience == null) {
             return null;
-        }else if(this.stockValue.getScience() < ScienceConfig.SCIENCE_COST.get(this.currentScience)){
+        } else if (this.stockValue.getScience() < ScienceConfig.SCIENCE_COST.get(this.currentScience)) {
             return null;
-        }else{
+        } else {
             this.stockValue.setScience(this.stockValue.getScience() - ScienceConfig.SCIENCE_COST.get(this.currentScience));
             ScienceName result = this.currentScience;
             this.currentScience = null;
@@ -150,11 +192,11 @@ public class Country {
     }
     */
 
-    public void recruitGiant(Giant giant){
+    public void recruitGiant(Giant giant) {
         // TODO giantname??
     }
 
-    public boolean judgeVictory() {
+    public boolean judgeScienceVictory() {
         // TODO 什么是胜利条件
         return false;
     }
@@ -214,11 +256,11 @@ public class Country {
         return learntScience;
     }
 
-    public CountryFlowValue getFlowValue() {
+    public Property getFlowValue() {
         return flowValue;
     }
 
-    public CountryStockValue getStockValue() {
+    public Property getStockValue() {
         return stockValue;
     }
 
