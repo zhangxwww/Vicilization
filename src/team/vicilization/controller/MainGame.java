@@ -22,6 +22,7 @@ public class MainGame extends State {
 
     private MapArea mapArea;
     private UpperInfoArea upperInfoArea;
+    private LowerInfoArea lowerInfoArea;
 
     private Vector<Country> countries;
     private Country currentPlayer;
@@ -30,22 +31,45 @@ public class MainGame extends State {
     private Vector<Unit> units;
 
     private static JButton nextRoundButton;
+    private static JButton unitMoveButton;
+    private static JButton unitSpecialButton;
+
+    private boolean unitSeleted;
+    private boolean unitMoving;
+    private Unit seletedUnit;
 
     public MainGame(MainWindow mainWindow, CountryName[] countrys) {
         super(mainWindow);
         setNextState(StateType.Gameover);
 
         this.round = 0;
+        this.unitSeleted = false;
+        this.unitMoving = false;
         this.initMapArea();
-        this.initCountrys(countrys);
 
         this.initButtons();
         this.initUpperInfoArea();
+        this.initLowerInfoArea();
+
+        this.initCountrys(countrys);
 
         this.cities = new Vector<City>();
     }
 
     private void nextRound() {
+        this.unitSeleted = false;
+        this.unitMoving = false;
+        this.mapArea.mapPanel.updateMap();
+        try {
+            System.out.println("remove");
+            this.panel.remove(unitMoveButton);
+        } catch (Exception e) {
+
+        }
+        this.panel.repaint();
+        this.seletedUnit = null;
+        this.lowerInfoArea.unshowUnitInfo();
+
         if (this.currentPlayer.judgeVictory() || round == 3 /* TODO delete later */) {
             this.mainWindow.convertToNextState(currentPlayer);
         } else {
@@ -68,7 +92,6 @@ public class MainGame extends State {
         }
         this.currentPlayer = this.countries.elementAt(0);
     }
-
 
     private void initUnitsForOneCountry(Country country, int order) {
         Random initPosition = new Random();
@@ -96,10 +119,16 @@ public class MainGame extends State {
     }
 
     private void initButtons() {
+        GameButtonsListener listener = new GameButtonsListener();
+
         this.nextRoundButton = new JButton("Next Round");
         this.nextRoundButton.setBounds(1060, 600, 200, 100);
-        this.nextRoundButton.addActionListener(new GameButtonsListener());
+        this.nextRoundButton.addActionListener(listener);
         this.panel.add(nextRoundButton);
+
+        this.unitMoveButton = new JButton("Move / Fight");
+        this.unitMoveButton.setBounds(20, 600, 200, 50);
+        this.unitMoveButton.addActionListener(listener);
     }
 
     private void initUpperInfoArea() {
@@ -107,9 +136,28 @@ public class MainGame extends State {
         this.panel.add(upperInfoArea);
     }
 
+    private void initLowerInfoArea() {
+        this.lowerInfoArea = new LowerInfoArea();
+        this.panel.add(lowerInfoArea);
+    }
+
     private void selectUnit(Unit unit) {
-        // TODO
-        System.out.println("select");
+        this.unitSeleted = true;
+        this.seletedUnit = unit;
+        this.lowerInfoArea.showUnitInfo(unit);
+        if (!seletedUnit.isMovedThisTurn()) { // 没有移动，显示移动按钮
+            this.panel.add(unitMoveButton);
+            this.panel.repaint();
+        }
+    }
+
+    private void unselectUnit() {
+        this.unitSeleted = false;
+        this.unitMoving = false;
+        this.panel.remove(unitMoveButton);
+        this.panel.repaint();
+        this.seletedUnit = null;
+        this.lowerInfoArea.unshowUnitInfo();
     }
 
     private void selectCity(City city) {
@@ -117,22 +165,6 @@ public class MainGame extends State {
     }
 
     private void selectScience(ScienceName scienceName) {
-        // TODO
-    }
-
-    private void showCityInfo(City city) {
-        // TODO
-    }
-
-    private void unshowCityInfo() {
-        // TODO
-    }
-
-    private void showUnitInfo(Unit unit) {
-        // TODO
-    }
-
-    private void unshowUnitInfo() {
         // TODO
     }
 
@@ -195,12 +227,16 @@ public class MainGame extends State {
             if (event.getSource() == MainGame.nextRoundButton) {
                 nextRound();
             }
+            else if (event.getSource() == MainGame.unitMoveButton) {
+                mapArea.drawAccessableSquares();
+                unitMoving = true;
+            }
             // TODO finish with other actions
         }
     }
 
     private class UpperInfoArea extends JPanel {
-        // show flow value, resource count ... here
+        // TODO show flow value, resource count ... here
         private JLabel sciencePointInfo;
         private JLabel moneyInfo;
         private JLabel roundInfo;
@@ -268,33 +304,66 @@ public class MainGame extends State {
         }
     }
 
+    private class LowerInfoArea extends JPanel {
 
-    private class SelectedButtonList extends JPanel {
-        // TODO show buttons when units or cities being selected
-        public SelectedButtonList(Unit unit) {
+        // show selected unit / city info
+        private JLabel unitTypeInfo;
+        private JLabel unitHealthInfo;
+        private JLabel unitAttackInfo;
+        private JLabel unitDefenceInfo;
+
+        private JLabel healthLabel;
+        private JLabel attackLabel;
+        private JLabel defenceLabel;
+        // TODO show city info
+
+        public LowerInfoArea() {
             super();
-            // TODO
+            this.setBounds(250, 600, 600, 100);
+            this.setLayout(null);
+
+            this.attackLabel = new JLabel("Attack : ");
+            this.defenceLabel = new JLabel("Defence : ");
+            this.healthLabel = new JLabel("Health : ");
+
+            this.attackLabel.setBounds(0, 25, 80, 25);
+            this.defenceLabel.setBounds(0, 50, 80, 25);
+            this.healthLabel.setBounds(0, 75, 80, 25);
+
+            this.unitTypeInfo = new JLabel();
+            this.unitHealthInfo = new JLabel();
+            this.unitAttackInfo = new JLabel();
+            this.unitDefenceInfo = new JLabel();
+
+            this.unitTypeInfo.setBounds(80, 0, 80, 25);
+            this.unitHealthInfo.setBounds(80, 25, 80, 25);
+            this.unitAttackInfo.setBounds(80, 50, 80, 25);
+            this.unitDefenceInfo.setBounds(80, 75, 80, 25);
+
+            this.add(attackLabel);
+            this.add(defenceLabel);
+            this.add(healthLabel);
+            this.add(unitTypeInfo);
+            this.add(unitHealthInfo);
+            this.add(unitAttackInfo);
+            this.add(unitDefenceInfo);
         }
 
+        public void showUnitInfo(Unit unit) {
+            this.unitTypeInfo.setText(unit.getSubType().toString());
+            this.unitAttackInfo.setText(String.valueOf(unit.getUnitInfo().getAttack()));
+            this.unitDefenceInfo.setText(String.valueOf(unit.getUnitInfo().getDefence()));
+            this.unitHealthInfo.setText(String.valueOf(unit.getHealth()));
+        }
 
-        public SelectedButtonList(City city) {
-            super();
-            // TODO
+        public void unshowUnitInfo() {
+            this.unitTypeInfo.setText("");
+            this.unitAttackInfo.setText("");
+            this.unitDefenceInfo.setText("");
+            this.unitHealthInfo.setText("");
         }
     }
 
-    private class InfoArea extends JPanel {
-        // TODO used to show info of selected unit or city
-        public InfoArea(Unit unit) {
-            super();
-            // TODO
-        }
-
-        public InfoArea(City city) {
-            super();
-            // TODO
-        }
-    }
 
     private class MapArea extends JPanel {
 
@@ -311,14 +380,16 @@ public class MainGame extends State {
             this.add(mapPanel);
         }
 
-
         public void addUnitInMap(Unit unit, Position position) {
             this.mapPanel.addUnit(unit, position);
         }
 
         public LandSquare at(int x, int y) {
-
             return mapPanel.map.getSquare(x, y);
+        }
+
+        public void drawAccessableSquares() {
+            this.mapPanel.drawAccessableSquares();
         }
 
         private class MapPanel extends JPanel {
@@ -349,6 +420,8 @@ public class MainGame extends State {
             private ImageIcon explorer_icon;
             private ImageIcon footman_icon;
 
+            Vector<LandSquare> accessableSquares;
+
             public MapPanel() {
                 super();
                 this.map = new GameMap();
@@ -356,7 +429,6 @@ public class MainGame extends State {
                 this.setLayout(null);
 
                 this.initIcons();
-
 
                 // TODO this will change later
                 this.setBounds(0, 0,
@@ -409,6 +481,18 @@ public class MainGame extends State {
                         this.add(square);
                     }
                 }
+            }
+
+            public void drawAccessableSquares() {
+                accessableSquares = seletedUnit.getAvailableLocation(map);
+                for (LandSquare landSquare : accessableSquares) {
+                    Position position = landSquare.getPosition();
+                    JLabel square = (JLabel) getComponentAt(
+                            position.getX() * 50, position.getY() * 50);
+                    square.setIcon(null);
+                    square.setBackground(Color.GREEN);
+                }
+                this.repaint();
             }
 
             private void drawMapWithoutUnits() {
@@ -494,8 +578,30 @@ public class MainGame extends State {
                 }
             }
 
-            public void drawUnits() {
-                // TODO
+            public void updateMap() {
+                drawMapWithoutUnits();
+                for (Unit unit : units) {
+                    Position position = unit.getPosition();
+                    JLabel square = (JLabel) getComponentAt(
+                            position.getX() * 50, position.getY() * 50);
+                    switch (unit.getSubType()) {
+                        case EXPLORER:
+                            square.setIcon(explorer_icon);
+                            break;
+                        case CONSTRUCTOR:
+                            square.setIcon(constructor_icon);
+                            break;
+                        case FOOTMAN:
+                            square.setIcon(footman_icon);
+                            break;
+                        // TODO add other
+                        default:
+                            break;
+                    }
+                    square.setBackground(CountryConfig.COLOR_OF_COUNTRY
+                            .get(unit.getCountry().getCountryName()));
+                }
+                this.repaint();
             }
 
             private void addUnit(Unit unit, Position position) {
@@ -534,13 +640,24 @@ public class MainGame extends State {
 
                     int posx = event.getX() / 50;
                     int posy = event.getY() / 50;
-                    for (Unit u : units) {
-                        if (u.getPosition().equals(new Position(posx, posy))) {
-                            if (u.getCountry() == currentPlayer) {
-                                selectUnit(u);
+                    if (!unitMoving) { // 单位没有准备移动
+                        for (Unit u : units) {
+                            if (u.getPosition().equals(new Position(posx, posy))) {
+                                if (u.getCountry() == currentPlayer) {
+                                    selectUnit(u);
+                                }
                             }
                         }
+                        // TODO select city
+                    } else { // 单位移动
+                        Position position = new Position(posx, posy);
+                        LandSquare landSquare = map.getSquare(posx, posy);
+                        if (accessableSquares.contains(landSquare)) {
+                            seletedUnit.moveTo(position);
+                        }
+                        unselectUnit();
                     }
+                    updateMap();
                 }
 
                 @Override

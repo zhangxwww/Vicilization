@@ -2,6 +2,7 @@ package team.vicilization.gameitem;
 
 public enum BuildingType {
 
+    NONE,
     ACADEMY,
     COMMERCIAL_CERTER,
     INDUSTRIAL_PARK;
