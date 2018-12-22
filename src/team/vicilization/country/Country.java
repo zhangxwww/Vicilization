@@ -56,10 +56,17 @@ public class Country {
 
     public void endOfCurrentRound() {
         // TODO 回血，移动力写哪都行
+        for (Unit unit : units) {
+            // TODO city不对每个单位做?
+            unit.recover();
+        }
     }
 
     public void readyForNewRound() {
         // TODO 这里要执行计算存量流量、推进项目、城市恢复等一系列会在每一回合开始执行的任务
+        for (City city : cities) {
+            city.updateStock();
+        }
     }
 
 
@@ -134,7 +141,7 @@ public class Country {
         this.units.remove(unit);
     }
 
-    public void harvestResource(Position position, LandformType landformType) {
+    public void harvestLandform(Position position, LandformType landformType) {
         City city = cities.get(0);
         int distance = 2500;
         int temp;
@@ -144,9 +151,11 @@ public class Country {
                 distance = temp;
             }
         }
+
         // TODO
         // city.getStockValue().addFlow();
     }
+
     public void selectScience(ScienceName scienceName) {
         this.currentScience = scienceName;
     }

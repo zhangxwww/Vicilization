@@ -1,13 +1,13 @@
 package team.vicilization.util;
 
 public class Property {
-    private int productivity = 0;
-    private int money = 0;
-    private int food = 0;
-    private int science = 0;
-    private int scientistValue = 0;
-    private int traderValue = 0;
-    private int engineerValue = 0;
+    private int productivity;
+    private int money;
+    private int food;
+    private int science;
+    private int scientistValue;
+    private int traderValue;
+    private int engineerValue;
 
     public Property() {
         this.productivity = 0;
