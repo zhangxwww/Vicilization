@@ -7,7 +7,7 @@ public interface Fightable {
 
     public int getHealth();
 
-    public void injure();
+    public void injure(int damage);
 
     public void die();
 }

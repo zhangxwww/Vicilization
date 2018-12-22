@@ -7,7 +7,8 @@ import team.vicilization.util.Position;
 import javax.swing.*;
 import java.util.Vector;
 
-public class City {
+public class City implements Fightable{
+
     //-------------------------------------Attributes
 
     private CityName name;
@@ -222,23 +223,107 @@ public class City {
         return false;
     }
 
-    public Vector<LandSquare> getTerritory() {
-        return territory;
+    //------------------------------------------Fightable
+
+    @Override
+    public int getAttack() {
+        return cityAttack;
+    }
+
+    @Override
+    public int getDefence() {
+        return cityDefence;
+    }
+
+    @Override
+    public int getHealth() {
+        return cityHealth;
+    }
+
+    @Override
+    public void injure(int damage) {
+        if(damage>=getHealth()){
+            this.setCityHealth(0);
+            this.die();
+        }else {
+            this.setCityHealth(this.getHealth()-damage);
+        }
+    }
+
+    @Override
+    public void die() {
+        //this.country.deleteCity(this);
+
     }
 
     //------------------------------------------get/set
+
+    public CityName getCityName() {
+        return name;
+    }
+
+
+
     public boolean getIsProducing(){
         return this.isProducing;
     }
     public void setIsProducing(boolean b){
         this.isProducing=b;
     }
-  
-    public Position getLocation() {
-        return location;
+
+
+    public CityFlowValue getFlowValue() {
+        return flowValue;
     }
+
+
 
     public CityStockValue getStockValue() {
         return stockValue;
+    }
+
+    public int getPopulation() {
+        return population;
+    }
+
+    public BuildingType getProducingBuilding() {
+        return producingBuilding;
+    }
+
+    public ProducableInfo getProducingItem() {
+        return producingItem;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public UnitSubType getProducingUnit() {
+        return producingUnit;
+    }
+
+    public Vector<BuildingType> getConstructedBuildings() {
+        return constructedBuildings;
+    }
+
+    public Vector<BuildingType> getAllowedBuildings() {
+        return allowedBuildings;
+    }
+
+    public Vector<LandSquare> getTerritory() {
+        return territory;
+    }
+
+    public Vector<Unit> getAllowedUnits() {
+        return allowedUnits;
+    }
+
+    public void setCityHealth(int cityHealth) {
+        this.cityHealth = cityHealth;
+    }
+
+  
+    public Position getLocation() {
+        return location;
     }
 }
