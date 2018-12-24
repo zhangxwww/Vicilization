@@ -34,6 +34,10 @@ public class MainGame extends State {
     private static JButton nextRoundButton;
     private static JButton unitMoveButton;
     private static JButton unitSpecialButton;
+    private static JButton cityConfirmProduceButton;
+
+    private static JList<BuildingType> availableBuildings;
+    private static JList<UnitSubType> availableUnits;
 
     private boolean unitSeleted;
     private boolean unitMoving;
@@ -42,31 +46,26 @@ public class MainGame extends State {
     private boolean citySelected;
     private City selectedCity;
 
+    private boolean startGame[];
+
     public MainGame(MainWindow mainWindow, CountryName[] countrys) {
         super(mainWindow);
         setNextState(StateType.Gameover);
 
-        System.out.println(countrys[0]);
-        System.out.println(countrys[1]);
-        this.round = 0;
-        this.unitSeleted = false;
-        this.unitMoving = false;
+        this.initParams();
         this.initMapArea();
-
         this.initButtons();
         this.initLowerInfoArea();
-
         this.initCountrys(countrys);
         this.initUpperInfoArea();
-
-        this.cities = new Vector<City>();
     }
 
     private void nextRound() {
         this.unselectCity();
         this.unselectUnit();
+        this.mapArea.mapPanel.updateMap();
 
-        if (this.currentPlayer.judgeScienceVictory() || round == 10 /* TODO delete later */) {
+        if (judgeVectory()) {
             this.mainWindow.convertToNextState(currentPlayer);
         } else {
             round++;
@@ -75,9 +74,22 @@ public class MainGame extends State {
             this.currentPlayer = this.countries
                     .elementAt(round % 2);
             this.currentPlayer.readyForNewRound();
+            this.synchronizeCitiesAndUnits();
             this.upperInfoArea.update();
         }
-        // TODO
+    }
+
+    private void initParams() {
+        this.round = 0;
+        this.unitSeleted = false;
+        this.unitMoving = false;
+        this.citySelected = false;
+        this.selectedCity = null;
+        this.selectedUnit = null;
+        this.startGame = new boolean[2];
+        this.startGame[0] = false;
+        this.startGame[1] = false;
+        this.cities = new Vector<City>();
     }
 
     private void initCountrys(CountryName[] countrys) {
@@ -121,17 +133,21 @@ public class MainGame extends State {
         GameButtonsListener listener = new GameButtonsListener();
 
         this.nextRoundButton = new JButton("Next Round");
-        this.nextRoundButton.setBounds(1060, 600, 200, 100);
+        this.nextRoundButton.setBounds(1160, 600, 100, 100);
         this.nextRoundButton.addActionListener(listener);
         this.panel.add(nextRoundButton);
 
         this.unitMoveButton = new JButton("Move / Fight");
-        this.unitMoveButton.setBounds(20, 600, 200, 50);
+        this.unitMoveButton.setBounds(20, 600, 150, 50);
         this.unitMoveButton.addActionListener(listener);
 
         this.unitSpecialButton = new JButton();
-        this.unitSpecialButton.setBounds(20, 650, 200, 50);
+        this.unitSpecialButton.setBounds(20, 650, 150, 50);
         this.unitSpecialButton.addActionListener(listener);
+
+        this.cityConfirmProduceButton = new JButton("Produce");
+        this.cityConfirmProduceButton.setBounds(1060, 600, 100, 100);
+        this.cityConfirmProduceButton.addActionListener(listener);
     }
 
     private void initUpperInfoArea() {
@@ -142,6 +158,39 @@ public class MainGame extends State {
     private void initLowerInfoArea() {
         this.lowerInfoArea = new LowerInfoArea();
         this.panel.add(lowerInfoArea);
+    }
+
+    private void synchronizeCitiesAndUnits() {
+        this.units.clear();
+        this.cities.clear();
+        for (Unit unit : currentPlayer.getUnits()) {
+            units.add(unit);
+        }
+        for (Unit unit : enermy.getUnits()) {
+            units.add(unit);
+        }
+        for (City city : currentPlayer.getCities()) {
+            cities.add(city);
+        }
+        for (City city : enermy.getCities()) {
+            cities.add(city);
+        }
+    }
+
+    private boolean judgeVectory() {
+        if (this.currentPlayer.judgeScienceVictory()) {
+            // science victory
+            return true;
+        } else if (enermy.getCities().size() == 0
+                && startGame[(round + 1) % 2]) {
+            // war victory
+            return true;
+        } else if (round == 1000) {
+            // time victory
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void selectUnit(Unit unit) {
@@ -178,6 +227,7 @@ public class MainGame extends State {
     }
 
     private void buildCity() {
+        this.startGame[round % 2] = true;
         Position pos = selectedUnit.getPosition();
         currentPlayer.deleteUnit(selectedUnit);
         City city = currentPlayer.buildNewCity(pos, mapArea.getMap(), enermy);
@@ -205,20 +255,7 @@ public class MainGame extends State {
         this.lowerInfoArea.unshowCityInfo();
     }
 
-    private void selectScience(ScienceName scienceName) {
-        // TODO
-    }
-
-    private void showScienceInfo(ScienceName scienceName) {
-        // TODO
-    }
-
     private void showScienceTree() {
-        // TODO
-    }
-
-
-    private void changePlayer() {
         // TODO
     }
 
@@ -247,14 +284,6 @@ public class MainGame extends State {
     }
 
     private void selectProduction() {
-        // TODO
-    }
-
-    private void startTradeRoute() {
-        // TODO
-    }
-
-    private void selectTradeCity() {
         // TODO
     }
 
@@ -299,6 +328,7 @@ public class MainGame extends State {
             // TODO science info
             super();
             this.setLayout(null);
+            this.setOpaque(true);
             this.setBounds(20, 0, 1240, 50);
             this.initIcons();
             this.initLabels();
@@ -312,7 +342,7 @@ public class MainGame extends State {
                     String.valueOf(currentPlayer.getStockValue().getMoney()) + "(+"
                             + String.valueOf(currentPlayer.getFlowValue().getMoney()) + ")");
 
-            this.roundInfo.setText(String.valueOf(round));
+            this.roundInfo.setText(String.valueOf(round / 2 + 1));
             if (round % 2 == 0) {
                 this.countryName_1.setFont(new Font("Consolas", Font.BOLD, 25));
                 this.countryName_2.setFont(new Font("Consolas", Font.PLAIN, 25));
@@ -320,6 +350,7 @@ public class MainGame extends State {
                 this.countryName_1.setFont(new Font("Consolas", Font.PLAIN, 25));
                 this.countryName_2.setFont(new Font("Consolas", Font.BOLD, 25));
             }
+            this.repaint();
         }
 
         private void initLabels() {
@@ -381,22 +412,6 @@ public class MainGame extends State {
         }
     }
 
-    private class ProductionArea extends JPanel {
-        // TODO shown when choosing what to produce
-        public ProductionArea(City city) {
-            super();
-            // TODO
-        }
-    }
-
-    private class ScienceArea extends JPanel {
-        // TODO show and select the sciences here
-        public ScienceArea(ScienceName scienceName) {
-            super();
-            // TODO
-        }
-    }
-
     private class LowerInfoArea extends JPanel {
         // show selected unit / city info
         private JLabel unitTypeInfo;
@@ -422,25 +437,27 @@ public class MainGame extends State {
         private JLabel cityMoneyInfo;
         private JLabel cityScienceInfo;
 
-
         private JLabel cityFoodLabel;
         private JLabel cityProductivityLabel;
         private JLabel cityMoneyLabel;
         private JLabel cityScienceLabel;
 
-
         private ImageIcon foodIcon;
         private ImageIcon producticityIcon;
         private ImageIcon moneyIcon;
         private ImageIcon scienceIcon;
-        // TODO show city info
+
+        private JLabel producingItemLabel;
+        private JLabel progressLabel;
 
         public LowerInfoArea() {
             super();
-            this.setBounds(250, 600, 600, 100);
+            this.setBounds(180, 600, 600, 100);
             this.setLayout(null);
             this.initIcons();
             this.initLabels();
+
+            this.setOpaque(true);
         }
 
         public void showUnitInfo(Unit unit) {
@@ -469,6 +486,21 @@ public class MainGame extends State {
             this.cityProductivityInfo.setText(String.valueOf(city.getFlowValue().getProductivity()));
             this.cityMoneyInfo.setText(String.valueOf(city.getFlowValue().getMoney()));
             this.cityScienceInfo.setText(String.valueOf(city.getFlowValue().getScience()));
+
+            UnitSubType unitSubType = city.getProducingUnit();
+            BuildingType buildingType = city.getProducingBuilding();
+            String producing = "None";
+            int total = 0;
+            if (unitSubType != UnitSubType.NONE) {
+                producing = unitSubType.toString();
+                total = GameItemConfig.UNIT_PRODUCTIVITY_COST.get(unitSubType);
+            } else if (buildingType != BuildingType.NONE) {
+                producing = buildingType.toString();
+                total = GameItemConfig.BUILDING_PRODUCTIVITY_COST.get(buildingType);
+            }
+            int progress = city.getStockValue().getProductivity();
+            this.producingItemLabel.setText(producing);
+            this.progressLabel.setText(progress + " / " + total);
         }
 
         public void unshowCityInfo() {
@@ -481,6 +513,9 @@ public class MainGame extends State {
             this.cityProductivityInfo.setText("");
             this.cityMoneyInfo.setText("");
             this.cityScienceInfo.setText("");
+
+            this.producingItemLabel.setText("");
+            this.progressLabel.setText("");
         }
 
         private void initIcons() {
@@ -539,6 +574,17 @@ public class MainGame extends State {
             this.cityMoneyLabel.setBounds(350, 20, 40, 40);
             this.cityScienceLabel.setBounds(350, 60, 40, 40);
 
+            this.producingItemLabel = new JLabel();
+            this.progressLabel = new JLabel();
+
+            this.producingItemLabel.setBounds(450, 20, 150, 40);
+            this.progressLabel.setBounds(450, 65, 150, 20);
+
+            this.progressLabel.setOpaque(true);
+            this.producingItemLabel.setOpaque(true);
+            this.progressLabel.setBackground(Color.RED);
+            this.producingItemLabel.setBackground(Color.BLUE);
+
             this.unitTypeInfo.setFont(new Font("Consolas", Font.BOLD, 20));
             this.attackInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
             this.defenceInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
@@ -550,6 +596,9 @@ public class MainGame extends State {
             this.cityProductivityInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
             this.cityMoneyInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
             this.cityScienceInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
+
+            this.producingItemLabel.setFont(new Font("Consolas", Font.PLAIN, 20));
+            this.progressLabel.setFont(new Font("Consolas", Font.PLAIN, 15));
 
             this.add(attackLabel);
             this.add(defenceLabel);
@@ -572,6 +621,9 @@ public class MainGame extends State {
             this.add(cityProductivityLabel);
             this.add(cityMoneyLabel);
             this.add(cityScienceLabel);
+
+            this.add(producingItemLabel);
+            this.add(progressLabel);
         }
     }
 
@@ -647,12 +699,9 @@ public class MainGame extends State {
             public MapPanel() {
                 super();
                 this.map = new GameMap();
-
                 this.setLayout(null);
 
                 this.initIcons();
-
-                // TODO this will change later
                 this.setBounds(0, 0,
                         GameMapConfig.MAP_WIDTH * 50,
                         GameMapConfig.MAP_HEIGHT * 50);
@@ -824,7 +873,6 @@ public class MainGame extends State {
                     Position position = city.getLocation();
                     JLabel square = (JLabel) getComponentAt(
                             position.getX() * 50, position.getY() * 50);
-                    // TODO rewrite later after icon of city available
                     square.setIcon(cityIcon);
                     square.setBackground(CountryConfig.COLOR_OF_COUNTRY
                             .get(city.getCountry().getCountryName()));
