@@ -60,6 +60,7 @@ public class Setting extends State {
             btn_2.setBounds(200 * i + 200, 400, 100, 50);
             if (i == 0) {
                 btn_1.setSelected(true);
+            } else {
                 btn_2.setSelected(true);
             }
             this.chooseCountryButton_1.add(btn_1);

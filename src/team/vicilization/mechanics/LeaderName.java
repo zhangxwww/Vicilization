@@ -2,7 +2,7 @@ package team.vicilization.mechanics;
 
 public enum LeaderName {
     GANDHI,
-    ALEXANDER;
+    ROOSEVELT;
 
     @Override
     public String toString() {
