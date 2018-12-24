@@ -10,8 +10,8 @@ import javax.swing.*;
 import java.lang.annotation.Annotation;
 import java.util.Vector;
 
-public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
-
+public abstract class Unit implements Movable,Selectable,Affiliable{
+    //-------------------------------------Attributes
     protected UnitType type;
     protected UnitSubType subType;
     protected Country country;
@@ -19,9 +19,7 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
     protected int health;
     protected UnitInfo unitInfo;
     protected static int unitRecover;
-
-
-    // TODO 这两个东西要在回合结束的时候重置
+    
     protected boolean movedThisTurn;
     protected boolean attackedThisTurn;
 
@@ -33,6 +31,7 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
         this.subType=unitSubType;
         this.unitInfo=new UnitInfo(unitSubType);
         this.health=GameItemConfig.UNIT_HEALTH.get(unitSubType);
+
         this.movedThisTurn = false;
         this.attackedThisTurn = false;
     }
@@ -59,6 +58,12 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
     public int getMobility() {
         return unitInfo.getMobility();
     }
+
+    @Override
+    public void setMobility(int mobility) {
+        unitInfo.setMobility(mobility);
+    }
+
     @Override
     public Vector<LandSquare> getAvailableLocation(GameMap map) {
         class locationStack{
@@ -161,27 +166,29 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
     @Override
     public void moveTo(Position pos) {
         this.setPosition(pos);
-        movedThisTurn = true;
+        this.movedThisTurn=true;
+        this.setMobility(0);
     }
     
 
-//------------------------------------------Fightable
 
+//------------------------------------------End/Start Turn
+    public void unitEndOfTurn(){
+        this.recover();
+        this.movedThisTurn=false;
+        this.attackedThisTurn=false;
+        this.setMobility(GameItemConfig.UNIT_MOBILITY.get(subType));
+    }
+    public void unitStartTurn(){
+    }
 
     public int getHealth() {
         return health;
     }
 
-    @Override
-    public int moneyCost() {
-        return 0;
+    public void setHealth(int health) {
+        this.health = health;
     }
-    @Override
-    public int productivityCost() {
-        return 0;
-    }
-
-
 
     @Override
     public boolean ableToSelect() {
@@ -224,6 +231,14 @@ public abstract class Unit implements Movable,Selectable,Producable,Affiliable{
     public UnitInfo getUnitInfo() {
         return unitInfo;
     }
+
+    public int getAttack(){
+        return this.unitInfo.getAttack();
+    }
+    public int getDefence(){
+        return  this.unitInfo.getDefence();
+    }
+
 
     public boolean isAttackedThisTurn() {
         return attackedThisTurn;

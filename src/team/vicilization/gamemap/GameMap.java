@@ -4,6 +4,8 @@ import team.vicilization.util.Position;
 
 import java.util.Vector;
 
+import static java.lang.Math.sqrt;
+
 public class GameMap {
     //先取一列，再取列中每一行
     private Vector<Vector<LandSquare>> landSquares;
@@ -68,6 +70,7 @@ public class GameMap {
             }
             System.out.print('\n');
         }
+        /*
         System.out.println("Printing resourceMap");
         for (int i = 0; i < GameMapConfig.MAP_HEIGHT; i++) {
             for (int j = 0; j < GameMapConfig.MAP_WIDTH; j++) {
@@ -76,12 +79,27 @@ public class GameMap {
             }
             System.out.print('\n');
         }
+        */
     }
 
     //=====================取某一元素=========================//
     public LandSquare getSquare(int x, int y) {
         return this.landSquares.get(x).get(y);
     }
+
+    public LandSquare getSquare(Position position) {
+        return this.landSquares.get(position.getX()).get(position.getY());
+    }
+
+    public boolean isLegalPosition(int x, int y) {
+        return ((x >= 0) && (x < GameMapConfig.MAP_WIDTH)
+                && (y >= 0) && (y < GameMapConfig.MAP_HEIGHT));
+    }
+
+    public boolean isLegalPosition(Position position) {
+        return isLegalPosition(position.getX(), position.getY());
+    }
+
 
     //=====================初始化温度分布=======================//
     private void initTemperature() {
@@ -96,7 +114,7 @@ public class GameMap {
             tempPeak.add(0.0);
         }
 
-        for(int i = 0;i<GameMapConfig.MAP_WIDTH;i++){
+        for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
             tempLoc.set(i, (int) ((Math.random() + 1) * 10));
             tempPeak.set(i, (Double) (GameMapConfig.TEMPERATURE - 10 * Math.random()));
         }
@@ -169,8 +187,8 @@ public class GameMap {
                         GameMapConfig.MOISTRURE
                                 - (Math.abs(i - moistureX1)
                                 + Math.abs(j - moistureY1)) / 2.0);
-                this.moistureMap.get(i).add(j,
-                        GameMapConfig.MOISTRURE
+                this.moistureMap.get(i).set(j,
+                        GameMapConfig.MOISTRURE + this.moistureMap.get(i).get(j)
                                 - (Math.abs(i - moistureX2)
                                 + Math.abs(j - moistureY2)) / 2.0);
             }
@@ -184,11 +202,6 @@ public class GameMap {
                 if (Math.random() > GameMapConfig.RAND_LEVEL1) {
                     this.terrainMap.get(i).set(j, TerrainType.HILL);
                 }
-                /*
-                else {
-                    this.terrainMap.get(i).set(j, TerrainType.HILL);
-                }
-                */
             }
         }
     }
@@ -206,7 +219,8 @@ public class GameMap {
                         this.landformMap.get(i).set(j, LandformType.DESERT);
                     }
                 } else {
-                    if (this.moistureMap.get(i).get(j) > GameMapConfig.MOISTURE_BOUND) {
+                    if ((this.moistureMap.get(i).get(j) > GameMapConfig.MOISTURE_BOUND) &&
+                            ((this.moistureMap.get(i).get(j) / GameMapConfig.MOISTRURE) * Math.random() > (1 - GameMapConfig.RAND_LEVEL1))) {
                         this.landformMap.get(i).set(j, LandformType.FOREST);
                     } else {
                         this.landformMap.get(i).set(j, LandformType.GRASSLANDS);
@@ -274,9 +288,11 @@ public class GameMap {
                 int deltaY = GameMapConfig.RIDGE_XY[serial][GameMapConfig.RIDGE_XY[serial].length - 1][1];
 
                 applyRidge(serial, ridgeX, ridgeY);
-                applyRiver((int) (Math.random() * GameMapConfig.RIVER_SERIAL),
-                        ridgeX + (int) (Math.random() * deltaX),
-                        ridgeY + (int) (Math.random() * deltaY));
+                if (cycle < GameMapConfig.RIVER_NUM) {
+                    applyRiver((int) (Math.random() * GameMapConfig.RIVER_SERIAL),
+                            ridgeX + (int) (Math.random() * deltaX),
+                            ridgeY + (int) (Math.random() * deltaY));
+                }
             } catch (IndexOutOfBoundsException e) {
                 continue;
             }

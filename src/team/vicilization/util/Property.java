@@ -1,8 +1,9 @@
-package team.vicilization.gameitem;
+package team.vicilization.util;
 
-public class CityFlowValue {
+import team.vicilization.gameitem.BuildingType;
+import team.vicilization.gameitem.GameItemConfig;
 
-
+public class Property {
     private int productivity ;
     private int money ;
     private int food ;
@@ -11,36 +12,47 @@ public class CityFlowValue {
     private int traderValue ;
     private int engineerValue ;
 
-    public CityFlowValue(){
-        this.productivity=0;
-        this.money=0;
-        this.science=0;
-        this.food=0;
-        this.scientistValue=0;
-        this.traderValue=0;
-        this.engineerValue=0;
+    public Property() {
+        this.productivity = 0;
+        this.money = 0;
+        this.science = 0;
+        this.food = 0;
+        this.scientistValue = 0;
+        this.traderValue = 0;
+        this.engineerValue = 0;
     }
 
-    public CityFlowValue(BuildingType type){
-        this.productivity=GameItemConfig.BUILDING_FLOW_PRODUCTIVITY.get(type);
+    public Property(BuildingType type){
+        this.productivity= GameItemConfig.BUILDING_FLOW_PRODUCTIVITY.get(type);
         this.money =GameItemConfig.BUILDING_FLOW_MONEY.get(type);
         this.food =GameItemConfig.BUILDING_FLOW_FOOD.get(type);
         this.science=GameItemConfig.BUILDING_FLOW_SCIENCE.get(type) ;
         this.scientistValue=GameItemConfig.BUILDING_FLOW_SCIENTIST_VALUE.get(type) ;
         this.traderValue=GameItemConfig.BUILDING_FLOW_TRADER_VALUE.get(type) ;
         this.engineerValue =GameItemConfig.BUILDING_FLOW_ENGINEER_VALUE.get(type);
+
     }
 
-    public void addValue(CityFlowValue flowValue){
-        this.productivity+=flowValue.productivity;
-        this.money+=flowValue.money;
-        this.science+=flowValue.science;
-        this.food+=flowValue.food;
-        this.scientistValue+=flowValue.scientistValue;
-        this.traderValue+=flowValue.traderValue;
-        this.engineerValue+=flowValue.engineerValue;
+    public Property(int productivity, int money, int food, int science,
+                    int scientistValue, int traderValue, int engineerValue) {
+        this.productivity = productivity;
+        this.money = money;
+        this.science = science;
+        this.food = food;
+        this.scientistValue = scientistValue;
+        this.traderValue = traderValue;
+        this.engineerValue = engineerValue;
     }
 
+    public void addProperty(Property property) {
+        this.productivity+=property.productivity;
+        this.money+=property.money;
+        this.science+=property.science;
+        this.food+=property.food;
+        this.scientistValue+=property.scientistValue;
+        this.traderValue+=property.traderValue;
+        this.engineerValue+=property.engineerValue;
+    }
 
     public int getProductivity() {
         return productivity;
