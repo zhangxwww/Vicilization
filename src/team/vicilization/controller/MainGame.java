@@ -42,29 +42,25 @@ public class MainGame extends State {
     private boolean citySelected;
     private City selectedCity;
 
+    private boolean startGame[];
+
     public MainGame(MainWindow mainWindow, CountryName[] countrys) {
         super(mainWindow);
         setNextState(StateType.Gameover);
 
-        this.round = 0;
-        this.unitSeleted = false;
-        this.unitMoving = false;
+        this.initParams();
         this.initMapArea();
-
         this.initButtons();
         this.initLowerInfoArea();
-
         this.initCountrys(countrys);
         this.initUpperInfoArea();
-
-        this.cities = new Vector<City>();
     }
 
     private void nextRound() {
         this.unselectCity();
         this.unselectUnit();
 
-        if (this.currentPlayer.judgeScienceVictory() || round == 10 /* TODO delete later */) {
+        if (judgeVectory()) {
             this.mainWindow.convertToNextState(currentPlayer);
         } else {
             round++;
@@ -75,7 +71,19 @@ public class MainGame extends State {
             this.currentPlayer.readyForNewRound();
             this.upperInfoArea.update();
         }
-        // TODO
+    }
+
+    private void initParams() {
+        this.round = 0;
+        this.unitSeleted = false;
+        this.unitMoving = false;
+        this.citySelected = false;
+        this.selectedCity = null;
+        this.selectedUnit = null;
+        this.startGame = new boolean[2];
+        this.startGame[0] = false;
+        this.startGame[1] = false;
+        this.cities = new Vector<City>();
     }
 
     private void initCountrys(CountryName[] countrys) {
@@ -142,6 +150,22 @@ public class MainGame extends State {
         this.panel.add(lowerInfoArea);
     }
 
+    private boolean judgeVectory() {
+        if (this.currentPlayer.judgeScienceVictory()) {
+            // science victory
+            return true;
+        } else if (enermy.getCities().size() == 0
+                && startGame[(round + 1) % 2]) {
+            // war victory
+            return true;
+        } else if (round == 1000) {
+            // time victory
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void selectUnit(Unit unit) {
         this.selectedCity = null;
         this.citySelected = false;
@@ -176,6 +200,7 @@ public class MainGame extends State {
     }
 
     private void buildCity() {
+        this.startGame[round % 2] = true;
         Position pos = selectedUnit.getPosition();
         currentPlayer.deleteUnit(selectedUnit);
         City city = currentPlayer.buildNewCity(pos, mapArea.getMap(), enermy);
@@ -432,7 +457,6 @@ public class MainGame extends State {
         private ImageIcon producticityIcon;
         private ImageIcon moneyIcon;
         private ImageIcon scienceIcon;
-        // TODO show city info
 
         public LowerInfoArea() {
             super();
@@ -646,12 +670,9 @@ public class MainGame extends State {
             public MapPanel() {
                 super();
                 this.map = new GameMap();
-
                 this.setLayout(null);
 
                 this.initIcons();
-
-                // TODO this will change later
                 this.setBounds(0, 0,
                         GameMapConfig.MAP_WIDTH * 50,
                         GameMapConfig.MAP_HEIGHT * 50);
