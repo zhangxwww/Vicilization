@@ -61,17 +61,8 @@ public class MainGame extends State {
     }
 
     private void nextRound() {
-        this.unitSeleted = false;
-        this.unitMoving = false;
-        this.mapArea.mapPanel.updateMap();
-        try {
-            this.panel.remove(unitMoveButton);
-        } catch (Exception e) {
-
-        }
-        this.panel.repaint();
-        this.selectedUnit = null;
-        this.lowerInfoArea.unshowUnitInfo();
+        this.unselectCity();
+        this.unselectUnit();
 
         if (this.currentPlayer.judgeScienceVictory() || round == 3 /* TODO delete later */) {
             this.mainWindow.convertToNextState(currentPlayer);
@@ -201,7 +192,6 @@ public class MainGame extends State {
         this.citySelected = true;
         this.selectedCity = city;
         this.lowerInfoArea.showCityInfo(city);
-        this.mapArea.drawCityTerritory();
         // TODO add procuce lists
     }
 
@@ -829,6 +819,9 @@ public class MainGame extends State {
                     square.setBackground(CountryConfig.COLOR_OF_COUNTRY
                             .get(unit.getCountry().getCountryName()));
                 }
+                if (citySelected) {
+                    drawTerritory();
+                }
                 this.repaint();
             }
 
@@ -876,6 +869,7 @@ public class MainGame extends State {
                                     found = true;
                                     unselectCity();
                                     selectUnit(u);
+                                    break;
                                 }
                             }
                         }
@@ -885,6 +879,7 @@ public class MainGame extends State {
                                     found = true;
                                     unselectUnit();
                                     selectCity(c);
+                                    break;
                                 }
                             }
                         }
