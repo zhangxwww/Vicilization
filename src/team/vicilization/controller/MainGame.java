@@ -132,6 +132,10 @@ public class MainGame extends State {
         this.unitMoveButton = new JButton("Move / Fight");
         this.unitMoveButton.setBounds(20, 600, 200, 50);
         this.unitMoveButton.addActionListener(listener);
+
+        this.unitSpecialButton = new JButton();
+        this.unitSpecialButton.setBounds(20, 650, 200, 50);
+        this.unitSpecialButton.addActionListener(listener);
     }
 
     private void initUpperInfoArea() {
@@ -150,17 +154,39 @@ public class MainGame extends State {
         this.lowerInfoArea.showUnitInfo(unit);
         if (!seletedUnit.isMovedThisTurn()) { // 没有移动，显示移动按钮
             this.panel.add(unitMoveButton);
-            this.panel.repaint();
         }
+        if (seletedUnit.getSubType() == UnitSubType.EXPLORER) {
+            this.panel.add(unitSpecialButton);
+            // !!! 如果这里要换成icon的话，在GameButtonLisioner 那里也要做同样的修改 !!!
+            unitSpecialButton.setText("Build city");
+        }
+        this.panel.repaint();
     }
 
     private void unselectUnit() {
         this.unitSeleted = false;
         this.unitMoving = false;
-        this.panel.remove(unitMoveButton);
+        try {
+            this.panel.remove(unitMoveButton);
+        } catch (Exception e) {
+        }
+        try {
+            this.panel.remove(unitSpecialButton);
+        } catch (Exception e) {
+        }
         this.panel.repaint();
         this.seletedUnit = null;
         this.lowerInfoArea.unshowUnitInfo();
+    }
+
+    private void buildCity() {
+        Position pos = seletedUnit.getPosition();
+        currentPlayer.deleteUnit(seletedUnit);
+        City city = currentPlayer.buildNewCity(pos, mapArea.getMap(), enermy);
+        this.cities.add(city);
+        units.remove(seletedUnit);
+        unselectUnit();
+        this.mapArea.mapPanel.updateMap();
     }
 
     private void selectCity(City city) {
@@ -232,6 +258,10 @@ public class MainGame extends State {
             } else if (event.getSource() == MainGame.unitMoveButton) {
                 mapArea.drawAccessableSquares();
                 unitMoving = true;
+            } else if (event.getSource() == MainGame.unitSpecialButton) {
+                if (MainGame.unitSpecialButton.getText() == "Build city") {
+                    buildCity();
+                }
             }
             // TODO finish with other actions
         }
@@ -442,6 +472,10 @@ public class MainGame extends State {
             this.mapPanel.drawAccessableSquares();
         }
 
+        public GameMap getMap() {
+            return this.mapPanel.map;
+        }
+
         private class MapPanel extends JPanel {
             private Position bias;
             private GameMap map;
@@ -630,6 +664,13 @@ public class MainGame extends State {
 
             public void updateMap() {
                 drawMapWithoutUnits();
+                for (City city : cities) {
+                    Position position = city.getLocation();
+                    JLabel square = (JLabel) getComponentAt(
+                            position.getX() * 50, position.getY() * 50);
+                    square.setIcon(null);
+                    square.setBackground(Color.RED);
+                }
                 for (Unit unit : units) {
                     Position position = unit.getPosition();
                     JLabel square = (JLabel) getComponentAt(
