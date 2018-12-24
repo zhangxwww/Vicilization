@@ -38,7 +38,7 @@ public class CountryConfig {
     public static final HashMap<CountryName, LeaderName> LEADER_OF_COUNTRY = new HashMap<>() {
         {
             put(CountryName.INDIA, LeaderName.GANDHI);
-            put(CountryName.AMERICA, LeaderName.ALEXANDER);
+            put(CountryName.AMERICA, LeaderName.ROOSEVELT);
         }
     };
 
