@@ -34,6 +34,10 @@ public class MainGame extends State {
     private static JButton nextRoundButton;
     private static JButton unitMoveButton;
     private static JButton unitSpecialButton;
+    private static JButton cityConfirmProduceButton;
+
+    private static JList<BuildingType> availableBuildings;
+    private static JList<UnitSubType> availableUnits;
 
     private boolean unitSeleted;
     private boolean unitMoving;
@@ -59,6 +63,7 @@ public class MainGame extends State {
     private void nextRound() {
         this.unselectCity();
         this.unselectUnit();
+        this.mapArea.mapPanel.updateMap();
 
         if (judgeVectory()) {
             this.mainWindow.convertToNextState(currentPlayer);
@@ -69,6 +74,7 @@ public class MainGame extends State {
             this.currentPlayer = this.countries
                     .elementAt(round % 2);
             this.currentPlayer.readyForNewRound();
+            this.synchronizeCitiesAndUnits();
             this.upperInfoArea.update();
         }
     }
@@ -127,17 +133,21 @@ public class MainGame extends State {
         GameButtonsListener listener = new GameButtonsListener();
 
         this.nextRoundButton = new JButton("Next Round");
-        this.nextRoundButton.setBounds(1060, 600, 200, 100);
+        this.nextRoundButton.setBounds(1160, 600, 100, 100);
         this.nextRoundButton.addActionListener(listener);
         this.panel.add(nextRoundButton);
 
         this.unitMoveButton = new JButton("Move / Fight");
-        this.unitMoveButton.setBounds(20, 600, 200, 50);
+        this.unitMoveButton.setBounds(20, 600, 150, 50);
         this.unitMoveButton.addActionListener(listener);
 
         this.unitSpecialButton = new JButton();
-        this.unitSpecialButton.setBounds(20, 650, 200, 50);
+        this.unitSpecialButton.setBounds(20, 650, 150, 50);
         this.unitSpecialButton.addActionListener(listener);
+
+        this.cityConfirmProduceButton = new JButton("Produce");
+        this.cityConfirmProduceButton.setBounds(1060, 600, 100, 100);
+        this.cityConfirmProduceButton.addActionListener(listener);
     }
 
     private void initUpperInfoArea() {
@@ -148,6 +158,23 @@ public class MainGame extends State {
     private void initLowerInfoArea() {
         this.lowerInfoArea = new LowerInfoArea();
         this.panel.add(lowerInfoArea);
+    }
+
+    private void synchronizeCitiesAndUnits() {
+        this.units.clear();
+        this.cities.clear();
+        for (Unit unit : currentPlayer.getUnits()) {
+            units.add(unit);
+        }
+        for (Unit unit : enermy.getUnits()) {
+            units.add(unit);
+        }
+        for (City city : currentPlayer.getCities()) {
+            cities.add(city);
+        }
+        for (City city : enermy.getCities()) {
+            cities.add(city);
+        }
     }
 
     private boolean judgeVectory() {
@@ -301,6 +328,7 @@ public class MainGame extends State {
             // TODO science info
             super();
             this.setLayout(null);
+            this.setOpaque(true);
             this.setBounds(20, 0, 1240, 50);
             this.initIcons();
             this.initLabels();
@@ -363,9 +391,9 @@ public class MainGame extends State {
             this.countryName_1.setOpaque(true);
             this.countryName_2.setOpaque(true);
 
-            this.countryName_1.setForeground(CountryConfig.COLOR_OF_COUNTRY.
+            this.countryName_1.setBackground(CountryConfig.COLOR_OF_COUNTRY.
                     get(countries.get(0).getCountryName().toString()));
-            this.countryName_2.setForeground(CountryConfig.COLOR_OF_COUNTRY.
+            this.countryName_2.setBackground(CountryConfig.COLOR_OF_COUNTRY.
                     get(countries.get(1).getCountryName().toString()));
 
             this.add(sciencePointSymbolLabel);
@@ -381,22 +409,6 @@ public class MainGame extends State {
         private void initIcons() {
             this.scienceIcon = new ImageIcon("./Resource/info/science.png");
             this.moneyIcon = new ImageIcon("./Resource/info/money.png");
-        }
-    }
-
-    private class ProductionArea extends JPanel {
-        // TODO shown when choosing what to produce
-        public ProductionArea(City city) {
-            super();
-            // TODO
-        }
-    }
-
-    private class ScienceArea extends JPanel {
-        // TODO show and select the sciences here
-        public ScienceArea(ScienceName scienceName) {
-            super();
-            // TODO
         }
     }
 
@@ -425,24 +437,27 @@ public class MainGame extends State {
         private JLabel cityMoneyInfo;
         private JLabel cityScienceInfo;
 
-
         private JLabel cityFoodLabel;
         private JLabel cityProductivityLabel;
         private JLabel cityMoneyLabel;
         private JLabel cityScienceLabel;
-
 
         private ImageIcon foodIcon;
         private ImageIcon producticityIcon;
         private ImageIcon moneyIcon;
         private ImageIcon scienceIcon;
 
+        private JLabel producingItemLabel;
+        private JLabel progressLabel;
+
         public LowerInfoArea() {
             super();
-            this.setBounds(250, 600, 600, 100);
+            this.setBounds(180, 600, 600, 100);
             this.setLayout(null);
             this.initIcons();
             this.initLabels();
+
+            this.setOpaque(true);
         }
 
         public void showUnitInfo(Unit unit) {
@@ -471,6 +486,21 @@ public class MainGame extends State {
             this.cityProductivityInfo.setText(String.valueOf(city.getFlowValue().getProductivity()));
             this.cityMoneyInfo.setText(String.valueOf(city.getFlowValue().getMoney()));
             this.cityScienceInfo.setText(String.valueOf(city.getFlowValue().getScience()));
+
+            UnitSubType unitSubType = city.getProducingUnit();
+            BuildingType buildingType = city.getProducingBuilding();
+            String producing = "None";
+            int total = 0;
+            if (unitSubType != UnitSubType.NONE) {
+                producing = unitSubType.toString();
+                total = GameItemConfig.UNIT_PRODUCTIVITY_COST.get(unitSubType);
+            } else if (buildingType != BuildingType.NONE) {
+                producing = buildingType.toString();
+                total = GameItemConfig.BUILDING_PRODUCTIVITY_COST.get(buildingType);
+            }
+            int progress = city.getStockValue().getProductivity();
+            this.producingItemLabel.setText(producing);
+            this.progressLabel.setText(progress + " / " + total);
         }
 
         public void unshowCityInfo() {
@@ -483,6 +513,9 @@ public class MainGame extends State {
             this.cityProductivityInfo.setText("");
             this.cityMoneyInfo.setText("");
             this.cityScienceInfo.setText("");
+
+            this.producingItemLabel.setText("");
+            this.progressLabel.setText("");
         }
 
         private void initIcons() {
@@ -541,6 +574,17 @@ public class MainGame extends State {
             this.cityMoneyLabel.setBounds(350, 20, 40, 40);
             this.cityScienceLabel.setBounds(350, 60, 40, 40);
 
+            this.producingItemLabel = new JLabel();
+            this.progressLabel = new JLabel();
+
+            this.producingItemLabel.setBounds(450, 20, 150, 40);
+            this.progressLabel.setBounds(450, 65, 150, 20);
+
+            this.progressLabel.setOpaque(true);
+            this.producingItemLabel.setOpaque(true);
+            this.progressLabel.setBackground(Color.RED);
+            this.producingItemLabel.setBackground(Color.BLUE);
+
             this.unitTypeInfo.setFont(new Font("Consolas", Font.BOLD, 20));
             this.attackInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
             this.defenceInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
@@ -552,6 +596,9 @@ public class MainGame extends State {
             this.cityProductivityInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
             this.cityMoneyInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
             this.cityScienceInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
+
+            this.producingItemLabel.setFont(new Font("Consolas", Font.PLAIN, 20));
+            this.progressLabel.setFont(new Font("Consolas", Font.PLAIN, 15));
 
             this.add(attackLabel);
             this.add(defenceLabel);
@@ -574,6 +621,9 @@ public class MainGame extends State {
             this.add(cityProductivityLabel);
             this.add(cityMoneyLabel);
             this.add(cityScienceLabel);
+
+            this.add(producingItemLabel);
+            this.add(progressLabel);
         }
     }
 

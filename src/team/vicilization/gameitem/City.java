@@ -69,7 +69,7 @@ public class City implements Fightable{
         tempAllowedBuildings.add(BuildingType.COMMERCIAL_CERTER);
         tempAllowedBuildings.add(BuildingType.INDUSTRIAL_PARK);
         for(BuildingType type:tempAllowedBuildings){
-            if(constructedBuildings.contains(type)|this.producingBuilding.equals(type)){
+            if (constructedBuildings.contains(type) || this.producingBuilding.equals(type)) {
                 tempAllowedBuildings.remove(type);
             }
             //科技if(GameItemConfig.)
