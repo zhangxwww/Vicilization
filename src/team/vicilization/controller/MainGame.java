@@ -46,6 +46,8 @@ public class MainGame extends State {
         super(mainWindow);
         setNextState(StateType.Gameover);
 
+        System.out.println(countrys[0]);
+        System.out.println(countrys[1]);
         this.round = 0;
         this.unitSeleted = false;
         this.unitMoving = false;
@@ -64,7 +66,7 @@ public class MainGame extends State {
         this.unselectCity();
         this.unselectUnit();
 
-        if (this.currentPlayer.judgeScienceVictory() || round == 3 /* TODO delete later */) {
+        if (this.currentPlayer.judgeScienceVictory() || round == 10 /* TODO delete later */) {
             this.mainWindow.convertToNextState(currentPlayer);
         } else {
             round++;
@@ -287,6 +289,9 @@ public class MainGame extends State {
         private JLabel moneySymbolLabel;
         private JLabel roundSymbolLabel;
 
+        private JLabel countryName_1;
+        private JLabel countryName_2;
+
         private ImageIcon scienceIcon;
         private ImageIcon moneyIcon;
 
@@ -308,6 +313,13 @@ public class MainGame extends State {
                             + String.valueOf(currentPlayer.getFlowValue().getMoney()) + ")");
 
             this.roundInfo.setText(String.valueOf(round));
+            if (round % 2 == 0) {
+                this.countryName_1.setFont(new Font("Consolas", Font.BOLD, 25));
+                this.countryName_2.setFont(new Font("Consolas", Font.PLAIN, 25));
+            } else {
+                this.countryName_1.setFont(new Font("Consolas", Font.PLAIN, 25));
+                this.countryName_2.setFont(new Font("Consolas", Font.BOLD, 25));
+            }
         }
 
         private void initLabels() {
@@ -317,21 +329,41 @@ public class MainGame extends State {
 
             this.sciencePointInfo.setBounds(60, 0, 80, 50);
             this.moneyInfo.setBounds(210, 0, 80, 50);
-            this.roundInfo.setBounds(1060, 0, 20, 25);
+            this.roundInfo.setBounds(1200, 0, 40, 25);
 
             this.sciencePointInfo.setFont(new Font("Consolas", Font.PLAIN, 22));
             this.moneyInfo.setFont(new Font("Consolas", Font.PLAIN, 22));
 
             this.sciencePointSymbolLabel = new JLabel(scienceIcon);
             this.moneySymbolLabel = new JLabel(moneyIcon);
-            this.roundSymbolLabel = new JLabel("R");
+            this.roundSymbolLabel = new JLabel("Rounds");
 
             this.sciencePointSymbolLabel.setOpaque(true);
             this.moneySymbolLabel.setOpaque(true);
 
             this.sciencePointSymbolLabel.setBounds(0, 0, 50, 50);
             this.moneySymbolLabel.setBounds(150, 0, 50, 50);
-            this.roundSymbolLabel.setBounds(1040, 0, 20, 25);
+            this.roundSymbolLabel.setBounds(1140, 0, 60, 25);
+
+            this.roundSymbolLabel.setFont(new Font("Consolas", Font.BOLD, 12));
+            this.roundInfo.setFont(new Font("Consolas", Font.BOLD, 12));
+
+            this.countryName_1 = new JLabel(countries.get(0).getCountryName().toString());
+            this.countryName_2 = new JLabel(countries.get(1).getCountryName().toString());
+
+            this.countryName_1.setBounds(1000, 0, 200, 25);
+            this.countryName_2.setBounds(1000, 25, 200, 25);
+
+            this.countryName_1.setFont(new Font("Consolas", Font.PLAIN, 25));
+            this.countryName_2.setFont(new Font("Consolas", Font.PLAIN, 25));
+
+            this.countryName_1.setOpaque(true);
+            this.countryName_2.setOpaque(true);
+
+            this.countryName_1.setBackground(CountryConfig.COLOR_OF_COUNTRY.
+                    get(countries.get(0).getCountryName().toString()));
+            this.countryName_2.setBackground(CountryConfig.COLOR_OF_COUNTRY.
+                    get(countries.get(1).getCountryName().toString()));
 
             this.add(sciencePointSymbolLabel);
             this.add(moneySymbolLabel);
@@ -339,6 +371,8 @@ public class MainGame extends State {
             this.add(sciencePointInfo);
             this.add(moneyInfo);
             this.add(roundInfo);
+            this.add(countryName_1);
+            this.add(countryName_2);
         }
 
         private void initIcons() {
@@ -477,7 +511,7 @@ public class MainGame extends State {
             this.defenceInfo = new JLabel();
             this.movabilityInfo = new JLabel();
 
-            this.unitTypeInfo.setBounds(50, 0, 120, 20);
+            this.unitTypeInfo.setBounds(0, 0, 190, 20);
             this.attackInfo.setBounds(50, 20, 40, 40);
             this.defenceInfo.setBounds(50, 60, 40, 40);
             this.healthInfo.setBounds(150, 20, 40, 40);
@@ -489,7 +523,7 @@ public class MainGame extends State {
             this.cityMoneyInfo = new JLabel();
             this.cityScienceInfo = new JLabel();
 
-            this.cityNameInfo.setBounds(300, 0, 120, 20);
+            this.cityNameInfo.setBounds(250, 0, 190, 20);
             this.cityFoodInfo.setBounds(300, 20, 40, 40);
             this.cityProductivityInfo.setBounds(300, 60, 40, 40);
             this.cityMoneyInfo.setBounds(400, 20, 40, 40);
@@ -538,9 +572,6 @@ public class MainGame extends State {
             this.add(cityProductivityLabel);
             this.add(cityMoneyLabel);
             this.add(cityScienceLabel);
-
-            this.healthInfo.setOpaque(true);
-            this.healthInfo.setBackground(Color.RED);
         }
     }
 
