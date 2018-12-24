@@ -58,6 +58,12 @@ public abstract class Unit implements Movable,Selectable,Affiliable{
     public int getMobility() {
         return unitInfo.getMobility();
     }
+
+    @Override
+    public void setMobility(int mobility) {
+        unitInfo.setMobility(mobility);
+    }
+
     @Override
     public Vector<LandSquare> getAvailableLocation(GameMap map) {
         class locationStack{
@@ -161,6 +167,7 @@ public abstract class Unit implements Movable,Selectable,Affiliable{
     public void moveTo(Position pos) {
         this.setPosition(pos);
         this.movedThisTurn=true;
+        this.setMobility(0);
     }
     
 
@@ -170,6 +177,7 @@ public abstract class Unit implements Movable,Selectable,Affiliable{
         this.recover();
         this.movedThisTurn=false;
         this.attackedThisTurn=false;
+        this.setMobility(GameItemConfig.UNIT_MOBILITY.get(subType));
     }
     public void unitStartTurn(){
     }
