@@ -26,6 +26,7 @@ public class MainGame extends State {
 
     private Vector<Country> countries;
     private Country currentPlayer;
+    private Country enermy;
 
     private Vector<City> cities;
     private Vector<Unit> units;
@@ -48,10 +49,10 @@ public class MainGame extends State {
         this.initMapArea();
 
         this.initButtons();
-        this.initUpperInfoArea();
         this.initLowerInfoArea();
 
         this.initCountrys(countrys);
+        this.initUpperInfoArea();
 
         this.cities = new Vector<City>();
     }
@@ -61,7 +62,6 @@ public class MainGame extends State {
         this.unitMoving = false;
         this.mapArea.mapPanel.updateMap();
         try {
-            System.out.println("remove");
             this.panel.remove(unitMoveButton);
         } catch (Exception e) {
 
@@ -70,10 +70,12 @@ public class MainGame extends State {
         this.seletedUnit = null;
         this.lowerInfoArea.unshowUnitInfo();
 
-        if (this.currentPlayer.judgeVictory() || round == 3 /* TODO delete later */) {
+        if (this.currentPlayer.judgeScienceVictory() || round == 3 /* TODO delete later */) {
             this.mainWindow.convertToNextState(currentPlayer);
         } else {
             round++;
+            this.currentPlayer.endOfCurrentRound();
+            this.enermy = this.currentPlayer;
             this.currentPlayer = this.countries
                     .elementAt(round % 2);
             this.currentPlayer.readyForNewRound();
@@ -91,6 +93,7 @@ public class MainGame extends State {
             this.initUnitsForOneCountry(country, i);
         }
         this.currentPlayer = this.countries.elementAt(0);
+        this.enermy = this.countries.elementAt(1);
     }
 
     private void initUnitsForOneCountry(Country country, int order) {
@@ -205,7 +208,7 @@ public class MainGame extends State {
         // TODO
     }
 
-    private void selectProduction(Producable production) {
+    private void selectProduction() {
         // TODO
     }
 
@@ -226,8 +229,7 @@ public class MainGame extends State {
         public void actionPerformed(ActionEvent event) {
             if (event.getSource() == MainGame.nextRoundButton) {
                 nextRound();
-            }
-            else if (event.getSource() == MainGame.unitMoveButton) {
+            } else if (event.getSource() == MainGame.unitMoveButton) {
                 mapArea.drawAccessableSquares();
                 unitMoving = true;
             }
@@ -236,7 +238,7 @@ public class MainGame extends State {
     }
 
     private class UpperInfoArea extends JPanel {
-        // TODO show flow value, resource count ... here
+        // show flow value, resource count ... here
         private JLabel sciencePointInfo;
         private JLabel moneyInfo;
         private JLabel roundInfo;
@@ -245,27 +247,51 @@ public class MainGame extends State {
         private JLabel moneySymbolLabel;
         private JLabel roundSymbolLabel;
 
+        private ImageIcon scienceIcon;
+        private ImageIcon moneyIcon;
+
         public UpperInfoArea() {
+            // TODO science info
             super();
+            this.setLayout(null);
+            this.setBounds(20, 0, 1240, 50);
+            this.initIcons();
+            this.initLabels();
+            this.update();
+        }
+
+        public void update() {
+            this.sciencePointInfo.setText(
+                    String.valueOf(currentPlayer.getFlowValue().getScience()));
+            this.moneyInfo.setText(
+                    String.valueOf(currentPlayer.getStockValue().getMoney()) + "(+"
+                            + String.valueOf(currentPlayer.getFlowValue().getMoney()) + ")");
+
+            this.roundInfo.setText(String.valueOf(round));
+        }
+
+        private void initLabels() {
             this.sciencePointInfo = new JLabel();
             this.moneyInfo = new JLabel();
             this.roundInfo = new JLabel();
 
-            this.sciencePointInfo.setBounds(15, 0, 40, 25);
-            this.moneyInfo.setBounds(15, 25, 40, 25);
+            this.sciencePointInfo.setBounds(60, 0, 80, 50);
+            this.moneyInfo.setBounds(210, 0, 80, 50);
             this.roundInfo.setBounds(1060, 0, 20, 25);
 
-            this.sciencePointSymbolLabel = new JLabel("S");
-            this.moneySymbolLabel = new JLabel("M");
+            this.sciencePointInfo.setFont(new Font("Consolas", Font.PLAIN, 22));
+            this.moneyInfo.setFont(new Font("Consolas", Font.PLAIN, 22));
+
+            this.sciencePointSymbolLabel = new JLabel(scienceIcon);
+            this.moneySymbolLabel = new JLabel(moneyIcon);
             this.roundSymbolLabel = new JLabel("R");
 
-            this.sciencePointSymbolLabel.setBounds(0, 0, 15, 25);
-            this.moneySymbolLabel.setBounds(0, 25, 15, 25);
+            this.sciencePointSymbolLabel.setOpaque(true);
+            this.moneySymbolLabel.setOpaque(true);
+
+            this.sciencePointSymbolLabel.setBounds(0, 0, 50, 50);
+            this.moneySymbolLabel.setBounds(150, 0, 50, 50);
             this.roundSymbolLabel.setBounds(1040, 0, 20, 25);
-
-            this.update();
-
-            this.setLayout(null);
 
             this.add(sciencePointSymbolLabel);
             this.add(moneySymbolLabel);
@@ -273,18 +299,11 @@ public class MainGame extends State {
             this.add(sciencePointInfo);
             this.add(moneyInfo);
             this.add(roundInfo);
-
-            // TODO show resources
-
-            this.setBounds(20, 0, 1240, 50);
         }
 
-        public void update() {
-            // TODO this should be rewritten later
-            this.sciencePointInfo.setText("3.4");
-            this.moneyInfo.setText("0/6");
-            this.roundInfo.setText(String.valueOf(round));
-            // TODO show resources
+        private void initIcons() {
+            this.scienceIcon = new ImageIcon("./Resource/info/science.png");
+            this.moneyIcon = new ImageIcon("./Resource/info/money.png");
         }
     }
 
@@ -305,48 +324,30 @@ public class MainGame extends State {
     }
 
     private class LowerInfoArea extends JPanel {
-
         // show selected unit / city info
         private JLabel unitTypeInfo;
         private JLabel unitHealthInfo;
         private JLabel unitAttackInfo;
         private JLabel unitDefenceInfo;
+        private JLabel unitMovabilityInfo;
 
         private JLabel healthLabel;
         private JLabel attackLabel;
         private JLabel defenceLabel;
+        private JLabel movabilityLabel;
+
+        private ImageIcon healthIcon;
+        private ImageIcon attackIcon;
+        private ImageIcon defenceIcon;
+        private ImageIcon movabilityIcon;
         // TODO show city info
 
         public LowerInfoArea() {
             super();
             this.setBounds(250, 600, 600, 100);
             this.setLayout(null);
-
-            this.attackLabel = new JLabel("Attack : ");
-            this.defenceLabel = new JLabel("Defence : ");
-            this.healthLabel = new JLabel("Health : ");
-
-            this.attackLabel.setBounds(0, 25, 80, 25);
-            this.defenceLabel.setBounds(0, 50, 80, 25);
-            this.healthLabel.setBounds(0, 75, 80, 25);
-
-            this.unitTypeInfo = new JLabel();
-            this.unitHealthInfo = new JLabel();
-            this.unitAttackInfo = new JLabel();
-            this.unitDefenceInfo = new JLabel();
-
-            this.unitTypeInfo.setBounds(80, 0, 80, 25);
-            this.unitHealthInfo.setBounds(80, 25, 80, 25);
-            this.unitAttackInfo.setBounds(80, 50, 80, 25);
-            this.unitDefenceInfo.setBounds(80, 75, 80, 25);
-
-            this.add(attackLabel);
-            this.add(defenceLabel);
-            this.add(healthLabel);
-            this.add(unitTypeInfo);
-            this.add(unitHealthInfo);
-            this.add(unitAttackInfo);
-            this.add(unitDefenceInfo);
+            this.initIcons();
+            this.initLabels();
         }
 
         public void showUnitInfo(Unit unit) {
@@ -354,6 +355,7 @@ public class MainGame extends State {
             this.unitAttackInfo.setText(String.valueOf(unit.getUnitInfo().getAttack()));
             this.unitDefenceInfo.setText(String.valueOf(unit.getUnitInfo().getDefence()));
             this.unitHealthInfo.setText(String.valueOf(unit.getHealth()));
+            this.unitMovabilityInfo.setText(String.valueOf(unit.getMobility()));
         }
 
         public void unshowUnitInfo() {
@@ -361,6 +363,54 @@ public class MainGame extends State {
             this.unitAttackInfo.setText("");
             this.unitDefenceInfo.setText("");
             this.unitHealthInfo.setText("");
+            this.unitMovabilityInfo.setText("");
+        }
+
+        private void initIcons() {
+            this.healthIcon = new ImageIcon("./Resource/unitinfo/health.png");
+            this.attackIcon = new ImageIcon("./Resource/unitinfo/attack.png");
+            this.defenceIcon = new ImageIcon("./Resource/unitinfo/defence.png");
+            this.movabilityIcon = new ImageIcon("./Resource/unitinfo/movability.png");
+        }
+
+        private void initLabels() {
+            this.attackLabel = new JLabel(attackIcon);
+            this.defenceLabel = new JLabel(defenceIcon);
+            this.healthLabel = new JLabel(healthIcon);
+            this.movabilityLabel = new JLabel(movabilityIcon);
+
+            this.attackLabel.setBounds(0, 20, 40, 40);
+            this.defenceLabel.setBounds(0, 60, 40, 40);
+            this.healthLabel.setBounds(110, 20, 40, 40);
+            this.movabilityLabel.setBounds(110, 60, 40, 40);
+
+            this.unitTypeInfo = new JLabel();
+            this.unitHealthInfo = new JLabel();
+            this.unitAttackInfo = new JLabel();
+            this.unitDefenceInfo = new JLabel();
+            this.unitMovabilityInfo = new JLabel();
+
+            this.unitTypeInfo.setBounds(50, 0, 120, 20);
+            this.unitAttackInfo.setBounds(50, 20, 60, 40);
+            this.unitDefenceInfo.setBounds(50, 60, 60, 40);
+            this.unitHealthInfo.setBounds(160, 20, 60, 40);
+            this.unitMovabilityInfo.setBounds(160, 60, 60, 40);
+
+            this.unitTypeInfo.setFont(new Font("Consolas", Font.BOLD, 20));
+            this.unitAttackInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
+            this.unitDefenceInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
+            this.unitHealthInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
+            this.unitMovabilityInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
+
+            this.add(attackLabel);
+            this.add(defenceLabel);
+            this.add(healthLabel);
+            this.add(movabilityLabel);
+            this.add(unitTypeInfo);
+            this.add(unitHealthInfo);
+            this.add(unitAttackInfo);
+            this.add(unitDefenceInfo);
+            this.add(unitMovabilityInfo);
         }
     }
 

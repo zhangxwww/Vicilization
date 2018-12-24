@@ -56,6 +56,10 @@ public class Country {
 
     public void endOfCurrentRound() {
         // TODO 回血，移动力写哪都行
+        for (Unit u : units) {
+            u.recover();
+            u.unitEndOfTurn();
+        }
     }
 
     public void readyForNewRound() {

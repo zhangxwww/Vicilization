@@ -12,6 +12,8 @@ public interface Movable {
 
     public int getMobility();
 
+    public void setMobility(int mobility);
+
     public Vector<LandSquare> getAvailableLocation(GameMap map);
 
     public void moveTo(Position pos);
