@@ -46,8 +46,6 @@ public class MainGame extends State {
         super(mainWindow);
         setNextState(StateType.Gameover);
 
-        System.out.println(countrys[0]);
-        System.out.println(countrys[1]);
         this.round = 0;
         this.unitSeleted = false;
         this.unitMoving = false;
@@ -312,7 +310,7 @@ public class MainGame extends State {
                     String.valueOf(currentPlayer.getStockValue().getMoney()) + "(+"
                             + String.valueOf(currentPlayer.getFlowValue().getMoney()) + ")");
 
-            this.roundInfo.setText(String.valueOf(round));
+            this.roundInfo.setText(String.valueOf(round / 2 + 1));
             if (round % 2 == 0) {
                 this.countryName_1.setFont(new Font("Consolas", Font.BOLD, 25));
                 this.countryName_2.setFont(new Font("Consolas", Font.PLAIN, 25));
@@ -320,6 +318,7 @@ public class MainGame extends State {
                 this.countryName_1.setFont(new Font("Consolas", Font.PLAIN, 25));
                 this.countryName_2.setFont(new Font("Consolas", Font.BOLD, 25));
             }
+            this.repaint();
         }
 
         private void initLabels() {
@@ -360,9 +359,9 @@ public class MainGame extends State {
             this.countryName_1.setOpaque(true);
             this.countryName_2.setOpaque(true);
 
-            this.countryName_1.setBackground(CountryConfig.COLOR_OF_COUNTRY.
+            this.countryName_1.setForeground(CountryConfig.COLOR_OF_COUNTRY.
                     get(countries.get(0).getCountryName().toString()));
-            this.countryName_2.setBackground(CountryConfig.COLOR_OF_COUNTRY.
+            this.countryName_2.setForeground(CountryConfig.COLOR_OF_COUNTRY.
                     get(countries.get(1).getCountryName().toString()));
 
             this.add(sciencePointSymbolLabel);

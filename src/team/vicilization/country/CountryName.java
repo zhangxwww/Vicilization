@@ -10,6 +10,5 @@ public enum CountryName {
         char[] cs = name.toCharArray();
         cs[0] -= 32;
         return String.valueOf(cs);
-        //TODO new toString
     }
 }
