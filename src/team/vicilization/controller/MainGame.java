@@ -228,20 +228,7 @@ public class MainGame extends State {
         this.lowerInfoArea.unshowCityInfo();
     }
 
-    private void selectScience(ScienceName scienceName) {
-        // TODO
-    }
-
-    private void showScienceInfo(ScienceName scienceName) {
-        // TODO
-    }
-
     private void showScienceTree() {
-        // TODO
-    }
-
-
-    private void changePlayer() {
         // TODO
     }
 
@@ -270,14 +257,6 @@ public class MainGame extends State {
     }
 
     private void selectProduction() {
-        // TODO
-    }
-
-    private void startTradeRoute() {
-        // TODO
-    }
-
-    private void selectTradeCity() {
         // TODO
     }
 
@@ -844,7 +823,6 @@ public class MainGame extends State {
                     Position position = city.getLocation();
                     JLabel square = (JLabel) getComponentAt(
                             position.getX() * 50, position.getY() * 50);
-                    // TODO rewrite later after icon of city available
                     square.setIcon(cityIcon);
                     square.setBackground(CountryConfig.COLOR_OF_COUNTRY
                             .get(city.getCountry().getCountryName()));
