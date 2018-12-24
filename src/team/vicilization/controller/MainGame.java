@@ -37,7 +37,10 @@ public class MainGame extends State {
 
     private boolean unitSeleted;
     private boolean unitMoving;
-    private Unit seletedUnit;
+    private Unit selectedUnit;
+
+    private boolean citySelected;
+    private City selectedCity;
 
     public MainGame(MainWindow mainWindow, CountryName[] countrys) {
         super(mainWindow);
@@ -67,7 +70,7 @@ public class MainGame extends State {
 
         }
         this.panel.repaint();
-        this.seletedUnit = null;
+        this.selectedUnit = null;
         this.lowerInfoArea.unshowUnitInfo();
 
         if (this.currentPlayer.judgeScienceVictory() || round == 3 /* TODO delete later */) {
@@ -149,13 +152,15 @@ public class MainGame extends State {
     }
 
     private void selectUnit(Unit unit) {
+        this.selectedCity = null;
+        this.citySelected = false;
         this.unitSeleted = true;
-        this.seletedUnit = unit;
+        this.selectedUnit = unit;
         this.lowerInfoArea.showUnitInfo(unit);
-        if (!seletedUnit.isMovedThisTurn()) { // 没有移动，显示移动按钮
+        if (!selectedUnit.isMovedThisTurn()) { // 没有移动，显示移动按钮
             this.panel.add(unitMoveButton);
         }
-        if (seletedUnit.getSubType() == UnitSubType.EXPLORER) {
+        if (selectedUnit.getSubType() == UnitSubType.EXPLORER) {
             this.panel.add(unitSpecialButton);
             // !!! 如果这里要换成icon的话，在GameButtonLisioner 那里也要做同样的修改 !!!
             unitSpecialButton.setText("Build city");
@@ -175,22 +180,37 @@ public class MainGame extends State {
         } catch (Exception e) {
         }
         this.panel.repaint();
-        this.seletedUnit = null;
+        this.selectedUnit = null;
         this.lowerInfoArea.unshowUnitInfo();
     }
 
     private void buildCity() {
-        Position pos = seletedUnit.getPosition();
-        currentPlayer.deleteUnit(seletedUnit);
+        Position pos = selectedUnit.getPosition();
+        currentPlayer.deleteUnit(selectedUnit);
         City city = currentPlayer.buildNewCity(pos, mapArea.getMap(), enermy);
         this.cities.add(city);
-        units.remove(seletedUnit);
+        units.remove(selectedUnit);
         unselectUnit();
         this.mapArea.mapPanel.updateMap();
     }
 
     private void selectCity(City city) {
-        // TODO
+        this.selectedUnit = null;
+        this.unitSeleted = false;
+        this.unitMoving = false;
+        this.citySelected = true;
+        this.selectedCity = city;
+        this.lowerInfoArea.showCityInfo(city);
+        this.mapArea.drawCityTerritory();
+        // TODO add procuce lists
+    }
+
+    private void unselectCity() {
+        this.citySelected = false;
+        // TODO remove sth
+        this.panel.repaint();
+        this.selectedCity = null;
+        this.lowerInfoArea.unshowCityInfo();
     }
 
     private void selectScience(ScienceName scienceName) {
@@ -356,10 +376,11 @@ public class MainGame extends State {
     private class LowerInfoArea extends JPanel {
         // show selected unit / city info
         private JLabel unitTypeInfo;
-        private JLabel unitHealthInfo;
-        private JLabel unitAttackInfo;
-        private JLabel unitDefenceInfo;
-        private JLabel unitMovabilityInfo;
+
+        private JLabel healthInfo;
+        private JLabel attackInfo;
+        private JLabel defenceInfo;
+        private JLabel movabilityInfo;
 
         private JLabel healthLabel;
         private JLabel attackLabel;
@@ -370,6 +391,24 @@ public class MainGame extends State {
         private ImageIcon attackIcon;
         private ImageIcon defenceIcon;
         private ImageIcon movabilityIcon;
+
+        private JLabel cityNameInfo;
+        private JLabel cityFoodInfo;
+        private JLabel cityProductivityInfo;
+        private JLabel cityMoneyInfo;
+        private JLabel cityScienceInfo;
+
+
+        private JLabel cityFoodLabel;
+        private JLabel cityProductivityLabel;
+        private JLabel cityMoneyLabel;
+        private JLabel cityScienceLabel;
+
+
+        private ImageIcon foodIcon;
+        private ImageIcon producticityIcon;
+        private ImageIcon moneyIcon;
+        private ImageIcon scienceIcon;
         // TODO show city info
 
         public LowerInfoArea() {
@@ -382,18 +421,42 @@ public class MainGame extends State {
 
         public void showUnitInfo(Unit unit) {
             this.unitTypeInfo.setText(unit.getSubType().toString());
-            this.unitAttackInfo.setText(String.valueOf(unit.getUnitInfo().getAttack()));
-            this.unitDefenceInfo.setText(String.valueOf(unit.getUnitInfo().getDefence()));
-            this.unitHealthInfo.setText(String.valueOf(unit.getHealth()));
-            this.unitMovabilityInfo.setText(String.valueOf(unit.getMobility()));
+            this.attackInfo.setText(String.valueOf(unit.getUnitInfo().getAttack()));
+            this.defenceInfo.setText(String.valueOf(unit.getUnitInfo().getDefence()));
+            this.healthInfo.setText(String.valueOf(unit.getHealth()));
+            this.movabilityInfo.setText(String.valueOf(unit.getMobility()));
         }
 
         public void unshowUnitInfo() {
             this.unitTypeInfo.setText("");
-            this.unitAttackInfo.setText("");
-            this.unitDefenceInfo.setText("");
-            this.unitHealthInfo.setText("");
-            this.unitMovabilityInfo.setText("");
+            this.attackInfo.setText("");
+            this.defenceInfo.setText("");
+            this.healthInfo.setText("");
+            this.movabilityInfo.setText("");
+        }
+
+        public void showCityInfo(City city) {
+            this.attackInfo.setText(String.valueOf(city.getAttack()));
+            this.defenceInfo.setText(String.valueOf(city.getDefence()));
+            this.healthInfo.setText(String.valueOf(city.getHealth()));
+
+            this.cityNameInfo.setText(city.getCityName().toString());
+            this.cityFoodInfo.setText(String.valueOf(city.getFlowValue().getFood()));
+            this.cityProductivityInfo.setText(String.valueOf(city.getFlowValue().getProductivity()));
+            this.cityMoneyInfo.setText(String.valueOf(city.getFlowValue().getMoney()));
+            this.cityScienceInfo.setText(String.valueOf(city.getFlowValue().getScience()));
+        }
+
+        public void unshowCityInfo() {
+            this.attackInfo.setText("");
+            this.defenceInfo.setText("");
+            this.healthInfo.setText("");
+
+            this.cityNameInfo.setText("");
+            this.cityFoodInfo.setText("");
+            this.cityProductivityInfo.setText("");
+            this.cityMoneyInfo.setText("");
+            this.cityScienceInfo.setText("");
         }
 
         private void initIcons() {
@@ -401,6 +464,10 @@ public class MainGame extends State {
             this.attackIcon = new ImageIcon("./Resource/unitinfo/attack.png");
             this.defenceIcon = new ImageIcon("./Resource/unitinfo/defence.png");
             this.movabilityIcon = new ImageIcon("./Resource/unitinfo/movability.png");
+            this.foodIcon = new ImageIcon("./Resource/info/food.png");
+            this.producticityIcon = new ImageIcon("./Resource/info/productivity.png");
+            this.moneyIcon = new ImageIcon("./Resource/info/money.png");
+            this.scienceIcon = new ImageIcon("./Resource/info/science.png");
         }
 
         private void initLabels() {
@@ -411,36 +478,79 @@ public class MainGame extends State {
 
             this.attackLabel.setBounds(0, 20, 40, 40);
             this.defenceLabel.setBounds(0, 60, 40, 40);
-            this.healthLabel.setBounds(110, 20, 40, 40);
-            this.movabilityLabel.setBounds(110, 60, 40, 40);
+            this.healthLabel.setBounds(100, 20, 40, 40);
+            this.movabilityLabel.setBounds(100, 60, 40, 40);
 
             this.unitTypeInfo = new JLabel();
-            this.unitHealthInfo = new JLabel();
-            this.unitAttackInfo = new JLabel();
-            this.unitDefenceInfo = new JLabel();
-            this.unitMovabilityInfo = new JLabel();
+            this.healthInfo = new JLabel();
+            this.attackInfo = new JLabel();
+            this.defenceInfo = new JLabel();
+            this.movabilityInfo = new JLabel();
 
             this.unitTypeInfo.setBounds(50, 0, 120, 20);
-            this.unitAttackInfo.setBounds(50, 20, 60, 40);
-            this.unitDefenceInfo.setBounds(50, 60, 60, 40);
-            this.unitHealthInfo.setBounds(160, 20, 60, 40);
-            this.unitMovabilityInfo.setBounds(160, 60, 60, 40);
+            this.attackInfo.setBounds(50, 20, 40, 40);
+            this.defenceInfo.setBounds(50, 60, 40, 40);
+            this.healthInfo.setBounds(150, 20, 40, 40);
+            this.movabilityInfo.setBounds(150, 60, 40, 40);
+
+            this.cityNameInfo = new JLabel();
+            this.cityFoodInfo = new JLabel();
+            this.cityProductivityInfo = new JLabel();
+            this.cityMoneyInfo = new JLabel();
+            this.cityScienceInfo = new JLabel();
+
+            this.cityNameInfo.setBounds(300, 0, 120, 20);
+            this.cityFoodInfo.setBounds(300, 20, 40, 40);
+            this.cityProductivityInfo.setBounds(300, 60, 40, 40);
+            this.cityMoneyInfo.setBounds(400, 20, 40, 40);
+            this.cityScienceInfo.setBounds(400, 60, 40, 40);
+
+            this.cityFoodLabel = new JLabel(foodIcon);
+            this.cityProductivityLabel = new JLabel(producticityIcon);
+            this.cityMoneyLabel = new JLabel(moneyIcon);
+            this.cityScienceLabel = new JLabel(scienceIcon);
+
+            this.cityFoodLabel.setBounds(250, 20, 40, 40);
+            this.cityProductivityLabel.setBounds(250, 60, 40, 40);
+            this.cityMoneyLabel.setBounds(350, 20, 40, 40);
+            this.cityScienceLabel.setBounds(350, 60, 40, 40);
 
             this.unitTypeInfo.setFont(new Font("Consolas", Font.BOLD, 20));
-            this.unitAttackInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
-            this.unitDefenceInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
-            this.unitHealthInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
-            this.unitMovabilityInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
+            this.attackInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
+            this.defenceInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
+            this.healthInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
+            this.movabilityInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
+
+            this.cityNameInfo.setFont(new Font("Consolas", Font.BOLD, 20));
+            this.cityFoodInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
+            this.cityProductivityInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
+            this.cityMoneyInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
+            this.cityScienceInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
 
             this.add(attackLabel);
             this.add(defenceLabel);
             this.add(healthLabel);
             this.add(movabilityLabel);
+
             this.add(unitTypeInfo);
-            this.add(unitHealthInfo);
-            this.add(unitAttackInfo);
-            this.add(unitDefenceInfo);
-            this.add(unitMovabilityInfo);
+            this.add(healthInfo);
+            this.add(attackInfo);
+            this.add(defenceInfo);
+            this.add(movabilityInfo);
+
+            this.add(cityNameInfo);
+            this.add(cityFoodInfo);
+            this.add(cityProductivityInfo);
+            this.add(cityMoneyInfo);
+            this.add(cityScienceInfo);
+
+            this.add(cityFoodLabel);
+            this.add(cityProductivityLabel);
+            this.add(cityMoneyLabel);
+            this.add(cityScienceLabel);
+
+            this.healthInfo.setOpaque(true);
+            this.healthInfo.setBackground(Color.RED);
         }
     }
 
@@ -470,6 +580,10 @@ public class MainGame extends State {
 
         public void drawAccessableSquares() {
             this.mapPanel.drawAccessableSquares();
+        }
+
+        public void drawCityTerritory() {
+            this.mapPanel.drawTerritory();
         }
 
         public GameMap getMap() {
@@ -504,7 +618,10 @@ public class MainGame extends State {
             private ImageIcon explorer_icon;
             private ImageIcon footman_icon;
 
+            private ImageIcon cityIcon;
+
             Vector<LandSquare> accessableSquares;
+            Vector<LandSquare> territory;
 
             public MapPanel() {
                 super();
@@ -552,6 +669,8 @@ public class MainGame extends State {
                 this.constructor_icon = new ImageIcon("./Resource/unit/constructor.png");
                 this.explorer_icon = new ImageIcon("./Resource/unit/explorer.png");
                 this.footman_icon = new ImageIcon("./Resource/unit/footman.png");
+
+                this.cityIcon = new ImageIcon("./Resource/city/city.png");
             }
 
             private void initSquares() {
@@ -568,9 +687,25 @@ public class MainGame extends State {
             }
 
             public void drawAccessableSquares() {
-                accessableSquares = seletedUnit.getAvailableLocation(map);
+                accessableSquares = selectedUnit.getAvailableLocation(map);
                 for (LandSquare landSquare : accessableSquares) {
                     Position position = landSquare.getPosition();
+                    JLabel square = (JLabel) getComponentAt(
+                            position.getX() * 50, position.getY() * 50);
+                    square.setIcon(null);
+                    square.setBackground(Color.GREEN);
+                }
+                this.repaint();
+            }
+
+            public void drawTerritory() {
+                territory = selectedCity.getTerritory();
+                Position center = selectedCity.getLocation();
+                for (LandSquare landSquare : territory) {
+                    Position position = landSquare.getPosition();
+                    if (position.equals(center)) {
+                        continue;
+                    }
                     JLabel square = (JLabel) getComponentAt(
                             position.getX() * 50, position.getY() * 50);
                     square.setIcon(null);
@@ -668,8 +803,10 @@ public class MainGame extends State {
                     Position position = city.getLocation();
                     JLabel square = (JLabel) getComponentAt(
                             position.getX() * 50, position.getY() * 50);
-                    square.setIcon(null);
-                    square.setBackground(Color.RED);
+                    // TODO rewrite later after icon of city available
+                    square.setIcon(cityIcon);
+                    square.setBackground(CountryConfig.COLOR_OF_COUNTRY
+                            .get(city.getCountry().getCountryName()));
                 }
                 for (Unit unit : units) {
                     Position position = unit.getPosition();
@@ -732,19 +869,34 @@ public class MainGame extends State {
                     int posx = event.getX() / 50;
                     int posy = event.getY() / 50;
                     if (!unitMoving) { // 单位没有准备移动
+                        boolean found = false;
                         for (Unit u : units) {
                             if (u.getPosition().equals(new Position(posx, posy))) {
                                 if (u.getCountry() == currentPlayer) {
+                                    found = true;
+                                    unselectCity();
                                     selectUnit(u);
                                 }
                             }
                         }
-                        // TODO select city
+                        for (City c : cities) {
+                            if (c.getLocation().equals(new Position(posx, posy))) {
+                                if (c.getCountry() == currentPlayer) {
+                                    found = true;
+                                    unselectUnit();
+                                    selectCity(c);
+                                }
+                            }
+                        }
+                        if (!found) {
+                            unselectUnit();
+                            unselectCity();
+                        }
                     } else { // 单位移动
                         Position position = new Position(posx, posy);
                         LandSquare landSquare = map.getSquare(posx, posy);
                         if (accessableSquares.contains(landSquare)) {
-                            seletedUnit.moveTo(position);
+                            selectedUnit.moveTo(position);
                         }
                         unselectUnit();
                     }
