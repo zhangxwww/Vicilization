@@ -10,9 +10,7 @@ public enum BuildingType {
     @Override
     public String toString() {
         String name=super.toString().toLowerCase();
-        char[] cs=name.toCharArray();
-        cs[0]-=32;
-        return String.valueOf(cs);
+        name.replace('_', ' ');
+        return name;
     }
-    //TODO 多单词枚举值的toString方法
 }

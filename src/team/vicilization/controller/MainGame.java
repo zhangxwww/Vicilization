@@ -33,11 +33,13 @@ public class MainGame extends State {
 
     private static JButton nextRoundButton;
     private static JButton unitMoveButton;
-    private static JButton unitSpecialButton;
+    private static JButton unitFightButton;
+    private static JButton explorerBuildCityButton;
+    private static JButton constructorHarvestButton;
     private static JButton cityConfirmProduceButton;
 
-    private static JList<BuildingType> availableBuildings;
-    private static JList<UnitSubType> availableUnits;
+    private static JComboBox<BuildingType> availableBuildings;
+    private static JComboBox<UnitSubType> availableUnits;
 
     private boolean unitSeleted;
     private boolean unitMoving;
@@ -47,6 +49,9 @@ public class MainGame extends State {
     private City selectedCity;
 
     private boolean startGame[];
+
+    private UnitSubType underProducingUnit;
+    private BuildingType underProducingBuilding;
 
     public MainGame(MainWindow mainWindow, CountryName[] countrys) {
         super(mainWindow);
@@ -58,6 +63,7 @@ public class MainGame extends State {
         this.initLowerInfoArea();
         this.initCountrys(countrys);
         this.initUpperInfoArea();
+        this.initComboxes();
     }
 
     private void nextRound() {
@@ -90,6 +96,8 @@ public class MainGame extends State {
         this.startGame[0] = false;
         this.startGame[1] = false;
         this.cities = new Vector<City>();
+        this.underProducingUnit = UnitSubType.NONE;
+        this.underProducingBuilding = BuildingType.NONE;
     }
 
     private void initCountrys(CountryName[] countrys) {
@@ -129,6 +137,14 @@ public class MainGame extends State {
         }
     }
 
+    private void initComboxes() {
+        this.availableBuildings = new JComboBox<BuildingType>();
+        this.availableUnits = new JComboBox<UnitSubType>();
+
+        this.availableBuildings.setBounds(1440, 960, 200, 40);
+        this.availableUnits.setBounds(1220, 960, 200, 40);
+    }
+
     private void initButtons() {
         GameButtonsListener listener = new GameButtonsListener();
 
@@ -137,16 +153,24 @@ public class MainGame extends State {
         this.nextRoundButton.addActionListener(listener);
         this.panel.add(nextRoundButton);
 
-        this.unitMoveButton = new JButton("Move / Fight");
-        this.unitMoveButton.setBounds(20, 940, 150, 50);
+        this.unitMoveButton = new JButton("Move");
+        this.unitMoveButton.setBounds(20, 940, 150, 25);
         this.unitMoveButton.addActionListener(listener);
 
-        this.unitSpecialButton = new JButton();
-        this.unitSpecialButton.setBounds(20, 990, 150, 50);
-        this.unitSpecialButton.addActionListener(listener);
+        this.unitFightButton = new JButton("Fight");
+        this.unitFightButton.setBounds(20, 965, 150, 25);
+        this.unitFightButton.addActionListener(listener);
+
+        this.explorerBuildCityButton = new JButton("Build city");
+        this.explorerBuildCityButton.setBounds(20, 990, 150, 25);
+        this.explorerBuildCityButton.addActionListener(listener);
+
+        this.constructorHarvestButton = new JButton("Harvest");
+        this.constructorHarvestButton.setBounds(20, 1015, 150, 25);
+        this.constructorHarvestButton.addActionListener(listener);
 
         this.cityConfirmProduceButton = new JButton("Produce");
-        this.cityConfirmProduceButton.setBounds(1680, 940, 100, 100);
+        this.cityConfirmProduceButton.setBounds(1670, 940, 100, 100);
         this.cityConfirmProduceButton.addActionListener(listener);
     }
 
@@ -202,10 +226,15 @@ public class MainGame extends State {
         if (!selectedUnit.isMovedThisTurn()) { // 没有移动，显示移动按钮
             this.panel.add(unitMoveButton);
         }
+        if (!selectedUnit.isAttackedThisTurn()
+                && selectedUnit.getType() == UnitType.FIGHTER) {
+            this.panel.add(unitFightButton);
+        }
         if (selectedUnit.getSubType() == UnitSubType.EXPLORER) {
-            this.panel.add(unitSpecialButton);
-            // !!! 如果这里要换成icon的话，在GameButtonLisioner 那里也要做同样的修改 !!!
-            unitSpecialButton.setText("Build city");
+            this.panel.add(explorerBuildCityButton);
+        }
+        if (selectedUnit.getSubType() == UnitSubType.CONSTRUCTOR) {
+            this.panel.add(constructorHarvestButton);
         }
         this.panel.repaint();
     }
@@ -218,7 +247,15 @@ public class MainGame extends State {
         } catch (Exception e) {
         }
         try {
-            this.panel.remove(unitSpecialButton);
+            this.panel.remove(unitFightButton);
+        } catch (Exception e) {
+        }
+        try {
+            this.panel.remove(explorerBuildCityButton);
+        } catch (Exception e) {
+        }
+        try {
+            this.panel.remove(constructorHarvestButton);
         } catch (Exception e) {
         }
         this.panel.repaint();
@@ -245,12 +282,19 @@ public class MainGame extends State {
         this.citySelected = true;
         this.selectedCity = city;
         this.lowerInfoArea.showCityInfo(city);
+
+        this.panel.add(cityConfirmProduceButton);
+        // TODO add something into avails
+        this.panel.add(availableBuildings);
+        this.panel.add(availableUnits);
         // TODO add procuce lists
+        this.panel.repaint();
     }
 
     private void unselectCity() {
         this.citySelected = false;
         // TODO remove sth
+        // TODO clear avails
         this.panel.repaint();
         this.selectedCity = null;
         this.lowerInfoArea.unshowCityInfo();
@@ -300,10 +344,8 @@ public class MainGame extends State {
             } else if (event.getSource() == MainGame.unitMoveButton) {
                 mapArea.drawAccessableSquares();
                 unitMoving = true;
-            } else if (event.getSource() == MainGame.unitSpecialButton) {
-                if (MainGame.unitSpecialButton.getText() == "Build city") {
-                    buildCity();
-                }
+            } else if (event.getSource() == MainGame.explorerBuildCityButton) {
+                buildCity();
             }
             // TODO finish with other actions
         }

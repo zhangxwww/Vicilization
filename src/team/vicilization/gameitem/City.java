@@ -308,6 +308,7 @@ public class City implements Fightable{
     }
 
     public Vector<BuildingType> getAllowedBuildings() {
+        calculateAllowedBuildings();
         return allowedBuildings;
     }
 
@@ -316,6 +317,7 @@ public class City implements Fightable{
     }
 
     public Vector<Unit> getAllowedUnits() {
+        calculateAllowedUnits();
         return allowedUnits;
     }
 
