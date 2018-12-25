@@ -4,13 +4,12 @@ import team.vicilization.util.Position;
 
 import javax.swing.*;
 
-public class LandSquare extends JLabel {
+public class LandSquare {
     //========================Attributes======================//
     private TerrainType terrainType;
     private LandformType landformType;
     private ResourceType resourceType;
     private Position position;
-    private boolean isMarked;
     private int mobilityCost;
     private int defenceBuff;
     private int productivityYield;
@@ -38,12 +37,8 @@ public class LandSquare extends JLabel {
         return result;
     }
 
-    void mark(){
-        this.isMarked = true;
-    }
-
-    void unmark(){
-        this.isMarked = false;
+    public void harvested() {
+        this.landformType = LandformType.DESERT;
     }
 
     //========================Calculate Methods======================//
@@ -113,10 +108,6 @@ public class LandSquare extends JLabel {
 
     }
 
-    public boolean getMark() {
-        return isMarked;
-    }
-
     public int getMobilityCost() {
         return mobilityCost;
     }
@@ -140,4 +131,6 @@ public class LandSquare extends JLabel {
     public int getScienceYield() {
         return scienceYield;
     }
+
+
 }

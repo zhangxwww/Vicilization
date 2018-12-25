@@ -244,7 +244,13 @@ public class MainGame extends State {
             this.panel.add(explorerBuildCityButton);
         }
         if (selectedUnit.getSubType() == UnitSubType.CONSTRUCTOR) {
-            this.panel.add(constructorHarvestButton);
+            LandformType landformType = this.mapArea.at(
+                    selectedUnit.getPosition()).getLandformType();
+            if (landformType == LandformType.FOREST
+                    || landformType == LandformType.RAINFOREST
+                    || landformType == LandformType.MARSH) {
+                this.panel.add(constructorHarvestButton);
+            }
         }
         this.panel.repaint();
     }
@@ -333,6 +339,19 @@ public class MainGame extends State {
 
     private void showScienceTree() {
         // TODO
+    }
+
+    private void harvest() {
+        Constructor constructor = (Constructor) this.selectedUnit;
+        constructor.reduceTimes();
+        Position position = constructor.getPosition();
+        LandSquare landSquare = this.mapArea.at(position);
+        this.currentPlayer.harvestResource(position, landSquare.getLandformType());
+        landSquare.harvested();
+        if (constructor.getTimes() == 0) {
+            this.units.remove(selectedUnit);
+            this.mapArea.mapPanel.updateMap();
+        }
     }
 
     private void fight(Fightable fighter, Fightable fought) {
@@ -433,6 +452,8 @@ public class MainGame extends State {
                 unitMoving = true;
             } else if (event.getSource() == MainGame.explorerBuildCityButton) {
                 buildCity();
+            } else if (event.getSource() == MainGame.constructorHarvestButton) {
+                harvest();
             }
             // TODO finish with other actions
         }
@@ -767,7 +788,6 @@ public class MainGame extends State {
         }
     }
 
-
     private class MapArea extends JPanel {
 
         private MapPanel mapPanel;
@@ -789,6 +809,10 @@ public class MainGame extends State {
 
         public LandSquare at(int x, int y) {
             return mapPanel.map.getSquare(x, y);
+        }
+
+        public LandSquare at(Position position) {
+            return mapPanel.map.getSquare(position);
         }
 
         public void drawAccessableSquares(Vector<LandSquare> squares) {
