@@ -61,7 +61,7 @@ public class MainGame extends State {
         this.initMapArea();
         this.initButtons();
         this.initLowerInfoArea();
-        this.initCountrys(countrys);
+        this.initCountries(countrys);
         this.initUpperInfoArea();
         this.initComboxes();
     }
@@ -100,9 +100,9 @@ public class MainGame extends State {
         this.underProducingBuilding = BuildingType.NONE;
     }
 
-    private void initCountrys(CountryName[] countrys) {
-        this.countries = new Vector<Country>(2);
-        this.units = new Vector<Unit>();
+    private void initCountries(CountryName[] countrys) {
+        this.countries = new Vector<>(2);
+        this.units = new Vector<>();
         for (int i = 0; i < 2; i++) {
             Country country = new Country(countrys[i]);
             this.countries.add(country);
@@ -138,40 +138,45 @@ public class MainGame extends State {
     }
 
     private void initComboxes() {
-        this.availableBuildings = new JComboBox<BuildingType>();
-        this.availableUnits = new JComboBox<UnitSubType>();
+        ComboxItemListener listener = new ComboxItemListener();
 
-        this.availableBuildings.setBounds(1440, 960, 200, 40);
-        this.availableUnits.setBounds(1220, 960, 200, 40);
+        availableBuildings = new JComboBox<BuildingType>();
+        availableUnits = new JComboBox<UnitSubType>();
+
+        availableBuildings.setBounds(1440, 960, 200, 40);
+        availableUnits.setBounds(1220, 960, 200, 40);
+
+        availableBuildings.addItemListener(listener);
+        availableUnits.addItemListener(listener);
     }
 
     private void initButtons() {
         GameButtonsListener listener = new GameButtonsListener();
 
-        this.nextRoundButton = new JButton("Next Round");
-        this.nextRoundButton.setBounds(1800, 940, 100, 100);
-        this.nextRoundButton.addActionListener(listener);
+        nextRoundButton = new JButton("Next Round");
+        nextRoundButton.setBounds(1800, 940, 100, 100);
+        nextRoundButton.addActionListener(listener);
         this.panel.add(nextRoundButton);
 
-        this.unitMoveButton = new JButton("Move");
-        this.unitMoveButton.setBounds(20, 940, 150, 25);
-        this.unitMoveButton.addActionListener(listener);
+        unitMoveButton = new JButton("Move");
+        unitMoveButton.setBounds(20, 940, 150, 25);
+        unitMoveButton.addActionListener(listener);
 
-        this.unitFightButton = new JButton("Fight");
-        this.unitFightButton.setBounds(20, 965, 150, 25);
-        this.unitFightButton.addActionListener(listener);
+        unitFightButton = new JButton("Fight");
+        unitFightButton.setBounds(20, 965, 150, 25);
+        unitFightButton.addActionListener(listener);
 
-        this.explorerBuildCityButton = new JButton("Build city");
-        this.explorerBuildCityButton.setBounds(20, 990, 150, 25);
-        this.explorerBuildCityButton.addActionListener(listener);
+        explorerBuildCityButton = new JButton("Build city");
+        explorerBuildCityButton.setBounds(20, 990, 150, 25);
+        explorerBuildCityButton.addActionListener(listener);
 
-        this.constructorHarvestButton = new JButton("Harvest");
-        this.constructorHarvestButton.setBounds(20, 1015, 150, 25);
-        this.constructorHarvestButton.addActionListener(listener);
+        constructorHarvestButton = new JButton("Harvest");
+        constructorHarvestButton.setBounds(20, 1015, 150, 25);
+        constructorHarvestButton.addActionListener(listener);
 
-        this.cityConfirmProduceButton = new JButton("Produce");
-        this.cityConfirmProduceButton.setBounds(1670, 940, 100, 100);
-        this.cityConfirmProduceButton.addActionListener(listener);
+        cityConfirmProduceButton = new JButton("Produce");
+        cityConfirmProduceButton.setBounds(1670, 940, 100, 100);
+        cityConfirmProduceButton.addActionListener(listener);
     }
 
     private void initUpperInfoArea() {
@@ -282,24 +287,43 @@ public class MainGame extends State {
         this.citySelected = true;
         this.selectedCity = city;
         this.lowerInfoArea.showCityInfo(city);
-
-        this.panel.add(cityConfirmProduceButton);
-        // TODO add something into avails
-        this.getAllowdBuildings();
-        this.getAllowedUnits();
-        this.panel.add(availableBuildings);
-        this.panel.add(availableUnits);
-        // TODO add procuce lists
+        this.showSelectProduce();
         this.panel.repaint();
     }
 
     private void unselectCity() {
         this.citySelected = false;
-        // TODO remove sth
-        // TODO clear avails
+        this.unshowSelectProduce();
         this.panel.repaint();
         this.selectedCity = null;
         this.lowerInfoArea.unshowCityInfo();
+    }
+
+    private void showSelectProduce() {
+        if (!selectedCity.isProducing()) {
+            this.panel.add(cityConfirmProduceButton);
+            this.getAllowedBuildings();
+            this.getAllowedUnits();
+            this.panel.add(availableBuildings);
+            this.panel.add(availableUnits);
+        }
+    }
+
+    private void unshowSelectProduce() {
+        try {
+            this.panel.remove(cityConfirmProduceButton);
+        } catch (Exception e) {
+        }
+        try {
+            this.panel.remove(availableBuildings);
+        } catch (Exception e) {
+        }
+        try {
+            this.panel.remove(availableUnits);
+        } catch (Exception e) {
+        }
+        this.clearAllowedBuildings();
+        this.clearAllowedUnits();
     }
 
     private void showScienceTree() {
@@ -318,33 +342,72 @@ public class MainGame extends State {
         // TODO
     }
 
-    private void recruiteGiant(GiantName giant) {
+    private void recruitGiant(GiantName giant) {
         // TODO
     }
 
-    private void getAllowdBuildings() {
+    private void getAllowedBuildings() {
         Vector<BuildingType> allowedBuilding = selectedCity.getAllowedBuildings();
-        this.availableBuildings.addItem(BuildingType.NONE);
+        availableBuildings.addItem(BuildingType.NONE);
         for (BuildingType type : allowedBuilding) {
-            this.availableBuildings.addItem(type);
+            availableBuildings.addItem(type);
         }
+        availableBuildings.setSelectedItem(BuildingType.NONE);
     }
 
     private void getAllowedUnits() {
         Vector<UnitSubType> allowedUnits = selectedCity.getAllowedUnits();
-        this.availableUnits.addItem(UnitSubType.NONE);
+        availableUnits.addItem(UnitSubType.NONE);
         for (UnitSubType type : allowedUnits) {
-            this.availableUnits.addItem(type);
+            availableUnits.addItem(type);
         }
+        availableUnits.setSelectedItem(UnitSubType.NONE);
     }
 
-    private void selectProduction() {
-        // TODO
+    private void clearAllowedBuildings() {
+        availableBuildings.removeAllItems();
+    }
+
+    private void clearAllowedUnits() {
+        availableUnits.removeAllItems();
+    }
+
+    private void selectProduction(BuildingType type) {
+        selectedCity.produce(type);
+        this.unshowSelectProduce();
+        this.lowerInfoArea.updateCityInfo();
+        this.panel.repaint();
+    }
+
+    private void selectProduction(UnitSubType type) {
+        selectedCity.produce(type);
+        this.unshowSelectProduce();
+        this.lowerInfoArea.updateCityInfo();
+        this.panel.repaint();
     }
 
     private void initMapArea() {
         this.mapArea = new MapArea();
         this.panel.add(mapArea);
+    }
+
+    private class ComboxItemListener implements ItemListener {
+        public void itemStateChanged(ItemEvent event) {
+            if (event.getStateChange() != ItemEvent.SELECTED) {
+                return;
+            }
+            UnitSubType unitSubType = UnitSubType.NONE;
+            BuildingType buildingType = BuildingType.NONE;
+            if (event.getSource() == MainGame.availableUnits
+                    && (unitSubType = (UnitSubType)
+                    MainGame.availableUnits.getSelectedItem()) != UnitSubType.NONE) {
+                selectProduction(unitSubType);
+            } else if (event.getSource() == MainGame.availableBuildings
+                    && (buildingType = (BuildingType)
+                    MainGame.availableBuildings.getSelectedItem()) != BuildingType.NONE) {
+                selectProduction(buildingType);
+            }
+        }
     }
 
     private class GameButtonsListener implements ActionListener {
@@ -529,6 +592,11 @@ public class MainGame extends State {
             this.movabilityInfo.setText("");
         }
 
+        public void updateUnitInfo() {
+            this.showUnitInfo(selectedUnit);
+            this.repaint();
+        }
+
         public void showCityInfo(City city) {
             this.attackInfo.setText(String.valueOf(city.getAttack()));
             this.defenceInfo.setText(String.valueOf(city.getDefence()));
@@ -554,6 +622,11 @@ public class MainGame extends State {
             int progress = city.getStockValue().getProductivity();
             this.producingItemLabel.setText(producing);
             this.progressLabel.setText(progress + " / " + total);
+        }
+
+        public void updateCityInfo() {
+            this.showCityInfo(selectedCity);
+            this.repaint();
         }
 
         public void unshowCityInfo() {

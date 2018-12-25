@@ -265,8 +265,7 @@ public class City implements Fightable{
     }
 
 
-
-    public boolean getIsProducing(){
+    public boolean isProducing() {
         return this.isProducing;
     }
     public void setIsProducing(boolean b){
