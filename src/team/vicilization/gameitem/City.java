@@ -30,7 +30,7 @@ public class City implements Fightable{
     private int cityHealth;
     private int recovery;
     private Vector<BuildingType> allowedBuildings;
-    private Vector<Unit> allowedUnits;
+    private Vector<UnitSubType> allowedUnits;
 
 
     public boolean isProducing;
@@ -88,6 +88,7 @@ public class City implements Fightable{
         for (UnitSubType type:tempAllowedUnits){
             //科技
         }
+        this.allowedUnits = tempAllowedUnits;
     }
     private void calculateFlowValue() {
         this.flowValue = new Property();
@@ -264,8 +265,7 @@ public class City implements Fightable{
     }
 
 
-
-    public boolean getIsProducing(){
+    public boolean isProducing() {
         return this.isProducing;
     }
     public void setIsProducing(boolean b){
@@ -308,6 +308,7 @@ public class City implements Fightable{
     }
 
     public Vector<BuildingType> getAllowedBuildings() {
+        calculateAllowedBuildings();
         return allowedBuildings;
     }
 
@@ -315,7 +316,8 @@ public class City implements Fightable{
         return territory;
     }
 
-    public Vector<Unit> getAllowedUnits() {
+    public Vector<UnitSubType> getAllowedUnits() {
+        calculateAllowedUnits();
         return allowedUnits;
     }
 
