@@ -144,16 +144,16 @@ public class GameMap {
         for (int i = 2; i < GameMapConfig.MAP_WIDTH - 2; i++) {
             temperatureLoc.set(i,
                     (int) ((tempLoc.get(i - 2)
-                            + tempLoc.get(i - 1)
-                            + tempLoc.get(i)
-                            + tempLoc.get(i + 1)
-                            + tempLoc.get(i + 2)) / 5));
+                            + 2 * tempLoc.get(i - 1)
+                            + 4 * tempLoc.get(i)
+                            + 2 * tempLoc.get(i + 1)
+                            + tempLoc.get(i + 2)) / 10));
             temperaturePeak.set(i,
                     (tempPeak.get(i - 2)
-                            + tempPeak.get(i - 1)
-                            + tempPeak.get(i)
-                            + tempPeak.get(i + 1)
-                            + tempPeak.get(i + 2)) / 5);
+                            + 2 * tempPeak.get(i - 1)
+                            + 4 * tempPeak.get(i)
+                            + 2 * tempPeak.get(i + 1)
+                            + tempPeak.get(i + 2)) / 10);
         }
 
         for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
@@ -175,8 +175,8 @@ public class GameMap {
 
     //=====================初始化降水分布=======================//
     private void initMoisture() {
-        int moistureX1 = (int) (Math.random() * GameMapConfig.MAP_WIDTH * 0.5);
-        int moistureX2 = (int) ((1 + Math.random()) * GameMapConfig.MAP_WIDTH * 0.5);
+        int moistureX1 = (int) (Math.random() * GameMapConfig.MAP_WIDTH * 0.33);
+        int moistureX2 = (int) ((2 + Math.random()) * GameMapConfig.MAP_WIDTH * 0.33);
         int moistureY1 = (int) (Math.random() * GameMapConfig.MAP_HEIGHT);
         int moistureY2 = (int) (Math.random() * GameMapConfig.MAP_HEIGHT);
 
@@ -214,16 +214,24 @@ public class GameMap {
                     this.landformMap.get(i).set(j, LandformType.FROZENGROUND);
                 } else if (this.temperatureMap.get(i).get(j) > GameMapConfig.TEMPERATURE_BOUND_HOT) {
                     if (this.moistureMap.get(i).get(j) > GameMapConfig.MOISTURE_BOUND) {
-                        this.landformMap.get(i).set(j, LandformType.RAINFOREST);
+                        if (Math.random() > GameMapConfig.RAND_LEVEL3) {
+                            this.landformMap.get(i).set(j, LandformType.GRASSLANDS);
+                        } else {
+                            this.landformMap.get(i).set(j, LandformType.RAINFOREST);
+                        }
                     } else {
                         this.landformMap.get(i).set(j, LandformType.DESERT);
                     }
                 } else {
                     if ((this.moistureMap.get(i).get(j) > GameMapConfig.MOISTURE_BOUND) &&
-                            ((this.moistureMap.get(i).get(j) / GameMapConfig.MOISTRURE) * Math.random() > (1 - GameMapConfig.RAND_LEVEL1))) {
+                            ((this.moistureMap.get(i).get(j) / GameMapConfig.MOISTRURE) * Math.random() * 0.7 * 0.3 + 0.15 > (1 - GameMapConfig.RAND_LEVEL1))) {
                         this.landformMap.get(i).set(j, LandformType.FOREST);
                     } else {
-                        this.landformMap.get(i).set(j, LandformType.GRASSLANDS);
+                        if (Math.random() * Math.random() > GameMapConfig.RAND_LEVEL0) {
+                            this.landformMap.get(i).set(j, LandformType.FOREST);
+                        } else {
+                            this.landformMap.get(i).set(j, LandformType.GRASSLANDS);
+                        }
                     }
                 }
                 if ((Math.random() > GameMapConfig.RAND_LEVEL2)

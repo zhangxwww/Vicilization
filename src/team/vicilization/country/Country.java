@@ -4,6 +4,7 @@ import team.vicilization.gameitem.City;
 import team.vicilization.gameitem.CityName;
 import team.vicilization.gameitem.Unit;
 import team.vicilization.gamemap.GameMap;
+import team.vicilization.gamemap.GameMapConfig;
 import team.vicilization.gamemap.LandSquare;
 import team.vicilization.gamemap.LandformType;
 import team.vicilization.mechanics.*;
@@ -55,14 +56,20 @@ public class Country {
     }
 
     public void endOfCurrentRound() {
-        // TODO 回血，移动力写哪都行
         for (Unit u : units) {
             u.recover();
             u.unitEndOfTurn();
         }
+        for (City city : cities) {
+            city.cityStartTurn();
+        }
     }
 
     public void readyForNewRound() {
+        for (City city : cities) {
+            //catch city.cityStartTurn();
+        }
+        this.calculateFlowValue();
         // TODO 这里要执行计算存量流量、推进项目、城市恢复等一系列会在每一回合开始执行的任务
     }
 
@@ -80,13 +87,12 @@ public class Country {
     }
 
     private void calculateFlowValue() {
+        this.flowValue = new Property();
+        for (City city : cities) {
+            // TODO city renew flow
+            this.flowValue.addProperty(city.getFlowValue());
+        }
     }
-
-    /*
-    private void calculateTradeMoney() {
-        // delete or not
-    }
-    */
 
     public City buildNewCity(Position position, GameMap map, Country enemyCountry) {
         Vector<LandSquare> newTerritory = new Vector<>();
@@ -148,8 +154,8 @@ public class Country {
                 distance = temp;
             }
         }
-        // TODO
-        // city.getStockValue().addFlow();
+        city.getStockValue().addProperty(GameMapConfig.LANDFORM_HARVEST.get(landformType));
+        // this.calculateFlowValue();
     }
     public void selectScience(ScienceName scienceName) {
         this.currentScience = scienceName;
@@ -173,28 +179,6 @@ public class Country {
         // TODO 要求玩家必须选择在研究的science
     }
 
-    /*
-    public ResourceType harvestResource(LandformType landformType){
-        // TODO modify in 接口？
-        // TODO private
-    }
-
-    public void addTradeRoute(){
-        // TODO private
-    }
-
-    public void startTradeRoute(){
-        // TODO private
-    }
-
-    public void tradeAdvance(){
-        // TODO private
-    }
-
-    public void endTrade(){
-        // TODO private
-    }
-    */
 
     public void recruitGiant(Giant giant) {
         // TODO giantname??
