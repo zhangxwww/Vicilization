@@ -33,11 +33,13 @@ public class MainGame extends State {
 
     private static JButton nextRoundButton;
     private static JButton unitMoveButton;
-    private static JButton unitSpecialButton;
+    private static JButton unitFightButton;
+    private static JButton explorerBuildCityButton;
+    private static JButton constructorHarvestButton;
     private static JButton cityConfirmProduceButton;
 
-    private static JList<BuildingType> availableBuildings;
-    private static JList<UnitSubType> availableUnits;
+    private static JComboBox<BuildingType> availableBuildings;
+    private static JComboBox<UnitSubType> availableUnits;
 
     private boolean unitSeleted;
     private boolean unitMoving;
@@ -48,6 +50,9 @@ public class MainGame extends State {
 
     private boolean startGame[];
 
+    private UnitSubType underProducingUnit;
+    private BuildingType underProducingBuilding;
+
     public MainGame(MainWindow mainWindow, CountryName[] countrys) {
         super(mainWindow);
         setNextState(StateType.Gameover);
@@ -56,8 +61,9 @@ public class MainGame extends State {
         this.initMapArea();
         this.initButtons();
         this.initLowerInfoArea();
-        this.initCountrys(countrys);
+        this.initCountries(countrys);
         this.initUpperInfoArea();
+        this.initComboxes();
     }
 
     private void nextRound() {
@@ -90,11 +96,13 @@ public class MainGame extends State {
         this.startGame[0] = false;
         this.startGame[1] = false;
         this.cities = new Vector<City>();
+        this.underProducingUnit = UnitSubType.NONE;
+        this.underProducingBuilding = BuildingType.NONE;
     }
 
-    private void initCountrys(CountryName[] countrys) {
-        this.countries = new Vector<Country>(2);
-        this.units = new Vector<Unit>();
+    private void initCountries(CountryName[] countrys) {
+        this.countries = new Vector<>(2);
+        this.units = new Vector<>();
         for (int i = 0; i < 2; i++) {
             Country country = new Country(countrys[i]);
             this.countries.add(country);
@@ -129,25 +137,46 @@ public class MainGame extends State {
         }
     }
 
+    private void initComboxes() {
+        ComboxItemListener listener = new ComboxItemListener();
+
+        availableBuildings = new JComboBox<BuildingType>();
+        availableUnits = new JComboBox<UnitSubType>();
+
+        availableBuildings.setBounds(1440, 960, 200, 40);
+        availableUnits.setBounds(1220, 960, 200, 40);
+
+        availableBuildings.addItemListener(listener);
+        availableUnits.addItemListener(listener);
+    }
+
     private void initButtons() {
         GameButtonsListener listener = new GameButtonsListener();
 
-        this.nextRoundButton = new JButton("Next Round");
-        this.nextRoundButton.setBounds(1160, 600, 100, 100);
-        this.nextRoundButton.addActionListener(listener);
+        nextRoundButton = new JButton("Next Round");
+        nextRoundButton.setBounds(1800, 940, 100, 100);
+        nextRoundButton.addActionListener(listener);
         this.panel.add(nextRoundButton);
 
-        this.unitMoveButton = new JButton("Move / Fight");
-        this.unitMoveButton.setBounds(20, 600, 150, 50);
-        this.unitMoveButton.addActionListener(listener);
+        unitMoveButton = new JButton("Move");
+        unitMoveButton.setBounds(20, 940, 150, 25);
+        unitMoveButton.addActionListener(listener);
 
-        this.unitSpecialButton = new JButton();
-        this.unitSpecialButton.setBounds(20, 650, 150, 50);
-        this.unitSpecialButton.addActionListener(listener);
+        unitFightButton = new JButton("Fight");
+        unitFightButton.setBounds(20, 965, 150, 25);
+        unitFightButton.addActionListener(listener);
 
-        this.cityConfirmProduceButton = new JButton("Produce");
-        this.cityConfirmProduceButton.setBounds(1060, 600, 100, 100);
-        this.cityConfirmProduceButton.addActionListener(listener);
+        explorerBuildCityButton = new JButton("Build city");
+        explorerBuildCityButton.setBounds(20, 990, 150, 25);
+        explorerBuildCityButton.addActionListener(listener);
+
+        constructorHarvestButton = new JButton("Harvest");
+        constructorHarvestButton.setBounds(20, 1015, 150, 25);
+        constructorHarvestButton.addActionListener(listener);
+
+        cityConfirmProduceButton = new JButton("Produce");
+        cityConfirmProduceButton.setBounds(1670, 940, 100, 100);
+        cityConfirmProduceButton.addActionListener(listener);
     }
 
     private void initUpperInfoArea() {
@@ -158,6 +187,11 @@ public class MainGame extends State {
     private void initLowerInfoArea() {
         this.lowerInfoArea = new LowerInfoArea();
         this.panel.add(lowerInfoArea);
+    }
+
+    private void initMapArea() {
+        this.mapArea = new MapArea();
+        this.panel.add(mapArea);
     }
 
     private void synchronizeCitiesAndUnits() {
@@ -202,10 +236,21 @@ public class MainGame extends State {
         if (!selectedUnit.isMovedThisTurn()) { // 没有移动，显示移动按钮
             this.panel.add(unitMoveButton);
         }
+        if (!selectedUnit.isAttackedThisTurn()
+                && selectedUnit.getType() == UnitType.FIGHTER) {
+            this.panel.add(unitFightButton);
+        }
         if (selectedUnit.getSubType() == UnitSubType.EXPLORER) {
-            this.panel.add(unitSpecialButton);
-            // !!! 如果这里要换成icon的话，在GameButtonLisioner 那里也要做同样的修改 !!!
-            unitSpecialButton.setText("Build city");
+            this.panel.add(explorerBuildCityButton);
+        }
+        if (selectedUnit.getSubType() == UnitSubType.CONSTRUCTOR) {
+            LandformType landformType = this.mapArea.at(
+                    selectedUnit.getPosition()).getLandformType();
+            if (landformType == LandformType.FOREST
+                    || landformType == LandformType.RAINFOREST
+                    || landformType == LandformType.MARSH) {
+                this.panel.add(constructorHarvestButton);
+            }
         }
         this.panel.repaint();
     }
@@ -218,7 +263,15 @@ public class MainGame extends State {
         } catch (Exception e) {
         }
         try {
-            this.panel.remove(unitSpecialButton);
+            this.panel.remove(unitFightButton);
+        } catch (Exception e) {
+        }
+        try {
+            this.panel.remove(explorerBuildCityButton);
+        } catch (Exception e) {
+        }
+        try {
+            this.panel.remove(constructorHarvestButton);
         } catch (Exception e) {
         }
         this.panel.repaint();
@@ -232,8 +285,9 @@ public class MainGame extends State {
         currentPlayer.deleteUnit(selectedUnit);
         City city = currentPlayer.buildNewCity(pos, mapArea.getMap(), enermy);
         this.cities.add(city);
-        units.remove(selectedUnit);
-        unselectUnit();
+        this.units.remove(selectedUnit);
+        this.unselectUnit();
+        this.selectCity(city);
         this.mapArea.mapPanel.updateMap();
     }
 
@@ -244,19 +298,60 @@ public class MainGame extends State {
         this.citySelected = true;
         this.selectedCity = city;
         this.lowerInfoArea.showCityInfo(city);
-        // TODO add procuce lists
+        this.showSelectProduce();
+        this.panel.repaint();
     }
 
     private void unselectCity() {
         this.citySelected = false;
-        // TODO remove sth
+        this.unshowSelectProduce();
         this.panel.repaint();
         this.selectedCity = null;
         this.lowerInfoArea.unshowCityInfo();
     }
 
+    private void showSelectProduce() {
+        if (!selectedCity.isProducing()) {
+            this.panel.add(cityConfirmProduceButton);
+            this.getAllowedBuildings();
+            this.getAllowedUnits();
+            this.panel.add(availableBuildings);
+            this.panel.add(availableUnits);
+        }
+    }
+
+    private void unshowSelectProduce() {
+        try {
+            this.panel.remove(cityConfirmProduceButton);
+        } catch (Exception e) {
+        }
+        try {
+            this.panel.remove(availableBuildings);
+        } catch (Exception e) {
+        }
+        try {
+            this.panel.remove(availableUnits);
+        } catch (Exception e) {
+        }
+        this.clearAllowedBuildings();
+        this.clearAllowedUnits();
+    }
+
     private void showScienceTree() {
         // TODO
+    }
+
+    private void harvest() {
+        Constructor constructor = (Constructor) this.selectedUnit;
+        constructor.reduceTimes();
+        Position position = constructor.getPosition();
+        LandSquare landSquare = this.mapArea.at(position);
+        this.currentPlayer.harvestResource(position, landSquare.getLandformType());
+        landSquare.harvested();
+        if (constructor.getTimes() == 0) {
+            this.units.remove(selectedUnit);
+            this.mapArea.mapPanel.updateMap();
+        }
     }
 
     private void fight(Fightable fighter, Fightable fought) {
@@ -271,25 +366,81 @@ public class MainGame extends State {
         // TODO
     }
 
-    private void recruiteGiant(GiantName giant) {
+    private void recruitGiant(GiantName giant) {
         // TODO
     }
 
-    private void showAllowdBuildings() {
-        // TODO
+    private void getAllowedBuildings() {
+        Vector<BuildingType> allowedBuilding = selectedCity.getAllowedBuildings();
+        availableBuildings.addItem(BuildingType.NONE);
+        for (BuildingType type : allowedBuilding) {
+            availableBuildings.addItem(type);
+        }
+        availableBuildings.setSelectedItem(BuildingType.NONE);
     }
 
-    private void showAllowedUnits() {
-        // TODO
+    private void getAllowedUnits() {
+        Vector<UnitSubType> allowedUnits = selectedCity.getAllowedUnits();
+        availableUnits.addItem(UnitSubType.NONE);
+        for (UnitSubType type : allowedUnits) {
+            availableUnits.addItem(type);
+        }
+        availableUnits.setSelectedItem(UnitSubType.NONE);
     }
 
-    private void selectProduction() {
-        // TODO
+    private void clearAllowedBuildings() {
+        availableBuildings.removeAllItems();
     }
 
-    private void initMapArea() {
-        this.mapArea = new MapArea();
-        this.panel.add(mapArea);
+    private void clearAllowedUnits() {
+        availableUnits.removeAllItems();
+    }
+
+    private void selectProduction(BuildingType type) {
+        selectedCity.produce(type);
+        this.unshowSelectProduce();
+        this.lowerInfoArea.updateCityInfo();
+        this.panel.repaint();
+    }
+
+    private void selectProduction(UnitSubType type) {
+        selectedCity.produce(type);
+        this.unshowSelectProduce();
+        this.lowerInfoArea.updateCityInfo();
+        this.panel.repaint();
+    }
+
+    private void drawAccesseble() {
+        Vector<LandSquare> squares = selectedUnit.
+                getAvailableLocation(this.mapArea.getMap());
+        for (Unit unit : units) {
+            squares.remove(this.mapArea.getMap().
+                    getSquare(unit.getPosition()));
+        }
+        for (City city : cities) {
+            squares.remove(this.mapArea.getMap().
+                    getSquare(city.getLocation()));
+        }
+        mapArea.drawAccessableSquares(squares);
+    }
+
+    private class ComboxItemListener implements ItemListener {
+        public void itemStateChanged(ItemEvent event) {
+            if (event.getStateChange() != ItemEvent.SELECTED) {
+                return;
+            }
+            UnitSubType unitSubType = UnitSubType.NONE;
+            BuildingType buildingType = BuildingType.NONE;
+            if (event.getSource() == MainGame.availableUnits
+                    && (unitSubType = (UnitSubType)
+                    MainGame.availableUnits.getSelectedItem()) != UnitSubType.NONE) {
+                selectProduction(unitSubType);
+            } else if (event.getSource() == MainGame.availableBuildings
+                    && (buildingType = (BuildingType)
+                    MainGame.availableBuildings.getSelectedItem()) != BuildingType.NONE) {
+                selectProduction(buildingType);
+            }
+        }
     }
 
     private class GameButtonsListener implements ActionListener {
@@ -297,12 +448,12 @@ public class MainGame extends State {
             if (event.getSource() == MainGame.nextRoundButton) {
                 nextRound();
             } else if (event.getSource() == MainGame.unitMoveButton) {
-                mapArea.drawAccessableSquares();
+                drawAccesseble();
                 unitMoving = true;
-            } else if (event.getSource() == MainGame.unitSpecialButton) {
-                if (MainGame.unitSpecialButton.getText() == "Build city") {
-                    buildCity();
-                }
+            } else if (event.getSource() == MainGame.explorerBuildCityButton) {
+                buildCity();
+            } else if (event.getSource() == MainGame.constructorHarvestButton) {
+                harvest();
             }
             // TODO finish with other actions
         }
@@ -329,7 +480,7 @@ public class MainGame extends State {
             super();
             this.setLayout(null);
             this.setOpaque(true);
-            this.setBounds(20, 0, 1240, 50);
+            this.setBounds(20, 0, 1880, 50);
             this.initIcons();
             this.initLabels();
             this.update();
@@ -360,7 +511,7 @@ public class MainGame extends State {
 
             this.sciencePointInfo.setBounds(60, 0, 80, 50);
             this.moneyInfo.setBounds(210, 0, 80, 50);
-            this.roundInfo.setBounds(1200, 0, 40, 25);
+            this.roundInfo.setBounds(1840, 0, 40, 25);
 
             this.sciencePointInfo.setFont(new Font("Consolas", Font.PLAIN, 22));
             this.moneyInfo.setFont(new Font("Consolas", Font.PLAIN, 22));
@@ -374,7 +525,7 @@ public class MainGame extends State {
 
             this.sciencePointSymbolLabel.setBounds(0, 0, 50, 50);
             this.moneySymbolLabel.setBounds(150, 0, 50, 50);
-            this.roundSymbolLabel.setBounds(1140, 0, 60, 25);
+            this.roundSymbolLabel.setBounds(1780, 0, 60, 25);
 
             this.roundSymbolLabel.setFont(new Font("Consolas", Font.BOLD, 12));
             this.roundInfo.setFont(new Font("Consolas", Font.BOLD, 12));
@@ -382,8 +533,8 @@ public class MainGame extends State {
             this.countryName_1 = new JLabel(countries.get(0).getCountryName().toString());
             this.countryName_2 = new JLabel(countries.get(1).getCountryName().toString());
 
-            this.countryName_1.setBounds(1000, 0, 200, 25);
-            this.countryName_2.setBounds(1000, 25, 200, 25);
+            this.countryName_1.setBounds(1500, 0, 200, 25);
+            this.countryName_2.setBounds(1500, 25, 200, 25);
 
             this.countryName_1.setFont(new Font("Consolas", Font.PLAIN, 25));
             this.countryName_2.setFont(new Font("Consolas", Font.PLAIN, 25));
@@ -452,7 +603,7 @@ public class MainGame extends State {
 
         public LowerInfoArea() {
             super();
-            this.setBounds(180, 600, 600, 100);
+            this.setBounds(180, 940, 600, 100);
             this.setLayout(null);
             this.initIcons();
             this.initLabels();
@@ -474,6 +625,11 @@ public class MainGame extends State {
             this.defenceInfo.setText("");
             this.healthInfo.setText("");
             this.movabilityInfo.setText("");
+        }
+
+        public void updateUnitInfo() {
+            this.showUnitInfo(selectedUnit);
+            this.repaint();
         }
 
         public void showCityInfo(City city) {
@@ -501,6 +657,11 @@ public class MainGame extends State {
             int progress = city.getStockValue().getProductivity();
             this.producingItemLabel.setText(producing);
             this.progressLabel.setText(progress + " / " + total);
+        }
+
+        public void updateCityInfo() {
+            this.showCityInfo(selectedCity);
+            this.repaint();
         }
 
         public void unshowCityInfo() {
@@ -627,7 +788,6 @@ public class MainGame extends State {
         }
     }
 
-
     private class MapArea extends JPanel {
 
         private MapPanel mapPanel;
@@ -635,7 +795,7 @@ public class MainGame extends State {
         public MapArea() {
             super();
 
-            this.setBounds(20, 50, 1240, 550);
+            this.setBounds(20, 50, 1880, 890);
             this.setBackground(Color.BLUE);
             this.setLayout(null);
 
@@ -651,8 +811,12 @@ public class MainGame extends State {
             return mapPanel.map.getSquare(x, y);
         }
 
-        public void drawAccessableSquares() {
-            this.mapPanel.drawAccessableSquares();
+        public LandSquare at(Position position) {
+            return mapPanel.map.getSquare(position);
+        }
+
+        public void drawAccessableSquares(Vector<LandSquare> squares) {
+            this.mapPanel.drawAccessableSquares(squares);
         }
 
         public void drawCityTerritory() {
@@ -694,7 +858,6 @@ public class MainGame extends State {
             private ImageIcon cityIcon;
 
             Vector<LandSquare> accessableSquares;
-            Vector<LandSquare> territory;
 
             public MapPanel() {
                 super();
@@ -756,8 +919,8 @@ public class MainGame extends State {
                 }
             }
 
-            public void drawAccessableSquares() {
-                accessableSquares = selectedUnit.getAvailableLocation(map);
+            public void drawAccessableSquares(Vector<LandSquare> squares) {
+                accessableSquares = squares;
                 for (LandSquare landSquare : accessableSquares) {
                     Position position = landSquare.getPosition();
                     JLabel square = (JLabel) getComponentAt(
@@ -769,7 +932,7 @@ public class MainGame extends State {
             }
 
             public void drawTerritory() {
-                territory = selectedCity.getTerritory();
+                Vector<LandSquare> territory = selectedCity.getTerritory();
                 Position center = selectedCity.getLocation();
                 for (LandSquare landSquare : territory) {
                     Position position = landSquare.getPosition();
