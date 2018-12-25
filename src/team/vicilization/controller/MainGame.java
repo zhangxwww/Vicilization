@@ -189,6 +189,11 @@ public class MainGame extends State {
         this.panel.add(lowerInfoArea);
     }
 
+    private void initMapArea() {
+        this.mapArea = new MapArea();
+        this.panel.add(mapArea);
+    }
+
     private void synchronizeCitiesAndUnits() {
         this.units.clear();
         this.cities.clear();
@@ -386,9 +391,18 @@ public class MainGame extends State {
         this.panel.repaint();
     }
 
-    private void initMapArea() {
-        this.mapArea = new MapArea();
-        this.panel.add(mapArea);
+    private void drawAccesseble() {
+        Vector<LandSquare> squares = selectedUnit.
+                getAvailableLocation(this.mapArea.getMap());
+        for (Unit unit : units) {
+            squares.remove(this.mapArea.getMap().
+                    getSquare(unit.getPosition()));
+        }
+        for (City city : cities) {
+            squares.remove(this.mapArea.getMap().
+                    getSquare(city.getLocation()));
+        }
+        mapArea.drawAccessableSquares(squares);
     }
 
     private class ComboxItemListener implements ItemListener {
@@ -415,7 +429,7 @@ public class MainGame extends State {
             if (event.getSource() == MainGame.nextRoundButton) {
                 nextRound();
             } else if (event.getSource() == MainGame.unitMoveButton) {
-                mapArea.drawAccessableSquares();
+                drawAccesseble();
                 unitMoving = true;
             } else if (event.getSource() == MainGame.explorerBuildCityButton) {
                 buildCity();
@@ -777,8 +791,8 @@ public class MainGame extends State {
             return mapPanel.map.getSquare(x, y);
         }
 
-        public void drawAccessableSquares() {
-            this.mapPanel.drawAccessableSquares();
+        public void drawAccessableSquares(Vector<LandSquare> squares) {
+            this.mapPanel.drawAccessableSquares(squares);
         }
 
         public void drawCityTerritory() {
@@ -820,7 +834,6 @@ public class MainGame extends State {
             private ImageIcon cityIcon;
 
             Vector<LandSquare> accessableSquares;
-            Vector<LandSquare> territory;
 
             public MapPanel() {
                 super();
@@ -882,8 +895,8 @@ public class MainGame extends State {
                 }
             }
 
-            public void drawAccessableSquares() {
-                accessableSquares = selectedUnit.getAvailableLocation(map);
+            public void drawAccessableSquares(Vector<LandSquare> squares) {
+                accessableSquares = squares;
                 for (LandSquare landSquare : accessableSquares) {
                     Position position = landSquare.getPosition();
                     JLabel square = (JLabel) getComponentAt(
@@ -895,7 +908,7 @@ public class MainGame extends State {
             }
 
             public void drawTerritory() {
-                territory = selectedCity.getTerritory();
+                Vector<LandSquare> territory = selectedCity.getTerritory();
                 Position center = selectedCity.getLocation();
                 for (LandSquare landSquare : territory) {
                     Position position = landSquare.getPosition();
