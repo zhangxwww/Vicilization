@@ -350,8 +350,8 @@ public class MainGame extends State {
         landSquare.harvested();
         if (constructor.getTimes() == 0) {
             this.units.remove(selectedUnit);
-            this.mapArea.mapPanel.updateMap();
         }
+        this.mapArea.mapPanel.updateMap();
     }
 
     private void fight(Fightable fighter, Fightable fought) {
