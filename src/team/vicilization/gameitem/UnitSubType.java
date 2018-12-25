@@ -8,7 +8,8 @@ public enum UnitSubType {
     SPEARMAN,
     KNIGHT,
     FOOTMAN,
-    ARCHER;
+    ARCHER,
+    SWORDSMAN;
 
     @Override
     public String toString() {

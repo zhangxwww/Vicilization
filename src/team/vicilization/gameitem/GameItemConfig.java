@@ -87,6 +87,7 @@ public class GameItemConfig {
             put(UnitSubType.CONSTRUCTOR, 100);
             put(UnitSubType.FOOTMAN, 100);
             put(UnitSubType.SPEARMAN, 100);
+            put(UnitSubType.SWORDSMAN, 100);
         }
     };
     public static final HashMap<UnitSubType, Integer> UNIT_ATTACK = new HashMap<UnitSubType, Integer>(){
@@ -97,6 +98,7 @@ public class GameItemConfig {
             put(UnitSubType.CONSTRUCTOR, 0);
             put(UnitSubType.FOOTMAN, 3);
             put(UnitSubType.SPEARMAN, 5);
+            put(UnitSubType.SWORDSMAN, 4);
         }
     };
     public static final HashMap<UnitSubType, Integer> UNIT_DEFENCE = new HashMap<UnitSubType, Integer>(){
@@ -107,6 +109,7 @@ public class GameItemConfig {
             put(UnitSubType.CONSTRUCTOR, 0);
             put(UnitSubType.FOOTMAN, 4);
             put(UnitSubType.SPEARMAN, 3);
+            put(UnitSubType.SWORDSMAN, 5);
         }
     };
     public static final HashMap<UnitSubType, Integer> UNIT_MOBILITY = new HashMap<UnitSubType, Integer>(){
@@ -117,6 +120,7 @@ public class GameItemConfig {
             put(UnitSubType.CONSTRUCTOR, 3);
             put(UnitSubType.FOOTMAN, 4);
             put(UnitSubType.SPEARMAN, 3);
+            put(UnitSubType.SWORDSMAN, 3);
         }
     };
     public static final HashMap<UnitSubType, Integer> UNIT_PRODUCTIVITY_COST = new HashMap<UnitSubType, Integer>(){
@@ -127,6 +131,7 @@ public class GameItemConfig {
             put(UnitSubType.CONSTRUCTOR, 3);
             put(UnitSubType.FOOTMAN, 3);
             put(UnitSubType.SPEARMAN, 2);
+            put(UnitSubType.SWORDSMAN, 4);
         }
     };
     public static final HashMap<UnitSubType, Integer> UNIT_MONEY_COST = new HashMap<UnitSubType, Integer>(){
@@ -137,6 +142,7 @@ public class GameItemConfig {
             put(UnitSubType.CONSTRUCTOR,100);
             put(UnitSubType.FOOTMAN, 100);
             put(UnitSubType.SPEARMAN, 70);
+            put(UnitSubType.SWORDSMAN, 130);
         }
     };
     public static final HashMap<UnitSubType, ScienceName> UNIT_REQUIRED_SCIENCE = new HashMap<UnitSubType, ScienceName>(){
@@ -147,6 +153,7 @@ public class GameItemConfig {
             put(UnitSubType.CONSTRUCTOR, ScienceName.MATH);
             put(UnitSubType.FOOTMAN, ScienceName.MATH);
             put(UnitSubType.SPEARMAN, ScienceName.MATH);
+            put(UnitSubType.SWORDSMAN, ScienceName.MATH);
         }
     };
     public static final HashMap<UnitSubType, ResourceType> UNIT_REQUIRED_RESOURCE = new HashMap<UnitSubType, ResourceType>(){
@@ -157,6 +164,7 @@ public class GameItemConfig {
             put(UnitSubType.CONSTRUCTOR, ResourceType.NONE);
             put(UnitSubType.FOOTMAN, ResourceType.NONE);
             put(UnitSubType.SPEARMAN, ResourceType.NONE);
+            put(UnitSubType.SWORDSMAN, ResourceType.NONE);
         }
     };
 
