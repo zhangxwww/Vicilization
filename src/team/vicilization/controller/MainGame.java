@@ -133,20 +133,20 @@ public class MainGame extends State {
         GameButtonsListener listener = new GameButtonsListener();
 
         this.nextRoundButton = new JButton("Next Round");
-        this.nextRoundButton.setBounds(1160, 600, 100, 100);
+        this.nextRoundButton.setBounds(1800, 940, 100, 100);
         this.nextRoundButton.addActionListener(listener);
         this.panel.add(nextRoundButton);
 
         this.unitMoveButton = new JButton("Move / Fight");
-        this.unitMoveButton.setBounds(20, 600, 150, 50);
+        this.unitMoveButton.setBounds(20, 940, 150, 50);
         this.unitMoveButton.addActionListener(listener);
 
         this.unitSpecialButton = new JButton();
-        this.unitSpecialButton.setBounds(20, 650, 150, 50);
+        this.unitSpecialButton.setBounds(20, 990, 150, 50);
         this.unitSpecialButton.addActionListener(listener);
 
         this.cityConfirmProduceButton = new JButton("Produce");
-        this.cityConfirmProduceButton.setBounds(1060, 600, 100, 100);
+        this.cityConfirmProduceButton.setBounds(1680, 940, 100, 100);
         this.cityConfirmProduceButton.addActionListener(listener);
     }
 
@@ -232,8 +232,9 @@ public class MainGame extends State {
         currentPlayer.deleteUnit(selectedUnit);
         City city = currentPlayer.buildNewCity(pos, mapArea.getMap(), enermy);
         this.cities.add(city);
-        units.remove(selectedUnit);
-        unselectUnit();
+        this.units.remove(selectedUnit);
+        this.unselectUnit();
+        this.selectCity(city);
         this.mapArea.mapPanel.updateMap();
     }
 
@@ -329,7 +330,7 @@ public class MainGame extends State {
             super();
             this.setLayout(null);
             this.setOpaque(true);
-            this.setBounds(20, 0, 1240, 50);
+            this.setBounds(20, 0, 1880, 50);
             this.initIcons();
             this.initLabels();
             this.update();
@@ -360,7 +361,7 @@ public class MainGame extends State {
 
             this.sciencePointInfo.setBounds(60, 0, 80, 50);
             this.moneyInfo.setBounds(210, 0, 80, 50);
-            this.roundInfo.setBounds(1200, 0, 40, 25);
+            this.roundInfo.setBounds(1840, 0, 40, 25);
 
             this.sciencePointInfo.setFont(new Font("Consolas", Font.PLAIN, 22));
             this.moneyInfo.setFont(new Font("Consolas", Font.PLAIN, 22));
@@ -374,7 +375,7 @@ public class MainGame extends State {
 
             this.sciencePointSymbolLabel.setBounds(0, 0, 50, 50);
             this.moneySymbolLabel.setBounds(150, 0, 50, 50);
-            this.roundSymbolLabel.setBounds(1140, 0, 60, 25);
+            this.roundSymbolLabel.setBounds(1780, 0, 60, 25);
 
             this.roundSymbolLabel.setFont(new Font("Consolas", Font.BOLD, 12));
             this.roundInfo.setFont(new Font("Consolas", Font.BOLD, 12));
@@ -382,8 +383,8 @@ public class MainGame extends State {
             this.countryName_1 = new JLabel(countries.get(0).getCountryName().toString());
             this.countryName_2 = new JLabel(countries.get(1).getCountryName().toString());
 
-            this.countryName_1.setBounds(1000, 0, 200, 25);
-            this.countryName_2.setBounds(1000, 25, 200, 25);
+            this.countryName_1.setBounds(1500, 0, 200, 25);
+            this.countryName_2.setBounds(1500, 25, 200, 25);
 
             this.countryName_1.setFont(new Font("Consolas", Font.PLAIN, 25));
             this.countryName_2.setFont(new Font("Consolas", Font.PLAIN, 25));
@@ -452,7 +453,7 @@ public class MainGame extends State {
 
         public LowerInfoArea() {
             super();
-            this.setBounds(180, 600, 600, 100);
+            this.setBounds(180, 940, 600, 100);
             this.setLayout(null);
             this.initIcons();
             this.initLabels();
@@ -635,7 +636,7 @@ public class MainGame extends State {
         public MapArea() {
             super();
 
-            this.setBounds(20, 50, 1240, 550);
+            this.setBounds(20, 50, 1880, 890);
             this.setBackground(Color.BLUE);
             this.setLayout(null);
 
