@@ -285,6 +285,8 @@ public class MainGame extends State {
 
         this.panel.add(cityConfirmProduceButton);
         // TODO add something into avails
+        this.getAllowdBuildings();
+        this.getAllowedUnits();
         this.panel.add(availableBuildings);
         this.panel.add(availableUnits);
         // TODO add procuce lists
@@ -320,12 +322,20 @@ public class MainGame extends State {
         // TODO
     }
 
-    private void showAllowdBuildings() {
-        // TODO
+    private void getAllowdBuildings() {
+        Vector<BuildingType> allowedBuilding = selectedCity.getAllowedBuildings();
+        this.availableBuildings.addItem(BuildingType.NONE);
+        for (BuildingType type : allowedBuilding) {
+            this.availableBuildings.addItem(type);
+        }
     }
 
-    private void showAllowedUnits() {
-        // TODO
+    private void getAllowedUnits() {
+        Vector<UnitSubType> allowedUnits = selectedCity.getAllowedUnits();
+        this.availableUnits.addItem(UnitSubType.NONE);
+        for (UnitSubType type : allowedUnits) {
+            this.availableUnits.addItem(type);
+        }
     }
 
     private void selectProduction() {

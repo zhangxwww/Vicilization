@@ -13,6 +13,8 @@ public enum UnitSubType {
     @Override
     public String toString() {
         String name=super.toString().toLowerCase();
-        return name;
+        char[] cs = name.toCharArray();
+        cs[0] -= 32;
+        return String.valueOf(cs);
     }
 }
