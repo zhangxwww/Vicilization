@@ -36,7 +36,6 @@ public class MainGame extends State {
     private static JButton unitFightButton;
     private static JButton explorerBuildCityButton;
     private static JButton constructorHarvestButton;
-    private static JButton cityConfirmProduceButton;
 
     private static JComboBox<BuildingType> availableBuildings;
     private static JComboBox<UnitSubType> availableUnits;
@@ -173,10 +172,6 @@ public class MainGame extends State {
         constructorHarvestButton = new JButton("Harvest");
         constructorHarvestButton.setBounds(20, 1015, 150, 25);
         constructorHarvestButton.addActionListener(listener);
-
-        cityConfirmProduceButton = new JButton("Produce");
-        cityConfirmProduceButton.setBounds(1670, 940, 100, 100);
-        cityConfirmProduceButton.addActionListener(listener);
     }
 
     private void initUpperInfoArea() {
@@ -312,7 +307,6 @@ public class MainGame extends State {
 
     private void showSelectProduce() {
         if (!selectedCity.isProducing()) {
-            this.panel.add(cityConfirmProduceButton);
             this.getAllowedBuildings();
             this.getAllowedUnits();
             this.panel.add(availableBuildings);
@@ -321,10 +315,6 @@ public class MainGame extends State {
     }
 
     private void unshowSelectProduce() {
-        try {
-            this.panel.remove(cityConfirmProduceButton);
-        } catch (Exception e) {
-        }
         try {
             this.panel.remove(availableBuildings);
         } catch (Exception e) {

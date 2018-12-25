@@ -38,7 +38,11 @@ public class LandSquare {
     }
 
     public void harvested() {
-        this.landformType = LandformType.DESERT;
+        if (Math.random() > GameMapConfig.RAND_LEVEL0) {
+            this.landformType = LandformType.DESERT;
+        } else {
+            this.landformType = LandformType.GRASSLANDS;
+        }
     }
 
     //========================Calculate Methods======================//
