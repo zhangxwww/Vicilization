@@ -78,7 +78,7 @@ public class MainGame extends State {
             this.enermy = this.currentPlayer;
             this.currentPlayer = this.countries
                     .elementAt(round % 2);
-            this.currentPlayer.readyForNewRound();
+            this.currentPlayer.readyForNewRound(this.mapArea.getMap(), this.enermy);
             this.synchronizeCitiesAndUnits();
             this.upperInfoArea.update();
         }
@@ -336,7 +336,7 @@ public class MainGame extends State {
         constructor.reduceTimes();
         Position position = constructor.getPosition();
         LandSquare landSquare = this.mapArea.at(position);
-        this.currentPlayer.harvestResource(position, landSquare.getLandformType());
+        this.currentPlayer.harvestLandform(position, landSquare.getLandformType());
         landSquare.harvested();
         if (constructor.getTimes() == 0) {
             this.units.remove(selectedUnit);

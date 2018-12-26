@@ -1,12 +1,7 @@
 package team.vicilization.country;
 
-import team.vicilization.gameitem.City;
-import team.vicilization.gameitem.CityName;
-import team.vicilization.gameitem.Unit;
-import team.vicilization.gamemap.GameMap;
-import team.vicilization.gamemap.GameMapConfig;
-import team.vicilization.gamemap.LandSquare;
-import team.vicilization.gamemap.LandformType;
+import team.vicilization.gameitem.*;
+import team.vicilization.gamemap.*;
 import team.vicilization.mechanics.*;
 import team.vicilization.util.Property;
 import team.vicilization.util.Position;
@@ -57,20 +52,84 @@ public class Country {
 
     public void endOfCurrentRound() {
         for (Unit u : units) {
-            u.recover(); //not recover in end?
             u.unitEndOfTurn();
         }
         for (City city : cities) {
-            city.cityStartTurn();
+            city.cityEndOfTurn();
         }
     }
 
-    public void readyForNewRound() {
+    public void readyForNewRound(GameMap map, Country enemyCountry) {
+        UnitSubType temp;
         for (City city : cities) {
-            //catch city.cityStartTurn();
+            temp = city.cityStartTurn();
+            switch (temp) {
+                case CONSTRUCTOR:
+                    this.addNewUnit(
+                            new Constructor(
+                                    this.nearestAvailable(city.getLocation(), map, enemyCountry),
+                                    this));
+                    break;
+                case ARCHER:
+                    this.addNewUnit(
+                            new Archer(
+                                    this.nearestAvailable(city.getLocation(), map, enemyCountry),
+                                    this));
+                    break;
+                case KNIGHT:
+                    this.addNewUnit(
+                            new Knight(
+                                    this.nearestAvailable(city.getLocation(), map, enemyCountry),
+                                    this));
+                    break;
+                case FOOTMAN:
+                    this.addNewUnit(
+                            new Footman(
+                                    this.nearestAvailable(city.getLocation(), map, enemyCountry),
+                                    this));
+                    break;
+                case EXPLORER:
+                    this.addNewUnit(
+                            new Explorer(
+                                    this.nearestAvailable(city.getLocation(), map, enemyCountry),
+                                    this));
+                    break;
+                case SPEARMAN:
+                    this.addNewUnit(
+                            new Spearman(
+                                    this.nearestAvailable(city.getLocation(), map, enemyCountry),
+                                    this));
+                    break;
+                default:
+                    break;
+            }
         }
-        this.calculateFlowValue();
+        for (Unit u : units) {
+            u.unitStartTurn();
+        }
+        this.updateStock();
+        this.finishScience();
         // TODO 这里要执行计算存量流量、推进项目、城市恢复等一系列会在每一回合开始执行的任务
+    }
+
+    private Position nearestAvailable(Position root, GameMap map, Country enemyCountry) {
+        Vector<LandSquare> availablePosition = new Vector<>();
+        for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
+            for (int j = 0; j < GameMapConfig.MAP_HEIGHT; j++) {
+                if (map.getSquare(i, j).getTerrainType() != TerrainType.RIDGE) {
+                    availablePosition.add(map.getSquare(i, j));
+                }
+            }
+        }
+
+        for (Unit unit : this.units) {
+            availablePosition.remove(unit.getPosition());
+        }
+        for (Unit unit : enemyCountry.units) {
+            availablePosition.remove(unit.getPosition());
+        }
+
+        return null;
     }
 
 
@@ -79,15 +138,16 @@ public class Country {
         // TODO private?
         // TODO duplicate with calculateStockValue?
         // TODO city stock/flow and country stock/flow
-
-        this.finishScience();
+        this.calculateFlowValue();
+        this.stockValue.addProperty(this.flowValue);
     }
 
-    public void pushProject() {
-        // TODO Country: science, giant
-        // TODO City: push project
-    }
-
+    /*
+        public void pushProject() {
+            // TODO Country: science, giant
+            // TODO City: push project
+        }
+    */
     private void calculateFlowValue() {
         this.flowValue = new Property();
         for (City city : cities) {

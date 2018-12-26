@@ -163,8 +163,7 @@ public class City implements Fightable{
     }
     public UnitSubType cityStartTurn(){
         finishProduceBuilding();
-        UnitSubType unitSubType=finishProduceUnit();
-        return unitSubType;
+        return finishProduceUnit();
     }
 
     //----------------------------------------produce
