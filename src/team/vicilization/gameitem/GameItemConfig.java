@@ -95,7 +95,7 @@ public class GameItemConfig {
             put(UnitSubType.EXPLORER, 0);
             put(UnitSubType.ARCHER, 5);
             put(UnitSubType.CONSTRUCTOR, 0);
-            put(UnitSubType.FOOTMAN, 3);
+            put(UnitSubType.FOOTMAN, 40);
             put(UnitSubType.SPEARMAN, 5);
             put(UnitSubType.SWORDSMAN, 4);
             put(UnitSubType.SCOUT, 2);
@@ -107,7 +107,7 @@ public class GameItemConfig {
             put(UnitSubType.EXPLORER, 0);
             put(UnitSubType.ARCHER, 2);
             put(UnitSubType.CONSTRUCTOR, 0);
-            put(UnitSubType.FOOTMAN, 4);
+            put(UnitSubType.FOOTMAN, 30);
             put(UnitSubType.SPEARMAN, 3);
             put(UnitSubType.SWORDSMAN, 5);
             put(UnitSubType.SCOUT, 2);
@@ -119,7 +119,7 @@ public class GameItemConfig {
             put(UnitSubType.EXPLORER, 3);
             put(UnitSubType.ARCHER, 4);
             put(UnitSubType.CONSTRUCTOR, 3);
-            put(UnitSubType.FOOTMAN, 4);
+            put(UnitSubType.FOOTMAN, 9);
             put(UnitSubType.SPEARMAN, 3);
             put(UnitSubType.SWORDSMAN, 3);
             put(UnitSubType.SCOUT, 6);
@@ -152,13 +152,13 @@ public class GameItemConfig {
     public static final HashMap<UnitSubType, ScienceName> UNIT_REQUIRED_SCIENCE = new HashMap<UnitSubType, ScienceName>(){
         {
             put(UnitSubType.KNIGHT, ScienceName.CALCULUS);
-            put(UnitSubType.EXPLORER, null);
+            put(UnitSubType.EXPLORER, ScienceName.NONE);
             put(UnitSubType.ARCHER, ScienceName.GEOMETRY);
-            put(UnitSubType.CONSTRUCTOR, null);
-            put(UnitSubType.FOOTMAN, null);
+            put(UnitSubType.CONSTRUCTOR, ScienceName.NONE);
+            put(UnitSubType.FOOTMAN, ScienceName.NONE);
             put(UnitSubType.SPEARMAN, ScienceName.ALGEBRA);
             put(UnitSubType.SWORDSMAN, ScienceName.COMPLEX_ANALYSIS);
-            put(UnitSubType.SCOUT, null);
+            put(UnitSubType.SCOUT, ScienceName.NONE);
         }
     };
     public static final HashMap<UnitSubType, ResourceType> UNIT_REQUIRED_RESOURCE = new HashMap<UnitSubType, ResourceType>(){

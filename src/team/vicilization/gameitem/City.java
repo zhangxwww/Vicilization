@@ -91,13 +91,13 @@ public class City implements Fightable{
         tempAllowedUnits.add(UnitSubType.EXPLORER);
         tempAllowedUnits.add(UnitSubType.SPEARMAN);
         tempAllowedUnits.add(UnitSubType.SWORDSMAN);
-        if (population != 1) {
-            this.allowedUnits.add(UnitSubType.EXPLORER);
-        }
         for (UnitSubType type:tempAllowedUnits){
             if (country.getLearntScience().contains(GameItemConfig.UNIT_REQUIRED_SCIENCE.get(type))) {
                 this.allowedUnits.add(type);
             }
+        }
+        if (population < 2) {
+            this.allowedUnits.remove(UnitSubType.EXPLORER);
         }
     }
 
