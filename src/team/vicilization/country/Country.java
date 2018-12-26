@@ -256,7 +256,12 @@ public class Country {
     }
 
     public void recruitGiant(GiantName giantName) {
-
+        GiantType type = GiantConfig.GIANT_NAME_TO_TYPE.get(giantName);
+        if ((type == GiantType.ECONOMIST) || (type == GiantType.SCIENTIST)) {
+            this.stockValue.addProperty(GiantConfig.GIANT_TYPE_BONUS.get(type));
+        }else{
+            this.cities.get(0).getStockValue().addProperty(GiantConfig.GIANT_TYPE_BONUS.get(type));
+        }
     }
 
     public boolean judgeScienceVictory() {
