@@ -286,10 +286,16 @@ public class MainGame extends State {
                 this.panel.add(unitFightButton);
             }
         }
+        if (selectedUnit.getType() == UnitType.FIGHTER
+                && ((Fighter) selectedUnit).isUpgradable()) {
+            this.panel.add(unitUpgradeButton);
+        }
         if (selectedUnit.getSubType() == UnitSubType.EXPLORER) {
             LandSquare landSquare = this.mapArea.at(selectedUnit.getPosition());
-            // TODO if(!currentPlayer.)
-            this.panel.add(explorerBuildCityButton);
+            if (!currentPlayer.hasLandSquare(landSquare)
+                    && !enermy.hasLandSquare(landSquare)) {
+                this.panel.add(explorerBuildCityButton);
+            }
         }
         if (selectedUnit.getSubType() == UnitSubType.CONSTRUCTOR) {
             LandformType landformType = this.mapArea.at(
@@ -313,6 +319,10 @@ public class MainGame extends State {
         }
         try {
             this.panel.remove(unitFightButton);
+        } catch (Exception e) {
+        }
+        try {
+            this.panel.remove(unitUpgradeButton);
         } catch (Exception e) {
         }
         try {
@@ -633,8 +643,14 @@ public class MainGame extends State {
                 this.countryName_1.setFont(new Font("Consolas", Font.PLAIN, 25));
                 this.countryName_2.setFont(new Font("Consolas", Font.BOLD, 25));
             }
-            // TODO this.scienceNameLabel.setText(currentPlayer.get);
-            // TODO this.scienceProgressLabel.setText(currentPlayer.getStockValue().getScience()+" / "+ScienceConfig.SCIENCE_COST.get());
+            if (currentPlayer.getCities().size() > 0) {
+                this.scienceNameLabel.setText(currentPlayer.getCurrentScience().toString());
+                this.scienceProgressLabel.setText(currentPlayer.getStockValue().getScience()
+                        + " / " + ScienceConfig.SCIENCE_COST.get(currentPlayer.getCurrentScience()));
+            } else {
+                this.scienceNameLabel.setText("");
+                this.scienceProgressLabel.setText("");
+            }
             this.repaint();
         }
 
