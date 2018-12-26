@@ -96,6 +96,11 @@ public class City implements Fightable{
             }
         }
     }
+
+    public void updateFlowValue(){
+        this.calculateFlowValue();
+    }
+
     private void calculateFlowValue() {
         this.flowValue = new Property();
         //地块产出

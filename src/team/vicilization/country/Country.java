@@ -165,7 +165,7 @@ public class Country {
     private void calculateFlowValue() {
         this.flowValue = new Property();
         for (City city : cities) {
-            // TODO city renew flow
+            city.updateFlowValue();
             this.flowValue.addProperty(city.getFlowValue());
         }
     }
