@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.lang.annotation.Annotation;
 import java.util.Vector;
 
-public abstract class Unit implements Movable,Selectable,Affiliable{
+public abstract class Unit implements Movable,Selectable{
     //-------------------------------------Attributes
     protected UnitType type;
     protected UnitSubType subType;

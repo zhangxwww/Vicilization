@@ -33,7 +33,6 @@ public class City implements Fightable{
     private Vector<BuildingType> allowedBuildings;
     private Vector<UnitSubType> allowedUnits;
 
-
     public boolean isProducing;
 
     //--------------------------------------------构造函数
@@ -104,6 +103,7 @@ public class City implements Fightable{
             }
         }
     }
+
     private void calculateFlowValue() {
         this.flowValue = new Property();
         //地块产出
@@ -129,6 +129,7 @@ public class City implements Fightable{
         }
         this.flowValue.addProperty(buildingFlowValue);
     }
+
     private void updateStock() {
         calculateFlowValue();
         stockValue.addProperty(flowValue);
@@ -159,6 +160,7 @@ public class City implements Fightable{
         //处理科技和各种点数
 
     }
+
     private void recover() {
         int initHealth = 100;
         if (cityHealth < initHealth - recovery) {
@@ -191,6 +193,7 @@ public class City implements Fightable{
         this.setIsProducing(true);
         this.producingBuilding=type;
     }
+
     private void finishProduceBuilding(){
         if(producingBuilding!=BuildingType.NONE) {
             if (stockValue.getProductivity() >= producingItem.getProductivityCost()) {
@@ -224,27 +227,18 @@ public class City implements Fightable{
         return UnitSubType.NONE;
     }
 
-    //public void produce(Producable production) {
-
-    //}
-
-    public void addNewUnit(Unit unit) {
-
-    }
-
-    public void addNewBuilding(BuildingType buildingType) {
-
-    }
-
     public boolean belongsTo(Country country) {
-        return false;
+        if (this.country.equals(country)){
+            return true;
+        }else {
+            return false;
+        }
     }
-    public boolean hasLandSquare(LandSquare landform) {
-        return false;
+    public boolean hasLandSquare(LandSquare landSquare) {
+        return this.territory.contains(landSquare);
     }
 
     //------------------------------------------Fightable
-
     @Override
     public int getAttack() {
         return cityAttack;
@@ -300,8 +294,7 @@ public class City implements Fightable{
 
     @Override
     public void die() {
-        //this.country.deleteCity(this);
-
+        
     }
 
     @Override
