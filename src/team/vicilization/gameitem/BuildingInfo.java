@@ -8,8 +8,8 @@ public class BuildingInfo extends ProducableInfo{
     //========================establish=============================//
     public BuildingInfo(BuildingType buildingType){
         this.setRequiredScience(GameItemConfig.BUILDING_REQUIRED_SCIENCE.get(buildingType));
-        super.setMoneyCost(GameItemConfig.UNIT_MONEY_COST.get(buildingType));
-        super.setProductivityCost(GameItemConfig.UNIT_PRODUCTIVITY_COST.get(buildingType));
+        super.setMoneyCost(GameItemConfig.BUILDING_MONEY_COST.get(buildingType));
+        super.setProductivityCost(GameItemConfig.BUILDING_PRODUCTIVITY_COST.get(buildingType));
     }
     //========================Get-Set Methods======================//
 

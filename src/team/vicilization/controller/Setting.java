@@ -52,6 +52,8 @@ public class Setting extends State {
         this.chooseCountryButton_1 = new Vector<JRadioButton>(CountryName.values().length);
         this.chooseCountryButton_2 = new Vector<JRadioButton>(CountryName.values().length);
 
+        RadioButtonListener listener = new RadioButtonListener();
+
         for (int i = 0; i < CountryName.values().length; i++) {
             String name = CountryName.values()[i].toString();
             JRadioButton btn_1 = new JRadioButton(name);
@@ -60,8 +62,13 @@ public class Setting extends State {
             btn_2.setBounds(200 * i + 200, 400, 100, 50);
             if (i == 0) {
                 btn_1.setSelected(true);
+            } else {
                 btn_2.setSelected(true);
             }
+
+            btn_1.addItemListener(listener);
+            btn_2.addItemListener(listener);
+
             this.chooseCountryButton_1.add(btn_1);
             this.chooseCountryButton_2.add(btn_2);
 
@@ -90,10 +97,10 @@ public class Setting extends State {
         public void itemStateChanged(ItemEvent event) {
             if (event.getStateChange() == ItemEvent.SELECTED) {
                 if (chooseCountryButton_1.contains(event.getSource())) {
-                    String country = ((JRadioButton) event.getSource()).getText();
+                    String country = ((JRadioButton) event.getSource()).getText().toUpperCase();
                     selectedCountryNames[0] = CountryName.valueOf(country);
                 } else if (chooseCountryButton_2.contains(event.getSource())) {
-                    String country = ((JRadioButton) event.getSource()).getText();
+                    String country = ((JRadioButton) event.getSource()).getText().toUpperCase();
                     selectedCountryNames[1] = CountryName.valueOf(country);
                 }
             }

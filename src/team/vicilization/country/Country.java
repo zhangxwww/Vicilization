@@ -4,6 +4,7 @@ import team.vicilization.gameitem.City;
 import team.vicilization.gameitem.CityName;
 import team.vicilization.gameitem.Unit;
 import team.vicilization.gamemap.GameMap;
+import team.vicilization.gamemap.GameMapConfig;
 import team.vicilization.gamemap.LandSquare;
 import team.vicilization.gamemap.LandformType;
 import team.vicilization.mechanics.*;
@@ -55,56 +56,45 @@ public class Country {
     }
 
     public void endOfCurrentRound() {
-        for (Unit unit : units) {
-            unit.unitEndOfTurn();
-        }
-        for (City city : cities) {
-            city.cityEndOfTurn();
-        }
-    }
-
-    public void readyForNewRound() {
-        // TODO 这里要执行计算存量流量、推进项目等一系列会在每一回合开始执行的任务
-        for (Unit unit : units) {
-            unit.unitStartTurn();
+        for (Unit u : units) {
+            u.recover(); //not recover in end?
+            u.unitEndOfTurn();
         }
         for (City city : cities) {
             city.cityStartTurn();
         }
-        this.updateStock();
+    }
+
+    public void readyForNewRound() {
+        for (City city : cities) {
+            //catch city.cityStartTurn();
+        }
+        this.calculateFlowValue();
+        // TODO 这里要执行计算存量流量、推进项目、城市恢复等一系列会在每一回合开始执行的任务
     }
 
 
-    private void updateStock() {
-        this.calculateFlowValue();
-        this.stockValue.addProperty(this.flowValue);
-
+    public void updateStock() {
         // TODO
         // TODO private?
+        // TODO duplicate with calculateStockValue?
         // TODO city stock/flow and country stock/flow
 
         this.finishScience();
     }
 
-    private void pushProject() {
+    public void pushProject() {
         // TODO Country: science, giant
         // TODO City: push project
     }
 
     private void calculateFlowValue() {
-        Property temp = new Property();
+        this.flowValue = new Property();
         for (City city : cities) {
-            // TODO
-            //temp.addProperty(city.getFlowValue());
+            // TODO city renew flow
+            this.flowValue.addProperty(city.getFlowValue());
         }
-        this.flowValue = temp;
     }
-
-    /*
-    private void calculateTradeMoney() {
-        // delete or not
-    }
-    */
 
     public City buildNewCity(Position position, GameMap map, Country enemyCountry) {
         Vector<LandSquare> newTerritory = new Vector<>();
@@ -117,6 +107,7 @@ public class Country {
                 newTerritory.add(map.getSquare(x + terr.getX(), y + terr.getY()));
             }
         }
+
         for (City city : this.cities) {
             for (LandSquare square : city.getTerritory()) {
                 newTerritory.remove(square);
@@ -132,6 +123,7 @@ public class Country {
             this.availableNames = CountryConfig.CITIES_OF_COUNTRY.get(this.countryName);
             Collections.shuffle(availableNames);
         }
+
         City tempCity = new City(this, position, this.availableNames.get(0), newTerritory);
         this.availableNames.remove(0);
         cities.add(tempCity);
@@ -164,9 +156,8 @@ public class Country {
                 distance = temp;
             }
         }
-
-        // TODO
-        // city.getStockValue().addFlow();
+        city.getStockValue().addProperty(GameMapConfig.LANDFORM_HARVEST.get(landformType));
+        // this.calculateFlowValue();
     }
 
     public void selectScience(ScienceName scienceName) {
@@ -180,24 +171,13 @@ public class Country {
             this.learntScience.add(this.currentScience);
             this.currentScience = null;
         }
+        // TODO other science
+        // TODO private
+        // TODO how to find science?
+        // TODO 一旦调用，科技就不见？null试探和返回值如何处理?
+        // TODO 要求玩家必须选择在研究的science
     }
 
-    /*
-    public ResourceType harvestResource(LandformType landformType){
-    }
-
-    public void addTradeRoute(){
-    }
-
-    public void startTradeRoute(){
-    }
-
-    public void tradeAdvance(){
-    }
-
-    public void endTrade(){
-    }
-    */
 
     public void recruitGiant(Giant giant) {
         // TODO giantname??

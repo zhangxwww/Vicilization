@@ -112,7 +112,7 @@ public class GameItemConfig {
     public static final HashMap<UnitSubType, Integer> UNIT_MOBILITY = new HashMap<UnitSubType, Integer>(){
         {
             put(UnitSubType.KNIGHT, 5);
-            put(UnitSubType.EXPLORER, 10);
+            put(UnitSubType.EXPLORER, 3);
             put(UnitSubType.ARCHER, 4);
             put(UnitSubType.CONSTRUCTOR, 3);
             put(UnitSubType.FOOTMAN, 4);
