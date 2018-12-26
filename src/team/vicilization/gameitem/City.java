@@ -6,7 +6,6 @@ import team.vicilization.gamemap.LandSquare;
 import team.vicilization.util.Position;
 import team.vicilization.util.Property;
 
-import javax.swing.*;
 import java.util.Vector;
 
 public class City implements Fightable{
@@ -179,6 +178,7 @@ public class City implements Fightable{
         //重置移动力
 
     }
+
     public UnitSubType cityStartTurn(){
         finishProduceBuilding();
         return finishProduceUnit();
@@ -190,6 +190,7 @@ public class City implements Fightable{
         this.producingUnit=type;
         this.setIsProducing(true);
     }
+
     public void produce(BuildingType type){
         this.producingItem=new BuildingInfo(type);
         this.setIsProducing(true);
@@ -208,6 +209,7 @@ public class City implements Fightable{
             }
         }
     }
+
     private UnitSubType finishProduceUnit(){
         if (producingUnit!=UnitSubType.NONE) {
             if (stockValue.getProductivity() >= producingItem.getProductivityCost()) {
@@ -232,6 +234,7 @@ public class City implements Fightable{
     public boolean belongsTo(Country country) {
         return this.country == country;
     }
+
     public boolean hasLandSquare(LandSquare landSquare) {
         return this.territory.contains(landSquare);
     }
