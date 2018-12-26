@@ -11,7 +11,6 @@ import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Vector;
 import javax.swing.Timer;
@@ -1379,7 +1378,7 @@ public class MainGame extends State {
                         case SWORDSMAN:
                             square.setIcon(swordsman_icon);
                             break;
-                        case SCOUT:
+                        case ASSASSIN:
                             square.setIcon(scout_icon);
                             break;
                         default:
@@ -1422,7 +1421,7 @@ public class MainGame extends State {
                     case SWORDSMAN:
                         square.setIcon(swordsman_icon);
                         break;
-                    case SCOUT:
+                    case ASSASSIN:
                         square.setIcon(scout_icon);
                         break;
                     default:

@@ -18,7 +18,8 @@ public abstract class Unit implements Movable,Selectable{
     protected Position position;
     protected int health;
     protected UnitInfo unitInfo;
-    protected static int unitRecover;
+
+    protected int unitRecover;
     
     protected boolean movedThisTurn;
     protected boolean attackedThisTurn;
@@ -32,6 +33,8 @@ public abstract class Unit implements Movable,Selectable{
         this.unitInfo=new UnitInfo(unitSubType);
         this.health=GameItemConfig.UNIT_HEALTH.get(unitSubType);
 
+        this.unitRecover=GameItemConfig.UNIT_RECOVERY.get(subType);
+
         this.movedThisTurn = false;
         this.attackedThisTurn = false;
     }
@@ -39,15 +42,15 @@ public abstract class Unit implements Movable,Selectable{
     public void delete(){
 
     }
+
     public void recover(){
         int initHealth=GameItemConfig.UNIT_HEALTH.get(this.subType);
-        if (health<initHealth-unitRecover){
-            health+=unitRecover;
+        if (health<initHealth-this.getUnitRecover()){
+            health+=this.getUnitRecover();
         }else {
             health=initHealth;
         }
     }
-
 
     //--------------------------------------Movable
     @Override
@@ -174,7 +177,9 @@ public abstract class Unit implements Movable,Selectable{
 
 //------------------------------------------End/Start Turn
     public void unitEndOfTurn(){
-        this.recover();
+        if (this.type==UnitType.FIGHTER) {
+            this.recover();
+        }
         this.movedThisTurn=false;
         this.attackedThisTurn=false;
         this.setMobility(GameItemConfig.UNIT_MOBILITY.get(subType));
@@ -239,6 +244,10 @@ public abstract class Unit implements Movable,Selectable{
         return  this.unitInfo.getDefence();
     }
 
+    public int getUnitRecover() {
+        this.unitRecover=GameItemConfig.UNIT_RECOVERY.get(subType);
+        return unitRecover;
+    }
 
     public boolean isAttackedThisTurn() {
         return attackedThisTurn;

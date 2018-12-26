@@ -87,7 +87,7 @@ public class City implements Fightable{
         tempAllowedUnits.add(UnitSubType.CONSTRUCTOR);
         tempAllowedUnits.add(UnitSubType.KNIGHT);
         tempAllowedUnits.add(UnitSubType.FOOTMAN);
-        tempAllowedUnits.add(UnitSubType.SCOUT);
+        tempAllowedUnits.add(UnitSubType.ASSASSIN);
         tempAllowedUnits.add(UnitSubType.EXPLORER);
         tempAllowedUnits.add(UnitSubType.SPEARMAN);
         tempAllowedUnits.add(UnitSubType.SWORDSMAN);
@@ -164,8 +164,8 @@ public class City implements Fightable{
 
     private void recover() {
         int initHealth = 100;
-        if (cityHealth < initHealth - recovery) {
-            cityHealth += recovery;
+        if (cityHealth < initHealth - this.getRecovery()) {
+            cityHealth += this.getRecovery();
         } else {
             cityHealth = initHealth;
         }
@@ -243,11 +243,13 @@ public class City implements Fightable{
 
     @Override
     public int getAttack() {
+        this.cityAttack=5*this.getPopulation();
         return cityAttack;
     }
 
     @Override
     public int getDefence() {
+        this.cityDefence=5*this.getPopulation();
         return cityDefence;
     }
 
@@ -358,5 +360,10 @@ public class City implements Fightable{
     }
     public void setPopulation(int population) {
         this.population = population;
+    }
+
+    public int getRecovery() {
+        this.recovery=10+2*this.getPopulation();
+        return recovery;
     }
 }
