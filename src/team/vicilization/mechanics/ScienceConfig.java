@@ -9,7 +9,7 @@ public class ScienceConfig {
 
     public static final HashMap<ScienceName, ScienceName> PRE_SCIENCE = new HashMap<ScienceName, ScienceName>(){
         {
-            put(ScienceName.ARITHMETIC, null);
+            put(ScienceName.ARITHMETIC, ScienceName.NONE);
             put(ScienceName.GEOMETRY, ScienceName.ARITHMETIC);
             put(ScienceName.ALGEBRA, ScienceName.GEOMETRY);
             put(ScienceName.CALCULUS, ScienceName.ALGEBRA);
@@ -29,7 +29,7 @@ public class ScienceConfig {
             put(ScienceName.STOCHASTIC_PROCESS, ScienceName.COMPLEX_ANALYSIS);
             put(ScienceName.COMPLEX_ANALYSIS, ScienceName.FUNCTIONAL_ANALYSIS);
             put(ScienceName.FUNCTIONAL_ANALYSIS, ScienceName.AEROSPACE);
-            put(ScienceName.AEROSPACE, null);
+            put(ScienceName.AEROSPACE, ScienceName.NONE);
         }
     };
 
