@@ -118,6 +118,15 @@ public class Country {
         this.calculateFlowValue();
     }
 
+    public boolean hasLandSquare(LandSquare landSquare) {
+        for (City city : cities) {
+            if (city.hasLandSquare(landSquare)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private Position nearestAvailable(Position root, GameMap map, Country enemyCountry) {
         Vector<LandSquare> availablePosition = new Vector<>();
         for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
@@ -315,4 +324,7 @@ public class Country {
         return stockValue;
     }
 
+    public ScienceName getCurrentScience() {
+        return currentScience;
+    }
 }
