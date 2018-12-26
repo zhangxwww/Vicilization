@@ -5,5 +5,7 @@ public enum GiantName {
     ERWIN_SCHRODINGER,
     ALAN_TURING,
     ADAM_SMITH,
-    JOHN_KEYNES
+    DAVID_RICARDO,
+    JOHN_KEYNES,
+
 }
