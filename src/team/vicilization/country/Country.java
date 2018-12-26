@@ -112,6 +112,10 @@ public class Country {
         // TODO 这里要执行计算存量流量、推进项目、城市恢复等一系列会在每一回合开始执行的任务
     }
 
+    public void undateFlow(){
+        this.calculateFlowValue();
+    }
+
     private Position nearestAvailable(Position root, GameMap map, Country enemyCountry) {
         Vector<LandSquare> availablePosition = new Vector<>();
         for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
@@ -147,12 +151,7 @@ public class Country {
         return position;
     }
 
-
-    public void updateStock() {
-        // TODO
-        // TODO private?
-        // TODO duplicate with calculateStockValue?
-        // TODO city stock/flow and country stock/flow
+    private void updateStock() {
         this.calculateFlowValue();
         this.stockValue.addProperty(this.flowValue);
     }
@@ -182,7 +181,6 @@ public class Country {
                 newTerritory.add(map.getSquare(x + terr.getX(), y + terr.getY()));
             }
         }
-
         for (City city : this.cities) {
             for (LandSquare square : city.getTerritory()) {
                 newTerritory.remove(square);
@@ -193,12 +191,10 @@ public class Country {
                 newTerritory.remove(square);
             }
         }
-
         if (availableNames.size() == 0) {
             this.availableNames = CountryConfig.CITIES_OF_COUNTRY.get(this.countryName);
             Collections.shuffle(availableNames);
         }
-
         City tempCity = new City(this, position, this.availableNames.get(0), newTerritory);
         this.availableNames.remove(0);
         cities.add(tempCity);
@@ -232,7 +228,6 @@ public class Country {
             }
         }
         city.getStockValue().addProperty(GameMapConfig.LANDFORM_HARVEST.get(landformType));
-        // this.calculateFlowValue();
     }
 
     public void selectScience(ScienceName scienceName) {
@@ -246,11 +241,6 @@ public class Country {
             this.learntScience.add(this.currentScience);
             this.currentScience = null;
         }
-        // TODO other science
-        // TODO private
-        // TODO how to find science?
-        // TODO 一旦调用，科技就不见？null试探和返回值如何处理?
-        // TODO 要求玩家必须选择在研究的science
     }
 
 
@@ -311,7 +301,6 @@ public class Country {
     public HashMap<String, Integer> getCountryResource() {
         return countryResource;
     }
-    //TODO Set country resources 的逻辑?
 
     public Vector<ScienceName> getLearntScience() {
         return learntScience;
