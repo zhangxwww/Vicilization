@@ -125,7 +125,6 @@ public class Country {
                 }
             }
         }
-
         for (Unit unit : this.units) {
             availablePosition.remove(map.getSquare(unit.getPosition()));
         }
@@ -138,7 +137,6 @@ public class Country {
         for (City city : enemyCountry.cities) {
             availablePosition.remove(map.getSquare(city.getLocation()));
         }
-
         Position position = availablePosition.get(0).getPosition();
         int distance = 2500;
         int temp;
@@ -198,6 +196,7 @@ public class Country {
         City tempCity = new City(this, position, this.availableNames.get(0), newTerritory);
         this.availableNames.remove(0);
         cities.add(tempCity);
+        this.calculateFlowValue();
         return tempCity;
     }
 
