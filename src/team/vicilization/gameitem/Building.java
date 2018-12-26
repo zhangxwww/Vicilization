@@ -3,10 +3,11 @@ package team.vicilization.gameitem;
 
 import team.vicilization.country.Country;
 import team.vicilization.util.Position;
+import team.vicilization.util.Property;
 
 public class Building {
     private BuildingType type;
-    private CityFlowValue buildingFlowValue;
+    private Property buildingFlowValue;
     private BuildingInfo buildingInfo;
 
     public Building(BuildingType type){
