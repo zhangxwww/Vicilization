@@ -1,6 +1,12 @@
 package team.vicilization.mechanics;
 
 public enum ScienceName {
-    MATH,
-    CALCULUS
+    ARITHMETIC,
+    GEOMETRY,
+    ALGEBRA,
+    CALCULUS,
+    STOCHASTIC_PROCESS,
+    COMPLEX_ANALYSIS,
+    FUNCTIONAL_ANALYSIS,
+    AEROSPACE,
 }

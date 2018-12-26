@@ -4,13 +4,13 @@ import team.vicilization.gameitem.BuildingType;
 import team.vicilization.gameitem.GameItemConfig;
 
 public class Property {
-    private int productivity ;
-    private int money ;
-    private int food ;
-    private int science ;
-    private int scientistValue ;
-    private int traderValue ;
-    private int engineerValue ;
+    private int productivity;
+    private int money;
+    private int food;
+    private int science;
+    private int scientistValue;
+    private int traderValue;
+    private int engineerValue;
 
     public Property() {
         this.productivity = 0;
