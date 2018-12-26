@@ -244,10 +244,10 @@ public abstract class Unit implements Movable,Selectable,Affiliable{
         return attackedThisTurn;
     }
 
+    public void setAttackedThisTurn(boolean attackedThisTurn) {
+        this.attackedThisTurn = attackedThisTurn;
+    }
     public boolean isMovedThisTurn() {
         return movedThisTurn;
     }
 }
-
-
-

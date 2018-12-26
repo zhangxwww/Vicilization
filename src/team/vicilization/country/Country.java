@@ -1,12 +1,7 @@
 package team.vicilization.country;
 
-import team.vicilization.gameitem.City;
-import team.vicilization.gameitem.CityName;
-import team.vicilization.gameitem.Unit;
-import team.vicilization.gamemap.GameMap;
-import team.vicilization.gamemap.GameMapConfig;
-import team.vicilization.gamemap.LandSquare;
-import team.vicilization.gamemap.LandformType;
+import team.vicilization.gameitem.*;
+import team.vicilization.gamemap.*;
 import team.vicilization.mechanics.*;
 import team.vicilization.util.Property;
 import team.vicilization.util.Position;
@@ -43,9 +38,12 @@ public class Country {
         this.occupiedTradeRoutes = 0;
         this.totalTradeRoutes = 0;
 
+        this.learntScience = new Vector<>();
+        this.learntScience.add(ScienceName.NONE);
+
         this.countryResource = new HashMap<String, Integer>() {
         };
-        this.currentScience = null;
+        this.currentScience = ScienceName.ARITHMETIC;
         this.flowValue = new Property();
         this.stockValue = new Property();
 
@@ -57,39 +55,139 @@ public class Country {
 
     public void endOfCurrentRound() {
         for (Unit u : units) {
-            u.recover();
             u.unitEndOfTurn();
         }
         for (City city : cities) {
-            city.cityStartTurn();
+            city.cityEndOfTurn();
         }
     }
 
-    public void readyForNewRound() {
+    public void readyForNewRound(GameMap map, Country enemyCountry) {
+        UnitSubType temp;
         for (City city : cities) {
-            //catch city.cityStartTurn();
+            temp = city.cityStartTurn();
+            switch (temp) {
+                case CONSTRUCTOR:
+                    this.addNewUnit(
+                            new Constructor(
+                                    this.nearestAvailable(city.getLocation(), map, enemyCountry),
+                                    this));
+                    break;
+                case ARCHER:
+                    this.addNewUnit(
+                            new Archer(
+                                    this.nearestAvailable(city.getLocation(), map, enemyCountry),
+                                    this));
+                    break;
+                case KNIGHT:
+                    this.addNewUnit(
+                            new Knight(
+                                    this.nearestAvailable(city.getLocation(), map, enemyCountry),
+                                    this));
+                    break;
+                case FOOTMAN:
+                    this.addNewUnit(
+                            new Footman(
+                                    this.nearestAvailable(city.getLocation(), map, enemyCountry),
+                                    this));
+                    break;
+                case EXPLORER:
+                    this.addNewUnit(
+                            new Explorer(
+                                    this.nearestAvailable(city.getLocation(), map, enemyCountry),
+                                    this));
+                    break;
+                case SPEARMAN:
+                    this.addNewUnit(
+                            new Spearman(
+                                    this.nearestAvailable(city.getLocation(), map, enemyCountry),
+                                    this));
+                    break;
+                case SCOUT:
+                    this.addNewUnit(
+                            new Scout(
+                                    this.nearestAvailable(city.getLocation(), map, enemyCountry),
+                                    this));
+                    break;
+                case SWORDSMAN:
+                    this.addNewUnit(
+                            new SwordsMan(
+                                    this.nearestAvailable(city.getLocation(), map, enemyCountry),
+                                    this));
+                    break;
+                default:
+                    break;
+            }
         }
-        this.calculateFlowValue();
+        for (Unit u : units) {
+            u.unitStartTurn();
+        }
+        this.updateStock();
+        this.finishScience();
         // TODO 这里要执行计算存量流量、推进项目、城市恢复等一系列会在每一回合开始执行的任务
     }
 
-
-    public void updateStock() {
-        // TODO
-        // TODO private?
-        // TODO duplicate with calculateStockValue?
-        // TODO city stock/flow and country stock/flow
+    public void undateFlow() {
+        this.calculateFlowValue();
     }
 
-    public void pushProject() {
-        // TODO
-        // TODO private?
+    public boolean hasLandSquare(LandSquare landSquare) {
+        for (City city : cities) {
+            if (city.hasLandSquare(landSquare)) {
+                return true;
+            }
+        }
+        return false;
     }
 
+    private Position nearestAvailable(Position root, GameMap map, Country enemyCountry) {
+        Vector<LandSquare> availablePosition = new Vector<>();
+        for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
+            for (int j = 0; j < GameMapConfig.MAP_HEIGHT; j++) {
+                if (map.getSquare(i, j).getTerrainType() != TerrainType.RIDGE) {
+                    availablePosition.add(map.getSquare(i, j));
+                }
+            }
+        }
+        for (Unit unit : this.units) {
+            availablePosition.remove(map.getSquare(unit.getPosition()));
+        }
+        for (Unit unit : enemyCountry.units) {
+            availablePosition.remove(map.getSquare(unit.getPosition()));
+        }
+        for (City city : this.cities) {
+            availablePosition.remove(map.getSquare(city.getLocation()));
+        }
+        for (City city : enemyCountry.cities) {
+            availablePosition.remove(map.getSquare(city.getLocation()));
+        }
+        Position position = availablePosition.get(0).getPosition();
+        int distance = 2500;
+        int temp;
+        for (LandSquare square : availablePosition) {
+            if ((temp = Position.distanceSquare(root, square.getPosition())) < distance) {
+                distance = temp;
+                position = square.getPosition();
+            }
+        }
+        return position;
+    }
+
+    private void updateStock() {
+        this.calculateFlowValue();
+        this.stockValue.addProperty(this.flowValue);
+    }
+
+    /*
+        public void pushProject() {
+            // TODO Country: science, giant
+            // TODO City: push project
+        }
+    */
     private void calculateFlowValue() {
         this.flowValue = new Property();
         for (City city : cities) {
-            // TODO city renew flow
+            city.updateFlowValue();
             this.flowValue.addProperty(city.getFlowValue());
         }
     }
@@ -105,7 +203,6 @@ public class Country {
                 newTerritory.add(map.getSquare(x + terr.getX(), y + terr.getY()));
             }
         }
-
         for (City city : this.cities) {
             for (LandSquare square : city.getTerritory()) {
                 newTerritory.remove(square);
@@ -116,15 +213,14 @@ public class Country {
                 newTerritory.remove(square);
             }
         }
-
-        if(availableNames.size() == 0){
+        if (availableNames.size() == 0) {
             this.availableNames = CountryConfig.CITIES_OF_COUNTRY.get(this.countryName);
             Collections.shuffle(availableNames);
         }
-
         City tempCity = new City(this, position, this.availableNames.get(0), newTerritory);
         this.availableNames.remove(0);
         cities.add(tempCity);
+        this.calculateFlowValue();
         return tempCity;
     }
 
@@ -144,7 +240,7 @@ public class Country {
         this.units.remove(unit);
     }
 
-    public void harvestResource(Position position, LandformType landformType) {
+    public void harvestLandform(Position position, LandformType landformType) {
         City city = cities.get(0);
         int distance = 2500;
         int temp;
@@ -155,38 +251,34 @@ public class Country {
             }
         }
         city.getStockValue().addProperty(GameMapConfig.LANDFORM_HARVEST.get(landformType));
-        // this.calculateFlowValue();
-    }
-    public void selectScience(ScienceName scienceName) {
-        this.currentScience = scienceName;
     }
 
-    public ScienceName finishScience() {
-        if (this.currentScience == null) {
-            return null;
-        } else if (this.stockValue.getScience() < ScienceConfig.SCIENCE_COST.get(this.currentScience)) {
-            return null;
-        } else {
-            this.stockValue.setScience(this.stockValue.getScience() - ScienceConfig.SCIENCE_COST.get(this.currentScience));
-            ScienceName result = this.currentScience;
-            this.currentScience = null;
-            return result;
+    /*
+        public void selectScience(ScienceName scienceName) {
+            this.currentScience = scienceName;
         }
-        // TODO other science
-        // TODO private
-        // TODO how to find science?
-        // TODO 一旦调用，科技就不见？null试探和返回值如何处理?
-        // TODO 要求玩家必须选择在研究的science
+    */
+
+    private void finishScience() {
+        if ((this.currentScience != null)
+                && (this.stockValue.getScience() >= ScienceConfig.SCIENCE_COST.get(this.currentScience))) {
+            this.stockValue.setScience(this.stockValue.getScience() - ScienceConfig.SCIENCE_COST.get(this.currentScience));
+            this.learntScience.add(this.currentScience);
+            this.currentScience = ScienceConfig.NEXT_SCIENCE.get(this.currentScience);
+        }
     }
 
-
-    public void recruitGiant(Giant giant) {
-        // TODO giantname??
+    public void recruitGiant(GiantName giantName) {
+        GiantType type = GiantConfig.GIANT_NAME_TO_TYPE.get(giantName);
+        if ((type == GiantType.ECONOMIST) || (type == GiantType.SCIENTIST)) {
+            this.stockValue.addProperty(GiantConfig.GIANT_TYPE_BONUS.get(type));
+        }else{
+            this.cities.get(0).getStockValue().addProperty(GiantConfig.GIANT_TYPE_BONUS.get(type));
+        }
     }
 
     public boolean judgeScienceVictory() {
-        // TODO 什么是胜利条件
-        return false;
+        return this.learntScience.contains(ScienceName.AEROSPACE);
     }
 
     public boolean hasCity(City city) {
@@ -238,7 +330,6 @@ public class Country {
     public HashMap<String, Integer> getCountryResource() {
         return countryResource;
     }
-    //TODO Set country resources 的逻辑?
 
     public Vector<ScienceName> getLearntScience() {
         return learntScience;
@@ -252,4 +343,7 @@ public class Country {
         return stockValue;
     }
 
+    public ScienceName getCurrentScience() {
+        return currentScience;
+    }
 }

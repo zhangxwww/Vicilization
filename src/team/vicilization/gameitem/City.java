@@ -1,6 +1,7 @@
 package team.vicilization.gameitem;
 
 import team.vicilization.country.Country;
+import team.vicilization.gamemap.GameMap;
 import team.vicilization.gamemap.LandSquare;
 import team.vicilization.util.Position;
 import team.vicilization.util.Property;
@@ -56,6 +57,8 @@ public class City implements Fightable{
         this.cityHealth = 100;
         this.recovery = 10;
 
+        this.allowedUnits = new Vector<>();
+        this.allowedBuildings = new Vector<>();
         this.calculateAllowedBuildings();
         this.calculateAllowedUnits();
 
@@ -63,33 +66,47 @@ public class City implements Fightable{
     }
 
     //-------------------------------------update Attributes
-    public void calculateAllowedBuildings(){
+    public void calculateAllowedBuildings() {
+        this.allowedBuildings.clear();
         Vector<BuildingType> tempAllowedBuildings=new Vector<BuildingType>(3);
         tempAllowedBuildings.add(BuildingType.ACADEMY);
         tempAllowedBuildings.add(BuildingType.COMMERCIAL_CERTER);
         tempAllowedBuildings.add(BuildingType.INDUSTRIAL_PARK);
         for(BuildingType type:tempAllowedBuildings){
-            if (constructedBuildings.contains(type) || this.producingBuilding.equals(type)) {
-                tempAllowedBuildings.remove(type);
+            if (!constructedBuildings.contains(type) && !this.producingBuilding.equals(type)
+                    && country.getLearntScience().contains(GameItemConfig.BUILDING_REQUIRED_SCIENCE.get(type))) {
+                this.allowedBuildings.add(type);
             }
-            //科技if(GameItemConfig.)
             //已建造
             //正在建造
         }
-        this.allowedBuildings=tempAllowedBuildings;
     }
-    public void calculateAllowedUnits(){
+
+    public void calculateAllowedUnits() {
+        this.allowedUnits.clear();
         Vector<UnitSubType> tempAllowedUnits=new Vector<UnitSubType>(20);
         tempAllowedUnits.add(UnitSubType.ARCHER);
         tempAllowedUnits.add(UnitSubType.CONSTRUCTOR);
-        if (population==1){
-            tempAllowedUnits.remove(UnitSubType.EXPLORER);
-        }
+        tempAllowedUnits.add(UnitSubType.KNIGHT);
+        tempAllowedUnits.add(UnitSubType.FOOTMAN);
+        tempAllowedUnits.add(UnitSubType.SCOUT);
+        tempAllowedUnits.add(UnitSubType.EXPLORER);
+        tempAllowedUnits.add(UnitSubType.SPEARMAN);
+        tempAllowedUnits.add(UnitSubType.SWORDSMAN);
         for (UnitSubType type:tempAllowedUnits){
-            //科技
+            if (country.getLearntScience().contains(GameItemConfig.UNIT_REQUIRED_SCIENCE.get(type))) {
+                this.allowedUnits.add(type);
+            }
         }
-        this.allowedUnits = tempAllowedUnits;
+        if (population < 2) {
+            this.allowedUnits.remove(UnitSubType.EXPLORER);
+        }
     }
+
+    public void updateFlowValue(){
+        this.calculateFlowValue();
+    }
+
     private void calculateFlowValue() {
         this.flowValue = new Property();
         //地块产出
@@ -163,8 +180,7 @@ public class City implements Fightable{
     }
     public UnitSubType cityStartTurn(){
         finishProduceBuilding();
-        UnitSubType unitSubType=finishProduceUnit();
-        return unitSubType;
+        return finishProduceUnit();
     }
 
     //----------------------------------------produce
@@ -179,29 +195,34 @@ public class City implements Fightable{
         this.producingBuilding=type;
     }
     private void finishProduceBuilding(){
-        if(stockValue.getProductivity()>=producingItem.getProductivityCost()){
-            stockValue.setProductivity(stockValue.getProductivity()-producingItem.getProductivityCost());
-            if(this.producingUnit==UnitSubType.NONE){
-                constructedBuildings.add(this.producingBuilding);
-                this.isProducing=false;
-                this.producingBuilding=BuildingType.NONE;
+        if(producingBuilding!=BuildingType.NONE) {
+            if (stockValue.getProductivity() >= producingItem.getProductivityCost()) {
+                stockValue.setProductivity(stockValue.getProductivity() - producingItem.getProductivityCost());
+                if (this.producingUnit == UnitSubType.NONE) {
+                    constructedBuildings.add(this.producingBuilding);
+                    this.isProducing = false;
+                    this.producingBuilding = BuildingType.NONE;
+                }
             }
         }
     }
     private UnitSubType finishProduceUnit(){
-        if(stockValue.getProductivity()>=producingItem.getProductivityCost()){
-
-
-            stockValue.setProductivity(stockValue.getProductivity()-producingItem.getProductivityCost());
-            if(this.producingBuilding==BuildingType.NONE){
-                UnitSubType unitSubType=this.producingUnit;
-                this.isProducing=false;
-                this.producingUnit=UnitSubType.NONE;
-                return unitSubType;
-            }else{
-                return UnitSubType.NONE;
+        if (producingUnit!=UnitSubType.NONE) {
+            if (stockValue.getProductivity() >= producingItem.getProductivityCost()) {
+                stockValue.setProductivity(stockValue.getProductivity() - producingItem.getProductivityCost());
+                if (this.producingBuilding == BuildingType.NONE) {
+                    UnitSubType unitSubType = this.producingUnit;
+                    if (unitSubType==UnitSubType.EXPLORER){
+                        this.setPopulation(getPopulation()-1);
+                    }
+                    this.isProducing = false;
+                    this.producingUnit = UnitSubType.NONE;
+                    return unitSubType;
+                } else {
+                    return UnitSubType.NONE;
+                }
+                //producingItem.finish;
             }
-            //producingItem.finish;
         }
         return UnitSubType.NONE;
     }
@@ -219,10 +240,10 @@ public class City implements Fightable{
     }
 
     public boolean belongsTo(Country country) {
-        return false;
+        return this.country == country;
     }
-    public boolean hasLandSquare(LandSquare landform) {
-        return false;
+    public boolean hasLandSquare(LandSquare landSquare) {
+        return this.territory.contains(landSquare);
     }
 
     //------------------------------------------Fightable
@@ -242,6 +263,34 @@ public class City implements Fightable{
         return cityHealth;
     }
 
+    public Vector<LandSquare> getAttackRange(GameMap map){
+        Position currentLocation=this.getLocation();
+        Vector<LandSquare> availableSquare=new Vector<LandSquare>();
+        int attackRange=2;
+        for (int j=0;j<attackRange;j++) {
+            for (int i = 0; i <= j; i++) {
+                Position p1 = new Position(currentLocation.getX() + i, currentLocation.getY() + attackRange - i);
+                Position p2 = new Position(currentLocation.getX() - i, currentLocation.getY() - attackRange + i);
+                Position p3 = new Position(currentLocation.getX() + attackRange - i, currentLocation.getY() + i);
+                Position p4 = new Position(currentLocation.getX() - attackRange + i, currentLocation.getY() - i);
+                if (map.isLegalPosition(p1)) {
+                    availableSquare.add(map.getSquare(p1));
+                }
+                if (map.isLegalPosition(p2)) {
+                    availableSquare.add(map.getSquare(p2));
+                }
+                if (map.isLegalPosition(p3)) {
+                    availableSquare.add(map.getSquare(p3));
+                }
+                if (map.isLegalPosition(p4)) {
+                    availableSquare.add(map.getSquare(p4));
+                }
+            }
+        }
+
+        return availableSquare;
+    }
+
     @Override
     public void injure(int damage) {
         if(damage>=getHealth()){
@@ -254,8 +303,12 @@ public class City implements Fightable{
 
     @Override
     public void die() {
-        //this.country.deleteCity(this);
+        this.country.loseCity(this);
+    }
 
+    @Override
+    public boolean isDied() {
+        return this.getHealth() <= 0;
     }
 
     //------------------------------------------get/set
@@ -263,70 +316,54 @@ public class City implements Fightable{
     public CityName getCityName() {
         return name;
     }
-
-
     public boolean isProducing() {
         return this.isProducing;
     }
     public void setIsProducing(boolean b){
         this.isProducing=b;
     }
-
-
     public Property getFlowValue() {
         return flowValue;
     }
-
-
-
     public Property getStockValue() {
         return stockValue;
     }
-
     public int getPopulation() {
         return population;
     }
-
     public BuildingType getProducingBuilding() {
         return producingBuilding;
     }
-
     public ProducableInfo getProducingItem() {
         return producingItem;
     }
-
     public Country getCountry() {
         return country;
     }
-
     public UnitSubType getProducingUnit() {
         return producingUnit;
     }
-
     public Vector<BuildingType> getConstructedBuildings() {
         return constructedBuildings;
     }
-
     public Vector<BuildingType> getAllowedBuildings() {
         calculateAllowedBuildings();
         return allowedBuildings;
     }
-
     public Vector<LandSquare> getTerritory() {
         return territory;
     }
-
     public Vector<UnitSubType> getAllowedUnits() {
         calculateAllowedUnits();
         return allowedUnits;
     }
-
     public void setCityHealth(int cityHealth) {
         this.cityHealth = cityHealth;
     }
-
-  
     public Position getLocation() {
         return location;
+    }
+    public void setPopulation(int population) {
+        this.population = population;
     }
 }
