@@ -278,7 +278,7 @@ public class Country {
     }
 
     public boolean judgeScienceVictory() {
-        return this.learntScience.contains(ScienceName.AEROSPACE);
+        return this.learntScience.contains(ScienceName.BUDDHISM);
     }
 
     public boolean hasCity(City city) {

@@ -794,8 +794,8 @@ public class MainGame extends State {
             this.scienceNameLabel.setBounds(400, 0, 200, 30);
             this.scienceProgressLabel.setBounds(400, 30, 200, 20);
 
-            this.scienceNameLabel.setFont(new Font("Consolas", Font.PLAIN, 28));
-            this.scienceProgressLabel.setFont(new Font("Consolas", Font.PLAIN, 22));
+            this.scienceNameLabel.setFont(new Font("Consolas", Font.PLAIN, 20));
+            this.scienceProgressLabel.setFont(new Font("Consolas", Font.PLAIN, 18));
 
             this.scientistLabel = new JLabel(scientistIcon);
             this.economistLabel = new JLabel(economistIcon);

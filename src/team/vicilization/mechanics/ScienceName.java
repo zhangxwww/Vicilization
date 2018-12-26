@@ -6,10 +6,10 @@ public enum ScienceName {
     GEOMETRY,
     ALGEBRA,
     CALCULUS,
-    STOCHASTIC_PROCESS,
-    COMPLEX_ANALYSIS,
-    FUNCTIONAL_ANALYSIS,
-    AEROSPACE;
+    PROBABILITY,
+    COMBINATION,
+    STATISTICS,
+    BUDDHISM;
 
     @Override
     public String toString() {
