@@ -123,13 +123,28 @@ public class Country {
         }
 
         for (Unit unit : this.units) {
-            availablePosition.remove(unit.getPosition());
+            availablePosition.remove(map.getSquare(unit.getPosition()));
         }
         for (Unit unit : enemyCountry.units) {
-            availablePosition.remove(unit.getPosition());
+            availablePosition.remove(map.getSquare(unit.getPosition()));
+        }
+        for (City city : this.cities) {
+            availablePosition.remove(map.getSquare(city.getLocation()));
+        }
+        for (City city : enemyCountry.cities) {
+            availablePosition.remove(map.getSquare(city.getLocation()));
         }
 
-        return null;
+        Position position = availablePosition.get(0).getPosition();
+        int distance = 2500;
+        int temp;
+        for (LandSquare square : availablePosition) {
+            if ((temp = Position.distanceSquare(position, square.getPosition())) < distance) {
+                distance = temp;
+                position = square.getPosition();
+            }
+        }
+        return position;
     }
 
 
