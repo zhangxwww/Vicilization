@@ -22,9 +22,9 @@ public class GameItemConfig {
     };
     public static final HashMap<BuildingType,ScienceName> BUILDING_REQUIRED_SCIENCE= new HashMap<BuildingType, ScienceName>(){
         {
-            put(BuildingType.ACADEMY,ScienceName.MATH);
-            put(BuildingType.COMMERCIAL_CERTER,ScienceName.MATH);
-            put(BuildingType.INDUSTRIAL_PARK,ScienceName.MATH);
+            put(BuildingType.ACADEMY,ScienceName.ARITHMETIC);
+            put(BuildingType.COMMERCIAL_CERTER,ScienceName.ARITHMETIC);
+            put(BuildingType.INDUSTRIAL_PARK,ScienceName.ARITHMETIC);
         }
     };
     public static final HashMap<BuildingType,Integer> BUILDING_FLOW_PRODUCTIVITY=new HashMap<BuildingType,Integer>(){
@@ -141,12 +141,12 @@ public class GameItemConfig {
     };
     public static final HashMap<UnitSubType, ScienceName> UNIT_REQUIRED_SCIENCE = new HashMap<UnitSubType, ScienceName>(){
         {
-            put(UnitSubType.KNIGHT, ScienceName.MATH);
-            put(UnitSubType.EXPLORER, ScienceName.MATH);
-            put(UnitSubType.ARCHER, ScienceName.MATH);
-            put(UnitSubType.CONSTRUCTOR, ScienceName.MATH);
-            put(UnitSubType.FOOTMAN, ScienceName.MATH);
-            put(UnitSubType.SPEARMAN, ScienceName.MATH);
+            put(UnitSubType.KNIGHT, ScienceName.ARITHMETIC);
+            put(UnitSubType.EXPLORER, ScienceName.ARITHMETIC);
+            put(UnitSubType.ARCHER, ScienceName.ARITHMETIC);
+            put(UnitSubType.CONSTRUCTOR, ScienceName.ARITHMETIC);
+            put(UnitSubType.FOOTMAN, ScienceName.ARITHMETIC);
+            put(UnitSubType.SPEARMAN, ScienceName.ARITHMETIC);
         }
     };
     public static final HashMap<UnitSubType, ResourceType> UNIT_REQUIRED_RESOURCE = new HashMap<UnitSubType, ResourceType>(){

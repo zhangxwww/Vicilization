@@ -70,7 +70,7 @@ public class MainGame extends State {
         this.seletedUnit = null;
         this.lowerInfoArea.unshowUnitInfo();
 
-        if (this.currentPlayer.judgeVictory() || round == 3 /* TODO delete later */) {
+        if (this.currentPlayer.judgeScienceVictory() || round == 3 /* TODO delete later */) {
             this.mainWindow.convertToNextState(currentPlayer);
         } else {
             round++;

@@ -188,8 +188,6 @@ public class City implements Fightable{
     }
     private UnitSubType finishProduceUnit(){
         if(stockValue.getProducticity()>=producingItem.getProductivityCost()){
-
-
             stockValue.setProducticity(stockValue.getProducticity()-producingItem.getProductivityCost());
             if(this.producingBuilding==BuildingType.NONE){
                 UnitSubType unitSubType=this.producingUnit;
@@ -216,11 +214,13 @@ public class City implements Fightable{
 
     }
 
+
     public boolean belongsTo(Country country) {
-        return false;
+        return (this.country == country);
     }
-    public boolean hasLandSquare(LandSquare landform) {
-        return false;
+
+    public boolean hasLandSquare(LandSquare landSquare) {
+        return (this.territory.contains(landSquare));
     }
 
     //------------------------------------------Fightable
@@ -276,8 +276,6 @@ public class City implements Fightable{
         return flowValue;
     }
 
-
-
     public CityStockValue getStockValue() {
         return stockValue;
     }
@@ -326,4 +324,5 @@ public class City implements Fightable{
     public Position getLocation() {
         return location;
     }
+
 }

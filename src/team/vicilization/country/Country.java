@@ -55,34 +55,49 @@ public class Country {
     }
 
     public void endOfCurrentRound() {
-        // TODO 回血，移动力写哪都行
         for (Unit unit : units) {
-            // TODO city不对每个单位做?
-            unit.recover();
+            unit.unitEndOfTurn();
+        }
+        for (City city : cities) {
+            city.cityEndOfTurn();
         }
     }
 
     public void readyForNewRound() {
-        // TODO 这里要执行计算存量流量、推进项目、城市恢复等一系列会在每一回合开始执行的任务
-        for (City city : cities) {
-            city.updateStock();
+        // TODO 这里要执行计算存量流量、推进项目等一系列会在每一回合开始执行的任务
+        for (Unit unit : units) {
+            unit.unitStartTurn();
         }
+        for (City city : cities) {
+            city.cityStartTurn();
+        }
+        this.updateStock();
     }
 
 
-    public void updateStock() {
+    private void updateStock() {
+        this.calculateFlowValue();
+        this.stockValue.addProperty(this.flowValue);
+
         // TODO
         // TODO private?
-        // TODO duplicate with calculateStockValue?
         // TODO city stock/flow and country stock/flow
+
+        this.finishScience();
     }
 
-    public void pushProject() {
-        // TODO
-        // TODO private?
+    private void pushProject() {
+        // TODO Country: science, giant
+        // TODO City: push project
     }
 
     private void calculateFlowValue() {
+        Property temp = new Property();
+        for (City city : cities) {
+            // TODO
+            //temp.addProperty(city.getFlowValue());
+        }
+        this.flowValue = temp;
     }
 
     /*
@@ -102,7 +117,6 @@ public class Country {
                 newTerritory.add(map.getSquare(x + terr.getX(), y + terr.getY()));
             }
         }
-
         for (City city : this.cities) {
             for (LandSquare square : city.getTerritory()) {
                 newTerritory.remove(square);
@@ -114,11 +128,10 @@ public class Country {
             }
         }
 
-        if(availableNames.size() == 0){
+        if (availableNames.size() == 0) {
             this.availableNames = CountryConfig.CITIES_OF_COUNTRY.get(this.countryName);
             Collections.shuffle(availableNames);
         }
-
         City tempCity = new City(this, position, this.availableNames.get(0), newTerritory);
         this.availableNames.remove(0);
         cities.add(tempCity);
@@ -160,44 +173,29 @@ public class Country {
         this.currentScience = scienceName;
     }
 
-    public ScienceName finishScience() {
-        if (this.currentScience == null) {
-            return null;
-        } else if (this.stockValue.getScience() < ScienceConfig.SCIENCE_COST.get(this.currentScience)) {
-            return null;
-        } else {
+    private void finishScience() {
+        if ((this.currentScience != null)
+                && (this.stockValue.getScience() >= ScienceConfig.SCIENCE_COST.get(this.currentScience))) {
             this.stockValue.setScience(this.stockValue.getScience() - ScienceConfig.SCIENCE_COST.get(this.currentScience));
-            ScienceName result = this.currentScience;
+            this.learntScience.add(this.currentScience);
             this.currentScience = null;
-            return result;
         }
-        // TODO other science
-        // TODO private
-        // TODO how to find science?
-        // TODO 一旦调用，科技就不见？null试探和返回值如何处理?
-        // TODO 要求玩家必须选择在研究的science
     }
 
     /*
     public ResourceType harvestResource(LandformType landformType){
-        // TODO modify in 接口？
-        // TODO private
     }
 
     public void addTradeRoute(){
-        // TODO private
     }
 
     public void startTradeRoute(){
-        // TODO private
     }
 
     public void tradeAdvance(){
-        // TODO private
     }
 
     public void endTrade(){
-        // TODO private
     }
     */
 
@@ -206,8 +204,7 @@ public class Country {
     }
 
     public boolean judgeScienceVictory() {
-        // TODO 什么是胜利条件
-        return false;
+        return this.learntScience.contains(ScienceName.AEROSPACE);
     }
 
     public boolean hasCity(City city) {
