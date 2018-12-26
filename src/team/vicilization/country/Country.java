@@ -141,7 +141,7 @@ public class Country {
         int distance = 2500;
         int temp;
         for (LandSquare square : availablePosition) {
-            if ((temp = Position.distanceSquare(position, square.getPosition())) < distance) {
+            if ((temp = Position.distanceSquare(root, square.getPosition())) < distance) {
                 distance = temp;
                 position = square.getPosition();
             }
