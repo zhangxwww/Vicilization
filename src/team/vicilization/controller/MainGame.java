@@ -358,7 +358,21 @@ public class MainGame extends State {
     }
 
     private void fight(Fightable fighter, Fightable fought) {
-        // TODO
+        Fighter attacker = (Fighter) fighter;
+        Fighter defencer = (Fighter) fought;
+        Position attackerPos = attacker.getPosition();
+        Position defencerPos = defencer.getPosition();
+        int attack = attacker.getAttack();
+        int defence = defencer.getDefence();
+        defence += this.mapArea.at(attackerPos).getDefenceBuff();
+        fighter.injure(defence);
+        fought.injure(attack);
+        if (fighter.isDied()) {
+            units.remove((Unit) fighter);
+        }
+        if (fought.isDied()) {
+            units.remove((Unit) fought);
+        }
     }
 
     private void fight(Fightable fighter, City city) {

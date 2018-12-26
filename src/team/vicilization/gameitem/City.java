@@ -299,6 +299,11 @@ public class City implements Fightable{
 
     }
 
+    @Override
+    public boolean isDied() {
+        return this.getHealth() <= 0;
+    }
+
     //------------------------------------------get/set
 
     public CityName getCityName() {

@@ -7,14 +7,15 @@ import team.vicilization.util.Position;
 
 import java.util.Vector;
 
-public abstract class Fighter extends Unit implements Fightable{
+public abstract class Fighter extends Unit implements Fightable {
 
 
-    public Fighter(Position position, Country country,UnitSubType unitSubType) {
-        super(position, country,UnitType.FIGHTER,unitSubType);
+    public Fighter(Position position, Country country, UnitSubType unitSubType) {
+        super(position, country, UnitType.FIGHTER, unitSubType);
         setType(UnitType.FIGHTER);
     }
-//---------------------------Fightable
+
+    //---------------------------Fightable
     @Override
     public int getAttack() {
         return super.getAttack();
@@ -30,16 +31,16 @@ public abstract class Fighter extends Unit implements Fightable{
         return super.getHealth();
     }
 
-    public Vector<LandSquare> getAttackRange(GameMap map){
-        Position currentLocation=super.currentLocation();
-        Vector<LandSquare> availableSquare=new Vector<LandSquare>();
-        int attackRange=0;
-        if(this.subType==UnitSubType.ARCHER){
-            attackRange=2;
-        }else {
-            attackRange=1;
+    public Vector<LandSquare> getAttackRange(GameMap map) {
+        Position currentLocation = super.currentLocation();
+        Vector<LandSquare> availableSquare = new Vector<LandSquare>();
+        int attackRange = 0;
+        if (this.subType == UnitSubType.ARCHER) {
+            attackRange = 2;
+        } else {
+            attackRange = 1;
         }
-        for (int j=0;j<attackRange;j++) {
+        for (int j = 0; j < attackRange; j++) {
             for (int i = 0; i <= j; i++) {
                 Position p1 = new Position(currentLocation.getX() + i, currentLocation.getY() + attackRange - i);
                 Position p2 = new Position(currentLocation.getX() - i, currentLocation.getY() - attackRange + i);
@@ -65,16 +66,21 @@ public abstract class Fighter extends Unit implements Fightable{
 
     @Override
     public void injure(int damage) {
-        if (damage>=getHealth()){
+        if (damage >= getHealth()) {
             this.setHealth(0);
             this.die();
-        }else {
-            this.setHealth(this.getHealth()-damage);
+        } else {
+            this.setHealth(this.getHealth() - damage);
         }
     }
 
     @Override
-    public void die(){
+    public boolean isDied() {
+        return this.getHealth() <= 0;
+    }
+
+    @Override
+    public void die() {
         this.country.deleteUnit(this);
     }
 }
