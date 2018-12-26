@@ -24,7 +24,7 @@ public class GameItemConfig {
         {
             put(BuildingType.ACADEMY,ScienceName.GEOMETRY);
             put(BuildingType.COMMERCIAL_CERTER,ScienceName.CALCULUS);
-            put(BuildingType.INDUSTRIAL_PARK,ScienceName.FUNCTIONAL_ANALYSIS);
+            put(BuildingType.INDUSTRIAL_PARK, ScienceName.PROBABILITY);
         }
     };
     public static final HashMap<BuildingType,Integer> BUILDING_FLOW_PRODUCTIVITY=new HashMap<BuildingType,Integer>(){
@@ -157,7 +157,7 @@ public class GameItemConfig {
             put(UnitSubType.CONSTRUCTOR, ScienceName.NONE);
             put(UnitSubType.FOOTMAN, ScienceName.NONE);
             put(UnitSubType.SPEARMAN, ScienceName.ARITHMETIC);
-            put(UnitSubType.SWORDSMAN, ScienceName.COMPLEX_ANALYSIS);
+            put(UnitSubType.SWORDSMAN, ScienceName.STATISTICS);
             put(UnitSubType.ASSASSIN, ScienceName.ALGEBRA);
         }
     };
@@ -176,6 +176,8 @@ public class GameItemConfig {
 
     public static final HashMap<UnitSubType, Integer> UNIT_RECOVERY = new HashMap<UnitSubType, Integer>(){
         {
+            put(UnitSubType.EXPLORER, 8);
+            put(UnitSubType.CONSTRUCTOR, 8);
             put(UnitSubType.KNIGHT, 8);
             put(UnitSubType.ARCHER, 5);
             put(UnitSubType.FOOTMAN, 10);
@@ -187,7 +189,7 @@ public class GameItemConfig {
 
     public static final HashMap<UnitSubType,ScienceName> UPDATE_NEED_SCIENCE=new HashMap<UnitSubType, ScienceName>(){
         {
-            put(UnitSubType.FOOTMAN,ScienceName.COMPLEX_ANALYSIS);
+            put(UnitSubType.FOOTMAN, ScienceName.STATISTICS);
         }
     };
 
