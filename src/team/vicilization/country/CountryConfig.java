@@ -26,6 +26,15 @@ public class CountryConfig {
             add(new Position(0, 2));
             add(new Position(-2, 0));
             add(new Position(0, -2));
+
+            add(new Position(2, 1));
+            add(new Position(1, 2));
+            add(new Position(-1, 2));
+            add(new Position(-2, 1));
+            add(new Position(1, -2));
+            add(new Position(2, -1));
+            add(new Position(-1, -2));
+            add(new Position(-2, -1));
         }
     };
     public static final HashMap<CountryName, Color> COLOR_OF_COUNTRY = new HashMap<>() {
