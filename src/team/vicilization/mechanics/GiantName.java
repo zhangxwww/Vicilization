@@ -7,5 +7,8 @@ public enum GiantName {
     ADAM_SMITH,
     DAVID_RICARDO,
     JOHN_KEYNES,
-
+    LEONARDO_DA_VINCI,
+    GUSTAVE_EIFFEL,
+    NICOLA_TESLA,
+    JAMES_WATT
 }
