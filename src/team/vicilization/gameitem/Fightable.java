@@ -16,5 +16,7 @@ public interface Fightable {
 
     public void die();
 
+    public boolean isDied();
+
     public Vector<LandSquare> getAttackRange(GameMap map);
 }

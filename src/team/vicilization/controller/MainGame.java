@@ -63,6 +63,7 @@ public class MainGame extends State {
         this.initCountries(countrys);
         this.initUpperInfoArea();
         this.initComboxes();
+        this.transView();
     }
 
     private void nextRound() {
@@ -81,6 +82,7 @@ public class MainGame extends State {
             this.currentPlayer.readyForNewRound(this.mapArea.getMap(), this.enermy);
             this.synchronizeCitiesAndUnits();
             this.upperInfoArea.update();
+            this.transView();
         }
     }
 
@@ -344,8 +346,33 @@ public class MainGame extends State {
         this.mapArea.mapPanel.updateMap();
     }
 
+    private void transView() {
+        Position position;
+        if (this.currentPlayer.getCities().size() != 0) {
+            position = currentPlayer.getCities().get(0).getLocation();
+            this.mapArea.transViewTo(position);
+        } else if (this.currentPlayer.getUnits().size() != 0) {
+            position = currentPlayer.getUnits().get(0).getPosition();
+            this.mapArea.transViewTo(position);
+        }
+    }
+
     private void fight(Fightable fighter, Fightable fought) {
-        // TODO
+        Fighter attacker = (Fighter) fighter;
+        Fighter defencer = (Fighter) fought;
+        Position attackerPos = attacker.getPosition();
+        Position defencerPos = defencer.getPosition();
+        int attack = attacker.getAttack();
+        int defence = defencer.getDefence();
+        defence += this.mapArea.at(attackerPos).getDefenceBuff();
+        fighter.injure(defence);
+        fought.injure(attack);
+        if (fighter.isDied()) {
+            units.remove((Unit) fighter);
+        }
+        if (fought.isDied()) {
+            units.remove((Unit) fought);
+        }
     }
 
     private void fight(Fightable fighter, City city) {
@@ -811,6 +838,14 @@ public class MainGame extends State {
 
         public void drawCityTerritory() {
             this.mapPanel.drawTerritory();
+        }
+
+        public void transViewTo(Position position) {
+            int x = position.getX() * 50;
+            int y = position.getY() * 50;
+            int deltax = 940 - x;
+            int deltay = 445 - y;
+            this.mapPanel.setLocation(deltax, deltay);
         }
 
         public GameMap getMap() {
