@@ -89,6 +89,12 @@ public class City implements Fightable{
         Vector<UnitSubType> tempAllowedUnits=new Vector<UnitSubType>(20);
         tempAllowedUnits.add(UnitSubType.ARCHER);
         tempAllowedUnits.add(UnitSubType.CONSTRUCTOR);
+        tempAllowedUnits.add(UnitSubType.KNIGHT);
+        tempAllowedUnits.add(UnitSubType.FOOTMAN);
+        tempAllowedUnits.add(UnitSubType.SCOUT);
+        tempAllowedUnits.add(UnitSubType.EXPLORER);
+        tempAllowedUnits.add(UnitSubType.SPEARMAN);
+        tempAllowedUnits.add(UnitSubType.SWORDSMAN);
         if (population != 1) {
             this.allowedUnits.add(UnitSubType.EXPLORER);
         }
@@ -308,73 +314,53 @@ public class City implements Fightable{
     public CityName getCityName() {
         return name;
     }
-
-
     public boolean isProducing() {
         return this.isProducing;
     }
     public void setIsProducing(boolean b){
         this.isProducing=b;
     }
-
-
     public Property getFlowValue() {
         return flowValue;
     }
-
-
-
     public Property getStockValue() {
         return stockValue;
     }
-
     public int getPopulation() {
         return population;
     }
-
     public BuildingType getProducingBuilding() {
         return producingBuilding;
     }
-
     public ProducableInfo getProducingItem() {
         return producingItem;
     }
-
     public Country getCountry() {
         return country;
     }
-
     public UnitSubType getProducingUnit() {
         return producingUnit;
     }
-
     public Vector<BuildingType> getConstructedBuildings() {
         return constructedBuildings;
     }
-
     public Vector<BuildingType> getAllowedBuildings() {
         calculateAllowedBuildings();
         return allowedBuildings;
     }
-
     public Vector<LandSquare> getTerritory() {
         return territory;
     }
-
     public Vector<UnitSubType> getAllowedUnits() {
         calculateAllowedUnits();
         return allowedUnits;
     }
-
     public void setCityHealth(int cityHealth) {
         this.cityHealth = cityHealth;
     }
-
-  
     public Position getLocation() {
         return location;
     }
-
     public void setPopulation(int population) {
         this.population = population;
     }

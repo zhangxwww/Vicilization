@@ -248,6 +248,3 @@ public abstract class Unit implements Movable,Selectable,Affiliable{
         return movedThisTurn;
     }
 }
-
-
-
