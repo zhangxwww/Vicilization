@@ -61,12 +61,17 @@ public class MainGame extends State {
     private ImageIcon upgradeButtonIcon;
     private ImageIcon nextRoundButtonIcon;
 
+    private Vector<GiantName> scientists;
+    private Vector<GiantName> economists;
+    private Vector<GiantName> engineers;
+
     public MainGame(MainWindow mainWindow, CountryName[] countrys) {
         super(mainWindow);
         setNextState(StateType.Gameover);
 
         this.initIcons();
         this.initParams();
+        this.initGiants();
         this.initMapArea();
         this.initButtons();
         this.initLowerInfoArea();
@@ -125,6 +130,10 @@ public class MainGame extends State {
         this.cities = new Vector<City>();
         this.underProducingUnit = UnitSubType.NONE;
         this.underProducingBuilding = BuildingType.NONE;
+    }
+
+    private void initGiants() {
+        // TODO
     }
 
     private void initCountries(CountryName[] countrys) {
@@ -617,8 +626,23 @@ public class MainGame extends State {
         private JLabel scienceNameLabel;
         private JLabel scienceProgressLabel;
 
+        private ImageIcon scientistIcon;
+        private ImageIcon economistIcon;
+        private ImageIcon engineerIcon;
+
+        private JLabel scientistLabel;
+        private JLabel economistLabel;
+        private JLabel engineerLabel;
+
+        private JLabel scientistNameLabel;
+        private JLabel economistNameLabel;
+        private JLabel engineerNameLabel;
+
+        private JLabel scientistProgressLabel;
+        private JLabel economistProgressLabel;
+        private JLabel engineerProgressLabel;
+
         public UpperInfoArea() {
-            // TODO giant
             super();
             this.setLayout(null);
             this.setOpaque(true);
@@ -651,6 +675,31 @@ public class MainGame extends State {
                 this.scienceNameLabel.setText("");
                 this.scienceProgressLabel.setText("");
             }
+            if (scientists.size() > 0) {
+                GiantName scientist = scientists.get(0);
+                this.scientistNameLabel.setText(scientist.toString());
+                // TODO value
+            } else {
+                this.scientistNameLabel.setText("Nobody");
+
+            }
+            if (economists.size() > 0) {
+                GiantName economist = economists.get(0);
+                this.economistNameLabel.setText(economist.toString());
+                // TODO value
+            } else {
+                this.economistNameLabel.setText("Nobody");
+
+            }
+            if (engineers.size() > 0) {
+                GiantName engineer = engineers.get(0);
+                this.engineerNameLabel.setText(engineer.toString());
+                // TODO value
+            } else {
+                this.engineerNameLabel.setText("Nobody");
+
+            }
+
             this.repaint();
         }
 
@@ -706,6 +755,30 @@ public class MainGame extends State {
             this.scienceNameLabel.setFont(new Font("Consolas", Font.PLAIN, 28));
             this.scienceProgressLabel.setFont(new Font("Consolas", Font.PLAIN, 22));
 
+            this.scientistLabel = new JLabel(scienceIcon);
+            this.economistLabel = new JLabel(economistIcon);
+            this.engineerLabel = new JLabel(engineerIcon);
+
+            this.scientistNameLabel = new JLabel();
+            this.economistNameLabel = new JLabel();
+            this.engineerNameLabel = new JLabel();
+
+            this.scientistProgressLabel = new JLabel();
+            this.economistProgressLabel = new JLabel();
+            this.engineerProgressLabel = new JLabel();
+
+            this.scientistLabel.setBounds(500, 0, 50, 50);
+            this.economistLabel.setBounds(780, 0, 50, 50);
+            this.engineerLabel.setBounds(1060, 0, 50, 50);
+
+            this.scientistNameLabel.setBounds(560, 0, 200, 30);
+            this.economistNameLabel.setBounds(840, 0, 200, 30);
+            this.engineerNameLabel.setBounds(1120, 0, 200, 30);
+
+            this.scientistProgressLabel.setBounds(560, 30, 200, 20);
+            this.economistProgressLabel.setBounds(840, 30, 200, 20);
+            this.engineerProgressLabel.setBounds(1120, 30, 200, 20);
+
             this.add(sciencePointSymbolLabel);
             this.add(moneySymbolLabel);
             this.add(roundSymbolLabel);
@@ -716,11 +789,23 @@ public class MainGame extends State {
             this.add(countryName_2);
             this.add(scienceNameLabel);
             this.add(scienceProgressLabel);
+            this.add(scientistLabel);
+            this.add(economistLabel);
+            this.add(engineerLabel);
+            this.add(scientistNameLabel);
+            this.add(economistNameLabel);
+            this.add(engineerNameLabel);
+            this.add(scientistProgressLabel);
+            this.add(economistProgressLabel);
+            this.add(engineerProgressLabel);
         }
 
         private void initIcons() {
             this.scienceIcon = new ImageIcon("./Resource/info/science.png");
             this.moneyIcon = new ImageIcon("./Resource/info/money.png");
+            this.scientistIcon = new ImageIcon("./Resource/info/scientist.png");
+            this.economistIcon = new ImageIcon("./Resource/info/economist.png");
+            this.engineerIcon = new ImageIcon("./Resource/info/engineer.png");
         }
     }
 
