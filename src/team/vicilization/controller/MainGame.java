@@ -289,6 +289,7 @@ public class MainGame extends State {
 
     private void prepareAttack() {
         this.unitAttacking = true;
+        this.mapArea.mapPanel.updateMap();
     }
 
     private void unprepareAttack() {
@@ -489,6 +490,21 @@ public class MainGame extends State {
         return squares;
     }
 
+    private void unitUpgrade() {
+        Position position = selectedUnit.getPosition();
+        UnitSubType subType = selectedUnit.getSubType();
+        this.unselectUnit();
+        this.unprepareAttack();
+        currentPlayer.deleteUnit(selectedUnit);
+        this.units.remove(selectedUnit);
+        if (subType == UnitSubType.FOOTMAN) {
+            this.selectedUnit = new SwordsMan(position, currentPlayer);
+            this.currentPlayer.addNewUnit(selectedUnit);
+        }
+        this.selectUnit(selectedUnit);
+        this.mapArea.mapPanel.updateMap();
+    }
+
     private void drawAttackRange(Vector<LandSquare> squares) {
         this.mapArea.drawAttackSquares(squares);
     }
@@ -525,8 +541,9 @@ public class MainGame extends State {
                 buildCity();
             } else if (event.getSource() == MainGame.constructorHarvestButton) {
                 harvest();
+            } else if (event.getSource() == MainGame.unitUpgradeButton) {
+                unitUpgrade();
             }
-            // TODO finish with other actions
         }
     }
 
