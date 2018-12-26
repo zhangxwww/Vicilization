@@ -96,6 +96,11 @@ public class City implements Fightable{
             }
         }
     }
+
+    public void updateFlowValue(){
+        this.calculateFlowValue();
+    }
+
     private void calculateFlowValue() {
         this.flowValue = new Property();
         //地块产出
@@ -229,10 +234,10 @@ public class City implements Fightable{
     }
 
     public boolean belongsTo(Country country) {
-        return false;
+        return this.country == country;
     }
-    public boolean hasLandSquare(LandSquare landform) {
-        return false;
+    public boolean hasLandSquare(LandSquare landSquare) {
+        return this.territory.contains(landSquare);
     }
 
     //------------------------------------------Fightable
