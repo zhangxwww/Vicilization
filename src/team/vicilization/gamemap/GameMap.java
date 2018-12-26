@@ -244,7 +244,6 @@ public class GameMap {
     }
 
     //=====================随机生成资源==========================//
-    //TODO more resources
     private void initResource() {
         for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
             for (int j = 0; j < GameMapConfig.MAP_HEIGHT; j++) {
