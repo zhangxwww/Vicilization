@@ -287,7 +287,8 @@ public class MainGame extends State {
             }
         }
         if (selectedUnit.getSubType() == UnitSubType.EXPLORER) {
-            // TODO check the landsquare
+            LandSquare landSquare = this.mapArea.at(selectedUnit.getPosition());
+            // TODO if(!currentPlayer.)
             this.panel.add(explorerBuildCityButton);
         }
         if (selectedUnit.getSubType() == UnitSubType.CONSTRUCTOR) {
@@ -607,7 +608,7 @@ public class MainGame extends State {
         private JLabel scienceProgressLabel;
 
         public UpperInfoArea() {
-            // TODO science info
+            // TODO giant
             super();
             this.setLayout(null);
             this.setOpaque(true);
@@ -632,6 +633,8 @@ public class MainGame extends State {
                 this.countryName_1.setFont(new Font("Consolas", Font.PLAIN, 25));
                 this.countryName_2.setFont(new Font("Consolas", Font.BOLD, 25));
             }
+            // TODO this.scienceNameLabel.setText(currentPlayer.get);
+            // TODO this.scienceProgressLabel.setText(currentPlayer.getStockValue().getScience()+" / "+ScienceConfig.SCIENCE_COST.get());
             this.repaint();
         }
 
@@ -664,8 +667,8 @@ public class MainGame extends State {
             this.countryName_1 = new JLabel(countries.get(0).getCountryName().toString());
             this.countryName_2 = new JLabel(countries.get(1).getCountryName().toString());
 
-            this.countryName_1.setBounds(1500, 0, 200, 25);
-            this.countryName_2.setBounds(1500, 25, 200, 25);
+            this.countryName_1.setBounds(1600, 0, 100, 25);
+            this.countryName_2.setBounds(1600, 25, 100, 25);
 
             this.countryName_1.setFont(new Font("Consolas", Font.PLAIN, 25));
             this.countryName_2.setFont(new Font("Consolas", Font.PLAIN, 25));
@@ -673,10 +676,19 @@ public class MainGame extends State {
             this.countryName_1.setOpaque(true);
             this.countryName_2.setOpaque(true);
 
-            this.countryName_1.setBackground(CountryConfig.COLOR_OF_COUNTRY.
-                    get(countries.get(0).getCountryName().toString()));
-            this.countryName_2.setBackground(CountryConfig.COLOR_OF_COUNTRY.
-                    get(countries.get(1).getCountryName().toString()));
+            this.countryName_1.setForeground(CountryConfig.COLOR_OF_COUNTRY.
+                    get(countries.get(0).getCountryName()));
+            this.countryName_2.setForeground(CountryConfig.COLOR_OF_COUNTRY.
+                    get(countries.get(1).getCountryName()));
+
+            this.scienceNameLabel = new JLabel();
+            this.scienceProgressLabel = new JLabel();
+
+            this.scienceNameLabel.setBounds(250, 0, 200, 30);
+            this.scienceProgressLabel.setBounds(250, 30, 200, 20);
+
+            this.scienceNameLabel.setFont(new Font("Consolas", Font.PLAIN, 28));
+            this.scienceProgressLabel.setFont(new Font("Consolas", Font.PLAIN, 22));
 
             this.add(sciencePointSymbolLabel);
             this.add(moneySymbolLabel);
@@ -686,6 +698,8 @@ public class MainGame extends State {
             this.add(roundInfo);
             this.add(countryName_1);
             this.add(countryName_2);
+            this.add(scienceNameLabel);
+            this.add(scienceProgressLabel);
         }
 
         private void initIcons() {
