@@ -11,6 +11,8 @@ import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Vector;
 import javax.swing.Timer;
 import java.util.Random;
@@ -133,7 +135,19 @@ public class MainGame extends State {
     }
 
     private void initGiants() {
-        // TODO
+        Vector<GiantName> giants = new Vector<>(Arrays.asList(GiantName.values()));
+        scientists = new Vector<>();
+        economists = new Vector<>();
+        engineers = new Vector<>();
+        for (GiantName name : giants) {
+            if (GiantConfig.GIANT_NAME_TO_TYPE.get(name) == GiantType.SCIENTIST) {
+                scientists.add(name);
+            } else if (GiantConfig.GIANT_NAME_TO_TYPE.get(name) == GiantType.ECONOMIST) {
+                economists.add(name);
+            } else {
+                engineers.add(name);
+            }
+        }
     }
 
     private void initCountries(CountryName[] countrys) {
@@ -454,6 +468,8 @@ public class MainGame extends State {
         if (fought.isDied()) {
             units.remove((Unit) fought);
         }
+        attacker.setAttackedThisTurn(true);
+        this.unselectUnit();
     }
 
     private void fight(Fightable fighter, City city) {
@@ -469,6 +485,8 @@ public class MainGame extends State {
         if (city.isDied()) {
             this.currentPlayer.occupyCity(city);
         }
+        attacker.setAttackedThisTurn(true);
+        this.unselectUnit();
     }
 
     private void showGiant() {
@@ -480,6 +498,7 @@ public class MainGame extends State {
     }
 
     private void getAllowedBuildings() {
+        availableBuildings.removeAllItems();
         Vector<BuildingType> allowedBuilding = selectedCity.getAllowedBuildings();
         availableBuildings.addItem(BuildingType.NONE);
         for (BuildingType type : allowedBuilding) {
@@ -489,6 +508,7 @@ public class MainGame extends State {
     }
 
     private void getAllowedUnits() {
+        availableUnits.removeAllItems();
         Vector<UnitSubType> allowedUnits = selectedCity.getAllowedUnits();
         availableUnits.addItem(UnitSubType.NONE);
         for (UnitSubType type : allowedUnits) {
@@ -562,6 +582,7 @@ public class MainGame extends State {
             this.currentPlayer.addNewUnit(selectedUnit);
         }
         this.selectUnit(selectedUnit);
+        this.synchronizeCitiesAndUnits();
         this.mapArea.mapPanel.updateMap();
     }
 
@@ -667,37 +688,42 @@ public class MainGame extends State {
                 this.countryName_1.setFont(new Font("Consolas", Font.PLAIN, 25));
                 this.countryName_2.setFont(new Font("Consolas", Font.BOLD, 25));
             }
-            if (currentPlayer.getCities().size() > 0) {
-                this.scienceNameLabel.setText(currentPlayer.getCurrentScience().toString());
-                this.scienceProgressLabel.setText(currentPlayer.getStockValue().getScience()
-                        + " / " + ScienceConfig.SCIENCE_COST.get(currentPlayer.getCurrentScience()));
-            } else {
-                this.scienceNameLabel.setText("");
-                this.scienceProgressLabel.setText("");
-            }
+            this.scienceNameLabel.setText(currentPlayer.getCurrentScience().toString());
+            this.scienceProgressLabel.setText(currentPlayer.getStockValue().getScience()
+                    + " / " + ScienceConfig.SCIENCE_COST.get(currentPlayer.getCurrentScience()));
+
             if (scientists.size() > 0) {
                 GiantName scientist = scientists.get(0);
                 this.scientistNameLabel.setText(scientist.toString());
-                // TODO value
+                int total = GiantConfig.GIANT_TYPE_COST
+                        .get(GiantType.SCIENTIST).getScientistValue();
+                int cur = currentPlayer.getStockValue().getScientistValue();
+                this.scientistProgressLabel.setText(cur + " / " + total);
             } else {
                 this.scientistNameLabel.setText("Nobody");
-
+                this.scientistProgressLabel.setText("0 / 0");
             }
             if (economists.size() > 0) {
                 GiantName economist = economists.get(0);
                 this.economistNameLabel.setText(economist.toString());
-                // TODO value
+                int total = GiantConfig.GIANT_TYPE_COST
+                        .get(GiantType.ECONOMIST).getTraderValue();
+                int cur = currentPlayer.getStockValue().getTraderValue();
+                this.economistProgressLabel.setText(cur + " / " + total);
             } else {
                 this.economistNameLabel.setText("Nobody");
-
+                this.economistProgressLabel.setText("0 / 0");
             }
             if (engineers.size() > 0) {
                 GiantName engineer = engineers.get(0);
                 this.engineerNameLabel.setText(engineer.toString());
-                // TODO value
+                int total = GiantConfig.GIANT_TYPE_COST
+                        .get(GiantType.ENGINEER).getEngineerValue();
+                int cur = currentPlayer.getStockValue().getEngineerValue();
+                this.engineerProgressLabel.setText(cur + " / " + total);
             } else {
                 this.engineerNameLabel.setText("Nobody");
-
+                this.engineerProgressLabel.setText("0 / 0");
             }
 
             this.repaint();
@@ -749,13 +775,13 @@ public class MainGame extends State {
             this.scienceNameLabel = new JLabel();
             this.scienceProgressLabel = new JLabel();
 
-            this.scienceNameLabel.setBounds(250, 0, 200, 30);
-            this.scienceProgressLabel.setBounds(250, 30, 200, 20);
+            this.scienceNameLabel.setBounds(320, 0, 200, 30);
+            this.scienceProgressLabel.setBounds(320, 30, 200, 20);
 
             this.scienceNameLabel.setFont(new Font("Consolas", Font.PLAIN, 28));
             this.scienceProgressLabel.setFont(new Font("Consolas", Font.PLAIN, 22));
 
-            this.scientistLabel = new JLabel(scienceIcon);
+            this.scientistLabel = new JLabel(scientistIcon);
             this.economistLabel = new JLabel(economistIcon);
             this.engineerLabel = new JLabel(engineerIcon);
 
@@ -767,17 +793,17 @@ public class MainGame extends State {
             this.economistProgressLabel = new JLabel();
             this.engineerProgressLabel = new JLabel();
 
-            this.scientistLabel.setBounds(500, 0, 50, 50);
-            this.economistLabel.setBounds(780, 0, 50, 50);
-            this.engineerLabel.setBounds(1060, 0, 50, 50);
+            this.scientistLabel.setBounds(570, 0, 50, 50);
+            this.economistLabel.setBounds(850, 0, 50, 50);
+            this.engineerLabel.setBounds(1130, 0, 50, 50);
 
-            this.scientistNameLabel.setBounds(560, 0, 200, 30);
-            this.economistNameLabel.setBounds(840, 0, 200, 30);
-            this.engineerNameLabel.setBounds(1120, 0, 200, 30);
+            this.scientistNameLabel.setBounds(630, 0, 200, 30);
+            this.economistNameLabel.setBounds(910, 0, 200, 30);
+            this.engineerNameLabel.setBounds(1190, 0, 200, 30);
 
-            this.scientistProgressLabel.setBounds(560, 30, 200, 20);
-            this.economistProgressLabel.setBounds(840, 30, 200, 20);
-            this.engineerProgressLabel.setBounds(1120, 30, 200, 20);
+            this.scientistProgressLabel.setBounds(630, 30, 200, 20);
+            this.economistProgressLabel.setBounds(910, 30, 200, 20);
+            this.engineerProgressLabel.setBounds(1190, 30, 200, 20);
 
             this.add(sciencePointSymbolLabel);
             this.add(moneySymbolLabel);
@@ -997,11 +1023,6 @@ public class MainGame extends State {
             this.producingLabel.setBounds(450, 20, 50, 50);
             this.producingItemLabel.setBounds(510, 20, 200, 30);
             this.progressLabel.setBounds(510, 50, 200, 20);
-
-            this.progressLabel.setOpaque(true);
-            this.producingItemLabel.setOpaque(true);
-            this.progressLabel.setBackground(Color.RED);
-            this.producingItemLabel.setBackground(Color.BLUE);
 
             this.unitTypeInfo.setFont(new Font("Consolas", Font.BOLD, 20));
             this.attackInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
