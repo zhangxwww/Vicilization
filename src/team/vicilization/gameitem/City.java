@@ -6,7 +6,6 @@ import team.vicilization.gamemap.LandSquare;
 import team.vicilization.util.Position;
 import team.vicilization.util.Property;
 
-import javax.swing.*;
 import java.util.Vector;
 
 public class City implements Fightable{
@@ -32,7 +31,6 @@ public class City implements Fightable{
     private int recovery;
     private Vector<BuildingType> allowedBuildings;
     private Vector<UnitSubType> allowedUnits;
-
 
     public boolean isProducing;
 
@@ -89,7 +87,7 @@ public class City implements Fightable{
         tempAllowedUnits.add(UnitSubType.CONSTRUCTOR);
         tempAllowedUnits.add(UnitSubType.KNIGHT);
         tempAllowedUnits.add(UnitSubType.FOOTMAN);
-        tempAllowedUnits.add(UnitSubType.SCOUT);
+        tempAllowedUnits.add(UnitSubType.ASSASSIN);
         tempAllowedUnits.add(UnitSubType.EXPLORER);
         tempAllowedUnits.add(UnitSubType.SPEARMAN);
         tempAllowedUnits.add(UnitSubType.SWORDSMAN);
@@ -132,6 +130,7 @@ public class City implements Fightable{
         }
         this.flowValue.addProperty(buildingFlowValue);
     }
+
     private void updateStock() {
         calculateFlowValue();
         stockValue.addProperty(flowValue);
@@ -162,10 +161,11 @@ public class City implements Fightable{
         //处理科技和各种点数
 
     }
+
     private void recover() {
         int initHealth = 100;
-        if (cityHealth < initHealth - recovery) {
-            cityHealth += recovery;
+        if (cityHealth < initHealth - this.getRecovery()) {
+            cityHealth += this.getRecovery();
         } else {
             cityHealth = initHealth;
         }
@@ -178,6 +178,7 @@ public class City implements Fightable{
         //重置移动力
 
     }
+
     public UnitSubType cityStartTurn(){
         finishProduceBuilding();
         return finishProduceUnit();
@@ -189,11 +190,13 @@ public class City implements Fightable{
         this.producingUnit=type;
         this.setIsProducing(true);
     }
+
     public void produce(BuildingType type){
         this.producingItem=new BuildingInfo(type);
         this.setIsProducing(true);
         this.producingBuilding=type;
     }
+
     private void finishProduceBuilding(){
         if(producingBuilding!=BuildingType.NONE) {
             if (stockValue.getProductivity() >= producingItem.getProductivityCost()) {
@@ -206,6 +209,7 @@ public class City implements Fightable{
             }
         }
     }
+
     private UnitSubType finishProduceUnit(){
         if (producingUnit!=UnitSubType.NONE) {
             if (stockValue.getProductivity() >= producingItem.getProductivityCost()) {
@@ -227,21 +231,10 @@ public class City implements Fightable{
         return UnitSubType.NONE;
     }
 
-    //public void produce(Producable production) {
-
-    //}
-
-    public void addNewUnit(Unit unit) {
-
-    }
-
-    public void addNewBuilding(BuildingType buildingType) {
-
-    }
-
     public boolean belongsTo(Country country) {
         return this.country == country;
     }
+
     public boolean hasLandSquare(LandSquare landSquare) {
         return this.territory.contains(landSquare);
     }
@@ -250,11 +243,13 @@ public class City implements Fightable{
 
     @Override
     public int getAttack() {
+        this.cityAttack=5*this.getPopulation();
         return cityAttack;
     }
 
     @Override
     public int getDefence() {
+        this.cityDefence=5*this.getPopulation();
         return cityDefence;
     }
 
@@ -365,5 +360,10 @@ public class City implements Fightable{
     }
     public void setPopulation(int population) {
         this.population = population;
+    }
+
+    public int getRecovery() {
+        this.recovery=10+2*this.getPopulation();
+        return recovery;
     }
 }

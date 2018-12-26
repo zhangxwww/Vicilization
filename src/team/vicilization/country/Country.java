@@ -103,9 +103,9 @@ public class Country {
                                     this.nearestAvailable(city.getLocation(), map, enemyCountry),
                                     this));
                     break;
-                case SCOUT:
+                case ASSASSIN:
                     this.addNewUnit(
-                            new Scout(
+                            new Assassin(
                                     this.nearestAvailable(city.getLocation(), map, enemyCountry),
                                     this));
                     break;
@@ -278,7 +278,7 @@ public class Country {
     }
 
     public boolean judgeScienceVictory() {
-        return this.learntScience.contains(ScienceName.AEROSPACE);
+        return this.learntScience.contains(ScienceName.BUDDHISM);
     }
 
     public boolean hasCity(City city) {

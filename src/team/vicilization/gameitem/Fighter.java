@@ -8,6 +8,7 @@ import team.vicilization.util.Position;
 import java.util.Vector;
 
 public abstract class Fighter extends Unit implements Fightable, Updateable {
+
     private boolean canUpdate;
 
     public boolean calculateCanUpdate(Country country) {
