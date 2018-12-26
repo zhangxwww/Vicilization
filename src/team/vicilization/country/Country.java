@@ -42,7 +42,7 @@ public class Country {
 
         this.countryResource = new HashMap<String, Integer>() {
         };
-        this.currentScience = null;
+        this.currentScience = ScienceName.ARITHMETIC;
         this.flowValue = new Property();
         this.stockValue = new Property();
 
@@ -114,7 +114,7 @@ public class Country {
         // TODO 这里要执行计算存量流量、推进项目、城市恢复等一系列会在每一回合开始执行的任务
     }
 
-    public void undateFlow(){
+    public void undateFlow() {
         this.calculateFlowValue();
     }
 
@@ -240,22 +240,23 @@ public class Country {
         city.getStockValue().addProperty(GameMapConfig.LANDFORM_HARVEST.get(landformType));
     }
 
-    public void selectScience(ScienceName scienceName) {
-        this.currentScience = scienceName;
-    }
+    /*
+        public void selectScience(ScienceName scienceName) {
+            this.currentScience = scienceName;
+        }
+    */
 
     private void finishScience() {
         if ((this.currentScience != null)
                 && (this.stockValue.getScience() >= ScienceConfig.SCIENCE_COST.get(this.currentScience))) {
             this.stockValue.setScience(this.stockValue.getScience() - ScienceConfig.SCIENCE_COST.get(this.currentScience));
             this.learntScience.add(this.currentScience);
-            this.currentScience = null;
+            this.currentScience = ScienceConfig.NEXT_SCIENCE.get(this.currentScience);
         }
     }
 
+    public void recruitGiant(GiantName giantName) {
 
-    public void recruitGiant(Giant giant) {
-        // TODO giantname??
     }
 
     public boolean judgeScienceVictory() {

@@ -20,14 +20,21 @@ public class GiantConfig {
         }
     };
 
-    public static final HashMap<GiantType, Property> GIANT_TYPE_BONUS = new HashMap<GiantType, Property>(){
+    public static final HashMap<GiantType, Property> GIANT_TYPE_BONUS = new HashMap<GiantType, Property>() {
         {
-            put(GiantType.ECONOMIST, new Property(0,100,0,0,0,0,0));
-            put(GiantType.SCIENTIST, new Property(0,0,0,100,0,0,0));
-            put(GiantType.ENGINEER, new Property(100,0,0,0,0,0,0));
+            put(GiantType.ECONOMIST, new Property(0, 100, 0, 0, 0, 0, 0));
+            put(GiantType.SCIENTIST, new Property(0, 0, 0, 100, 0, 0, 0));
+            put(GiantType.ENGINEER, new Property(100, 0, 0, 0, 0, 0, 0));
         }
     };
 
+    public static final HashMap<GiantType, Property> GIANT_TYPE_COST = new HashMap<GiantType, Property>() {
+        {
+            put(GiantType.ECONOMIST, new Property(0, 0, 0, 0, 0, 50, 0));
+            put(GiantType.SCIENTIST, new Property(0, 0, 0, 0, 50, 0, 0));
+            put(GiantType.ENGINEER, new Property(0, 0, 0, 0, 0, 0, 50));
+        }
+    };
 
     private GiantConfig() {
     }
