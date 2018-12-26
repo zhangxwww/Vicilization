@@ -6,7 +6,79 @@ import team.vicilization.mechanics.ScienceName;
 import java.util.HashMap;
 
 public class GameItemConfig {
-    public static final HashMap<BuildingType,Building> BUILDING_TYPE_TO_BUILDING = null;
+    public static final HashMap<BuildingType,Integer> BUILDING_PRODUCTIVITY_COST= new HashMap<BuildingType,Integer>(){
+        {
+            put(BuildingType.ACADEMY,6);
+            put(BuildingType.COMMERCIAL_CERTER,6);
+            put(BuildingType.INDUSTRIAL_PARK,6);
+        }
+    };
+    public static final HashMap<BuildingType,Integer> BUILDING_MONEY_COST= new HashMap<BuildingType,Integer>(){
+        {
+            put(BuildingType.ACADEMY,180);
+            put(BuildingType.COMMERCIAL_CERTER,180);
+            put(BuildingType.INDUSTRIAL_PARK,180);
+        }
+    };
+    public static final HashMap<BuildingType,ScienceName> BUILDING_REQUIRED_SCIENCE= new HashMap<BuildingType, ScienceName>(){
+        {
+            put(BuildingType.ACADEMY,ScienceName.MATH);
+            put(BuildingType.COMMERCIAL_CERTER,ScienceName.MATH);
+            put(BuildingType.INDUSTRIAL_PARK,ScienceName.MATH);
+        }
+    };
+    public static final HashMap<BuildingType,Integer> BUILDING_FLOW_PRODUCTIVITY=new HashMap<BuildingType,Integer>(){
+        {
+            put(BuildingType.ACADEMY,0);
+            put(BuildingType.COMMERCIAL_CERTER,0);
+            put(BuildingType.INDUSTRIAL_PARK,2);
+        }
+    };
+    public static final HashMap<BuildingType,Integer> BUILDING_FLOW_MONEY=new HashMap<BuildingType,Integer>(){
+        {
+            put(BuildingType.ACADEMY,0);
+            put(BuildingType.COMMERCIAL_CERTER,10);
+            put(BuildingType.INDUSTRIAL_PARK,0);
+        }
+    };
+    public static final HashMap<BuildingType,Integer> BUILDING_FLOW_FOOD=new HashMap<BuildingType,Integer>(){
+        {
+            put(BuildingType.ACADEMY,0);
+            put(BuildingType.COMMERCIAL_CERTER,0);
+            put(BuildingType.INDUSTRIAL_PARK,0);
+        }
+    };
+    public static final HashMap<BuildingType,Integer> BUILDING_FLOW_SCIENCE=new HashMap<BuildingType,Integer>(){
+        {
+            put(BuildingType.ACADEMY,2);
+            put(BuildingType.COMMERCIAL_CERTER,0);
+            put(BuildingType.INDUSTRIAL_PARK,0);
+        }
+    };
+    public static final HashMap<BuildingType,Integer> BUILDING_FLOW_SCIENTIST_VALUE=new HashMap<BuildingType,Integer>(){
+        {
+            put(BuildingType.ACADEMY,1);
+            put(BuildingType.COMMERCIAL_CERTER,0);
+            put(BuildingType.INDUSTRIAL_PARK,0);
+        }
+    };
+    public static final HashMap<BuildingType,Integer> BUILDING_FLOW_TRADER_VALUE=new HashMap<BuildingType,Integer>(){
+        {
+            put(BuildingType.ACADEMY,0);
+            put(BuildingType.COMMERCIAL_CERTER,1);
+            put(BuildingType.INDUSTRIAL_PARK,0);
+        }
+    };
+    public static final HashMap<BuildingType,Integer> BUILDING_FLOW_ENGINEER_VALUE=new HashMap<BuildingType,Integer>(){
+        {
+            put(BuildingType.ACADEMY,0);
+            put(BuildingType.COMMERCIAL_CERTER,0);
+            put(BuildingType.INDUSTRIAL_PARK,1);
+        }
+    };
+
+
+
     public static final HashMap<UnitSubType, Integer> UNIT_HEALTH = new HashMap<UnitSubType, Integer>(){
         {
             put(UnitSubType.KNIGHT, 100);
@@ -40,7 +112,7 @@ public class GameItemConfig {
     public static final HashMap<UnitSubType, Integer> UNIT_MOBILITY = new HashMap<UnitSubType, Integer>(){
         {
             put(UnitSubType.KNIGHT, 5);
-            put(UnitSubType.EXPLORER, 3);
+            put(UnitSubType.EXPLORER, 10);
             put(UnitSubType.ARCHER, 4);
             put(UnitSubType.CONSTRUCTOR, 3);
             put(UnitSubType.FOOTMAN, 4);

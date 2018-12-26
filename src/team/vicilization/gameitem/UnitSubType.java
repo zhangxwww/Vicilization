@@ -2,6 +2,7 @@ package team.vicilization.gameitem;
 
 public enum UnitSubType {
 
+    NONE,
     EXPLORER,
     CONSTRUCTOR,
     SPEARMAN,
