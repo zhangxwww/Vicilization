@@ -22,9 +22,9 @@ public class GameItemConfig {
     };
     public static final HashMap<BuildingType,ScienceName> BUILDING_REQUIRED_SCIENCE= new HashMap<BuildingType, ScienceName>(){
         {
-            put(BuildingType.ACADEMY,null);
-            put(BuildingType.COMMERCIAL_CERTER,null);
-            put(BuildingType.INDUSTRIAL_PARK,null);
+            put(BuildingType.ACADEMY,ScienceName.GEOMETRY);
+            put(BuildingType.COMMERCIAL_CERTER,ScienceName.CALCULUS);
+            put(BuildingType.INDUSTRIAL_PARK,ScienceName.FUNCTIONAL_ANALYSIS);
         }
     };
     public static final HashMap<BuildingType,Integer> BUILDING_FLOW_PRODUCTIVITY=new HashMap<BuildingType,Integer>(){
@@ -77,8 +77,6 @@ public class GameItemConfig {
         }
     };
 
-
-
     public static final HashMap<UnitSubType, Integer> UNIT_HEALTH = new HashMap<UnitSubType, Integer>(){
         {
             put(UnitSubType.KNIGHT, 100);
@@ -88,6 +86,7 @@ public class GameItemConfig {
             put(UnitSubType.FOOTMAN, 100);
             put(UnitSubType.SPEARMAN, 100);
             put(UnitSubType.SWORDSMAN, 100);
+            put(UnitSubType.SCOUT, 100);
         }
     };
     public static final HashMap<UnitSubType, Integer> UNIT_ATTACK = new HashMap<UnitSubType, Integer>(){
@@ -99,6 +98,7 @@ public class GameItemConfig {
             put(UnitSubType.FOOTMAN, 3);
             put(UnitSubType.SPEARMAN, 5);
             put(UnitSubType.SWORDSMAN, 4);
+            put(UnitSubType.SCOUT, 2);
         }
     };
     public static final HashMap<UnitSubType, Integer> UNIT_DEFENCE = new HashMap<UnitSubType, Integer>(){
@@ -110,6 +110,7 @@ public class GameItemConfig {
             put(UnitSubType.FOOTMAN, 4);
             put(UnitSubType.SPEARMAN, 3);
             put(UnitSubType.SWORDSMAN, 5);
+            put(UnitSubType.SCOUT, 2);
         }
     };
     public static final HashMap<UnitSubType, Integer> UNIT_MOBILITY = new HashMap<UnitSubType, Integer>(){
@@ -121,6 +122,7 @@ public class GameItemConfig {
             put(UnitSubType.FOOTMAN, 4);
             put(UnitSubType.SPEARMAN, 3);
             put(UnitSubType.SWORDSMAN, 3);
+            put(UnitSubType.SCOUT, 6);
         }
     };
     public static final HashMap<UnitSubType, Integer> UNIT_PRODUCTIVITY_COST = new HashMap<UnitSubType, Integer>(){
@@ -132,6 +134,7 @@ public class GameItemConfig {
             put(UnitSubType.FOOTMAN, 3);
             put(UnitSubType.SPEARMAN, 2);
             put(UnitSubType.SWORDSMAN, 4);
+            put(UnitSubType.SCOUT, 2);
         }
     };
     public static final HashMap<UnitSubType, Integer> UNIT_MONEY_COST = new HashMap<UnitSubType, Integer>(){
@@ -143,17 +146,19 @@ public class GameItemConfig {
             put(UnitSubType.FOOTMAN, 100);
             put(UnitSubType.SPEARMAN, 70);
             put(UnitSubType.SWORDSMAN, 130);
+            put(UnitSubType.SCOUT, 100);
         }
     };
     public static final HashMap<UnitSubType, ScienceName> UNIT_REQUIRED_SCIENCE = new HashMap<UnitSubType, ScienceName>(){
         {
-            put(UnitSubType.KNIGHT, ScienceName.ARITHMETIC);
-            put(UnitSubType.EXPLORER, ScienceName.ARITHMETIC);
-            put(UnitSubType.ARCHER, ScienceName.ARITHMETIC);
-            put(UnitSubType.CONSTRUCTOR, ScienceName.ARITHMETIC);
-            put(UnitSubType.FOOTMAN, ScienceName.ARITHMETIC);
-            put(UnitSubType.SPEARMAN, ScienceName.ARITHMETIC);
-            put(UnitSubType.SWORDSMAN, ScienceName.ARITHMETIC);
+            put(UnitSubType.KNIGHT, ScienceName.CALCULUS);
+            put(UnitSubType.EXPLORER, null);
+            put(UnitSubType.ARCHER, ScienceName.GEOMETRY);
+            put(UnitSubType.CONSTRUCTOR, null);
+            put(UnitSubType.FOOTMAN, null);
+            put(UnitSubType.SPEARMAN, ScienceName.ALGEBRA);
+            put(UnitSubType.SWORDSMAN, ScienceName.COMPLEX_ANALYSIS);
+            put(UnitSubType.SCOUT, null);
         }
     };
     public static final HashMap<UnitSubType, ResourceType> UNIT_REQUIRED_RESOURCE = new HashMap<UnitSubType, ResourceType>(){
@@ -165,6 +170,13 @@ public class GameItemConfig {
             put(UnitSubType.FOOTMAN, ResourceType.NONE);
             put(UnitSubType.SPEARMAN, ResourceType.NONE);
             put(UnitSubType.SWORDSMAN, ResourceType.NONE);
+            put(UnitSubType.SCOUT, ResourceType.NONE);
+        }
+    };
+
+    public static final HashMap<UnitSubType,ScienceName> UPDATE_NEED_SCIENCE=new HashMap<UnitSubType, ScienceName>(){
+        {
+            put(UnitSubType.FOOTMAN,ScienceName.COMPLEX_ANALYSIS);
         }
     };
 

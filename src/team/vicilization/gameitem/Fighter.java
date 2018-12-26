@@ -7,12 +7,26 @@ import team.vicilization.util.Position;
 
 import java.util.Vector;
 
-public abstract class Fighter extends Unit implements Fightable {
+public abstract class Fighter extends Unit implements Fightable,Updateable {
+    private boolean canUpdate;
 
+    public boolean calculateCanUpdate(Country country){
+        if(!GameItemConfig.UPDATE_NEED_SCIENCE.containsKey(this.subType)){
+            this.canUpdate=false;
+        }else {
+            if (country.getLearntScience().contains(GameItemConfig.UPDATE_NEED_SCIENCE.get(this.subType))){
+                this.canUpdate=true;
+            }else {
+                this.canUpdate=false;
+            }
+        }
+        return canUpdate;
+    }
 
     public Fighter(Position position, Country country, UnitSubType unitSubType) {
         super(position, country, UnitType.FIGHTER, unitSubType);
         setType(UnitType.FIGHTER);
+        calculateCanUpdate(country);
     }
 
     //---------------------------Fightable
@@ -82,5 +96,14 @@ public abstract class Fighter extends Unit implements Fightable {
     @Override
     public void die() {
         this.country.deleteUnit(this);
+    }
+
+
+    public boolean getCanUpdate() {
+        return canUpdate;
+    }
+
+    public void setCanUpdate(boolean canUpdate) {
+        this.canUpdate = canUpdate;
     }
 }
