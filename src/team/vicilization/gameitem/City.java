@@ -57,43 +57,46 @@ public class City implements Fightable{
         this.cityHealth = 100;
         this.recovery = 10;
 
-        this.calculateAllowedBuildings(country);
-        this.calculateAllowedUnits(country);
+        this.allowedUnits = new Vector<>();
+        this.allowedBuildings = new Vector<>();
+        this.calculateAllowedBuildings();
+        this.calculateAllowedUnits();
 
         this.isProducing=false;
     }
 
     //-------------------------------------update Attributes
-    public void calculateAllowedBuildings(Country country){
+    public void calculateAllowedBuildings() {
+        this.allowedBuildings.clear();
         Vector<BuildingType> tempAllowedBuildings=new Vector<BuildingType>(3);
         tempAllowedBuildings.add(BuildingType.ACADEMY);
         tempAllowedBuildings.add(BuildingType.COMMERCIAL_CERTER);
         tempAllowedBuildings.add(BuildingType.INDUSTRIAL_PARK);
         for(BuildingType type:tempAllowedBuildings){
-            if (constructedBuildings.contains(type) || this.producingBuilding.equals(type)) {
-                tempAllowedBuildings.remove(type);
+            if (!constructedBuildings.contains(type) && !this.producingBuilding.equals(type)) {
+                this.allowedBuildings.add(type);
             }
-            if(!country.getLearntScience().contains(GameItemConfig.BUILDING_REQUIRED_SCIENCE.get(type))){
-                tempAllowedBuildings.remove(type);
+            if (country.getLearntScience().contains(GameItemConfig.BUILDING_REQUIRED_SCIENCE.get(type))) {
+                this.allowedBuildings.add(type);
             }
             //已建造
             //正在建造
         }
-        this.allowedBuildings=tempAllowedBuildings;
     }
-    public void calculateAllowedUnits(Country country){
+
+    public void calculateAllowedUnits() {
+        this.allowedUnits.clear();
         Vector<UnitSubType> tempAllowedUnits=new Vector<UnitSubType>(20);
         tempAllowedUnits.add(UnitSubType.ARCHER);
         tempAllowedUnits.add(UnitSubType.CONSTRUCTOR);
-        if (population==1){
-            tempAllowedUnits.remove(UnitSubType.EXPLORER);
+        if (population != 1) {
+            this.allowedUnits.add(UnitSubType.EXPLORER);
         }
         for (UnitSubType type:tempAllowedUnits){
-            if (!country.getLearntScience().contains(GameItemConfig.UNIT_REQUIRED_SCIENCE.get(type))){
-                tempAllowedUnits.remove(type);
+            if (country.getLearntScience().contains(GameItemConfig.UNIT_REQUIRED_SCIENCE.get(type))) {
+                this.allowedUnits.add(type);
             }
         }
-        this.allowedUnits = tempAllowedUnits;
     }
     private void calculateFlowValue() {
         this.flowValue = new Property();

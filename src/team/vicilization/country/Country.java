@@ -43,6 +43,8 @@ public class Country {
         this.occupiedTradeRoutes = 0;
         this.totalTradeRoutes = 0;
 
+        this.learntScience = new Vector<>();
+
         this.countryResource = new HashMap<String, Integer>() {
         };
         this.currentScience = null;
