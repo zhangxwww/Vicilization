@@ -301,23 +301,43 @@ public class MainGame extends State {
         this.lowerInfoArea.showUnitInfo(unit);
         if (!selectedUnit.isMovedThisTurn()) { // 没有移动，显示移动按钮
             this.panel.add(unitMoveButton);
+        } else {
+            try {
+                this.panel.remove(unitMoveButton);
+            } catch (Exception e) {
+            }
         }
         if (!selectedUnit.isAttackedThisTurn()
                 && selectedUnit.getType() == UnitType.FIGHTER) {
             Vector<LandSquare> attackSquares = calculateAttackSquares();
             if (attackSquares.size() > 0) {
                 this.panel.add(unitFightButton);
+            } else {
+                try {
+                    this.panel.remove(unitFightButton);
+                } catch (Exception e) {
+                }
             }
         }
         if (selectedUnit.getType() == UnitType.FIGHTER
                 && ((Fighter) selectedUnit).isUpgradable()) {
             this.panel.add(unitUpgradeButton);
+        } else {
+            try {
+                this.panel.remove(unitUpgradeButton);
+            } catch (Exception e) {
+            }
         }
         if (selectedUnit.getSubType() == UnitSubType.EXPLORER) {
             LandSquare landSquare = this.mapArea.at(selectedUnit.getPosition());
             if (!currentPlayer.hasLandSquare(landSquare)
                     && !enermy.hasLandSquare(landSquare)) {
                 this.panel.add(explorerBuildCityButton);
+            } else {
+                try {
+                    this.panel.remove(explorerBuildCityButton);
+                } catch (Exception e) {
+                }
             }
         }
         if (selectedUnit.getSubType() == UnitSubType.CONSTRUCTOR) {
@@ -327,6 +347,11 @@ public class MainGame extends State {
                     || landformType == LandformType.RAINFOREST
                     || landformType == LandformType.MARSH) {
                 this.panel.add(constructorHarvestButton);
+            } else {
+                try {
+                    this.panel.remove(constructorHarvestButton);
+                } catch (Exception e) {
+                }
             }
         }
         this.panel.repaint();
@@ -425,10 +450,6 @@ public class MainGame extends State {
         this.clearAllowedUnits();
     }
 
-    private void showScienceTree() {
-        // TODO
-    }
-
     private void harvest() {
         Constructor constructor = (Constructor) this.selectedUnit;
         constructor.reduceTimes();
@@ -487,10 +508,6 @@ public class MainGame extends State {
         }
         attacker.setAttackedThisTurn(true);
         this.unselectUnit();
-    }
-
-    private void showGiant() {
-        // TODO
     }
 
     private void recruitGiant(GiantName giant) {
@@ -567,7 +584,7 @@ public class MainGame extends State {
                 attackSquares.add(this.mapArea.at(city.getLocation()));
             }
         }
-        return squares;
+        return attackSquares;
     }
 
     private void unitUpgrade() {
@@ -735,7 +752,7 @@ public class MainGame extends State {
             this.roundInfo = new JLabel();
 
             this.sciencePointInfo.setBounds(60, 0, 80, 50);
-            this.moneyInfo.setBounds(210, 0, 80, 50);
+            this.moneyInfo.setBounds(210, 0, 140, 50);
             this.roundInfo.setBounds(1840, 0, 40, 25);
 
             this.sciencePointInfo.setFont(new Font("Consolas", Font.PLAIN, 22));
@@ -775,8 +792,8 @@ public class MainGame extends State {
             this.scienceNameLabel = new JLabel();
             this.scienceProgressLabel = new JLabel();
 
-            this.scienceNameLabel.setBounds(320, 0, 200, 30);
-            this.scienceProgressLabel.setBounds(320, 30, 200, 20);
+            this.scienceNameLabel.setBounds(400, 0, 200, 30);
+            this.scienceProgressLabel.setBounds(400, 30, 200, 20);
 
             this.scienceNameLabel.setFont(new Font("Consolas", Font.PLAIN, 28));
             this.scienceProgressLabel.setFont(new Font("Consolas", Font.PLAIN, 22));
@@ -793,17 +810,25 @@ public class MainGame extends State {
             this.economistProgressLabel = new JLabel();
             this.engineerProgressLabel = new JLabel();
 
-            this.scientistLabel.setBounds(570, 0, 50, 50);
-            this.economistLabel.setBounds(850, 0, 50, 50);
-            this.engineerLabel.setBounds(1130, 0, 50, 50);
+            this.scientistLabel.setBounds(650, 0, 50, 50);
+            this.economistLabel.setBounds(930, 0, 50, 50);
+            this.engineerLabel.setBounds(1210, 0, 50, 50);
 
-            this.scientistNameLabel.setBounds(630, 0, 200, 30);
-            this.economistNameLabel.setBounds(910, 0, 200, 30);
-            this.engineerNameLabel.setBounds(1190, 0, 200, 30);
+            this.scientistNameLabel.setBounds(710, 0, 210, 30);
+            this.economistNameLabel.setBounds(990, 0, 210, 30);
+            this.engineerNameLabel.setBounds(1270, 0, 210, 30);
 
-            this.scientistProgressLabel.setBounds(630, 30, 200, 20);
-            this.economistProgressLabel.setBounds(910, 30, 200, 20);
-            this.engineerProgressLabel.setBounds(1190, 30, 200, 20);
+            this.scientistNameLabel.setFont(new Font("Consolas", Font.PLAIN, 20));
+            this.economistNameLabel.setFont(new Font("Consolas", Font.PLAIN, 20));
+            this.engineerNameLabel.setFont(new Font("Consolas", Font.PLAIN, 20));
+
+            this.scientistProgressLabel.setBounds(710, 30, 200, 20);
+            this.economistProgressLabel.setBounds(990, 30, 200, 20);
+            this.engineerProgressLabel.setBounds(1270, 30, 200, 20);
+
+            this.scientistProgressLabel.setFont(new Font("Consolas", Font.PLAIN, 18));
+            this.economistProgressLabel.setFont(new Font("Consolas", Font.PLAIN, 18));
+            this.engineerProgressLabel.setFont(new Font("Consolas", Font.PLAIN, 18));
 
             this.add(sciencePointSymbolLabel);
             this.add(moneySymbolLabel);
@@ -1454,6 +1479,7 @@ public class MainGame extends State {
                                 if (u.getCountry() == currentPlayer) {
                                     found = true;
                                     unselectCity();
+                                    unselectUnit();
                                     selectUnit(u);
                                     break;
                                 }
@@ -1464,6 +1490,7 @@ public class MainGame extends State {
                                 if (c.getCountry() == currentPlayer) {
                                     found = true;
                                     unselectUnit();
+                                    unselectCity();
                                     selectCity(c);
                                     break;
                                 }
