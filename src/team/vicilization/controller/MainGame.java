@@ -94,6 +94,12 @@ public class MainGame extends State {
             this.upperInfoArea.update();
             this.transView();
         }
+        this.mapArea.mapPanel.updateMap();
+        if (currentPlayer.getCities().size() > 0) {
+            selectCity(currentPlayer.getCities().get(0));
+        } else if (currentPlayer.getUnits().size() > 0) {
+            selectUnit(currentPlayer.getUnits().get(0));
+        }
     }
 
     private void initIcons() {
@@ -131,6 +137,7 @@ public class MainGame extends State {
         }
         this.currentPlayer = this.countries.elementAt(0);
         this.enermy = this.countries.elementAt(1);
+        this.selectUnit(currentPlayer.getUnits().get(0));
     }
 
     private void initUnitsForOneCountry(Country country, int order) {
@@ -167,6 +174,9 @@ public class MainGame extends State {
         availableBuildings.setBounds(1440, 1000, 200, 40);
         availableUnits.setBounds(1220, 1000, 200, 40);
 
+        availableBuildings.setFont(new Font("Consolas", Font.PLAIN, 20));
+        availableUnits.setFont(new Font("Consolas", Font.PLAIN, 20));
+
         availableBuildings.addItemListener(listener);
         availableUnits.addItemListener(listener);
     }
@@ -177,27 +187,39 @@ public class MainGame extends State {
         nextRoundButton = new JButton(nextRoundButtonIcon);
         nextRoundButton.setBounds(1800, 940, 100, 100);
         nextRoundButton.addActionListener(listener);
+        nextRoundButton.setBorderPainted(false);
+        nextRoundButton.setContentAreaFilled(false);
         this.panel.add(nextRoundButton);
 
         unitUpgradeButton = new JButton(upgradeButtonIcon);
         unitUpgradeButton.setBounds(1220, 950, 36, 36);
         unitUpgradeButton.addActionListener(listener);
+        unitUpgradeButton.setBorderPainted(false);
+        unitUpgradeButton.setContentAreaFilled(false);
 
         unitMoveButton = new JButton(moveButtonIcon);
         unitMoveButton.setBounds(1260, 950, 36, 36);
         unitMoveButton.addActionListener(listener);
+        unitMoveButton.setBorderPainted(false);
+        unitMoveButton.setContentAreaFilled(false);
 
         unitFightButton = new JButton(attackButtonIcon);
         unitFightButton.setBounds(1300, 950, 36, 36);
         unitFightButton.addActionListener(listener);
+        unitFightButton.setBorderPainted(false);
+        unitFightButton.setContentAreaFilled(false);
 
         explorerBuildCityButton = new JButton(buildCityButtonIcon);
         explorerBuildCityButton.setBounds(1340, 950, 36, 36);
         explorerBuildCityButton.addActionListener(listener);
+        explorerBuildCityButton.setBorderPainted(false);
+        explorerBuildCityButton.setContentAreaFilled(false);
 
         constructorHarvestButton = new JButton(harvestButtonIcon);
         constructorHarvestButton.setBounds(1380, 950, 36, 36);
         constructorHarvestButton.addActionListener(listener);
+        constructorHarvestButton.setBorderPainted(false);
+        constructorHarvestButton.setContentAreaFilled(false);
     }
 
     private void initUpperInfoArea() {
@@ -265,6 +287,7 @@ public class MainGame extends State {
             }
         }
         if (selectedUnit.getSubType() == UnitSubType.EXPLORER) {
+            // TODO check the landsquare
             this.panel.add(explorerBuildCityButton);
         }
         if (selectedUnit.getSubType() == UnitSubType.CONSTRUCTOR) {
@@ -580,6 +603,9 @@ public class MainGame extends State {
         private ImageIcon scienceIcon;
         private ImageIcon moneyIcon;
 
+        private JLabel scienceNameLabel;
+        private JLabel scienceProgressLabel;
+
         public UpperInfoArea() {
             // TODO science info
             super();
@@ -630,10 +656,10 @@ public class MainGame extends State {
 
             this.sciencePointSymbolLabel.setBounds(0, 0, 50, 50);
             this.moneySymbolLabel.setBounds(150, 0, 50, 50);
-            this.roundSymbolLabel.setBounds(1780, 0, 60, 25);
+            this.roundSymbolLabel.setBounds(1760, 0, 80, 25);
 
-            this.roundSymbolLabel.setFont(new Font("Consolas", Font.BOLD, 12));
-            this.roundInfo.setFont(new Font("Consolas", Font.BOLD, 12));
+            this.roundSymbolLabel.setFont(new Font("Consolas", Font.BOLD, 20));
+            this.roundInfo.setFont(new Font("Consolas", Font.BOLD, 20));
 
             this.countryName_1 = new JLabel(countries.get(0).getCountryName().toString());
             this.countryName_2 = new JLabel(countries.get(1).getCountryName().toString());
@@ -712,7 +738,7 @@ public class MainGame extends State {
 
         public LowerInfoArea() {
             super();
-            this.setBounds(20, 940, 710, 100);
+            this.setBounds(470, 940, 710, 100);
             this.setLayout(null);
             this.initIcons();
             this.initLabels();
