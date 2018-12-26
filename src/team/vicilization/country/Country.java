@@ -42,7 +42,7 @@ public class Country {
 
         this.countryResource = new HashMap<String, Integer>() {
         };
-        this.currentScience = null;
+        this.currentScience = ScienceName.ARITHMETIC;
         this.flowValue = new Property();
         this.stockValue = new Property();
 
@@ -114,8 +114,17 @@ public class Country {
         // TODO 这里要执行计算存量流量、推进项目、城市恢复等一系列会在每一回合开始执行的任务
     }
 
-    public void undateFlow(){
+    public void undateFlow() {
         this.calculateFlowValue();
+    }
+
+    public boolean hasLandSquare(LandSquare landSquare) {
+        for (City city : cities) {
+            if (city.hasLandSquare(landSquare)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Position nearestAvailable(Position root, GameMap map, Country enemyCountry) {
@@ -127,7 +136,6 @@ public class Country {
                 }
             }
         }
-
         for (Unit unit : this.units) {
             availablePosition.remove(map.getSquare(unit.getPosition()));
         }
@@ -140,12 +148,11 @@ public class Country {
         for (City city : enemyCountry.cities) {
             availablePosition.remove(map.getSquare(city.getLocation()));
         }
-
         Position position = availablePosition.get(0).getPosition();
         int distance = 2500;
         int temp;
         for (LandSquare square : availablePosition) {
-            if ((temp = Position.distanceSquare(position, square.getPosition())) < distance) {
+            if ((temp = Position.distanceSquare(root, square.getPosition())) < distance) {
                 distance = temp;
                 position = square.getPosition();
             }
@@ -167,7 +174,7 @@ public class Country {
     private void calculateFlowValue() {
         this.flowValue = new Property();
         for (City city : cities) {
-            // TODO city renew flow
+            city.updateFlowValue();
             this.flowValue.addProperty(city.getFlowValue());
         }
     }
@@ -200,6 +207,7 @@ public class Country {
         City tempCity = new City(this, position, this.availableNames.get(0), newTerritory);
         this.availableNames.remove(0);
         cities.add(tempCity);
+        this.calculateFlowValue();
         return tempCity;
     }
 
@@ -232,22 +240,28 @@ public class Country {
         city.getStockValue().addProperty(GameMapConfig.LANDFORM_HARVEST.get(landformType));
     }
 
-    public void selectScience(ScienceName scienceName) {
-        this.currentScience = scienceName;
-    }
+    /*
+        public void selectScience(ScienceName scienceName) {
+            this.currentScience = scienceName;
+        }
+    */
 
     private void finishScience() {
         if ((this.currentScience != null)
                 && (this.stockValue.getScience() >= ScienceConfig.SCIENCE_COST.get(this.currentScience))) {
             this.stockValue.setScience(this.stockValue.getScience() - ScienceConfig.SCIENCE_COST.get(this.currentScience));
             this.learntScience.add(this.currentScience);
-            this.currentScience = null;
+            this.currentScience = ScienceConfig.NEXT_SCIENCE.get(this.currentScience);
         }
     }
 
-
-    public void recruitGiant(Giant giant) {
-        // TODO giantname??
+    public void recruitGiant(GiantName giantName) {
+        GiantType type = GiantConfig.GIANT_NAME_TO_TYPE.get(giantName);
+        if ((type == GiantType.ECONOMIST) || (type == GiantType.SCIENTIST)) {
+            this.stockValue.addProperty(GiantConfig.GIANT_TYPE_BONUS.get(type));
+        }else{
+            this.cities.get(0).getStockValue().addProperty(GiantConfig.GIANT_TYPE_BONUS.get(type));
+        }
     }
 
     public boolean judgeScienceVictory() {
@@ -316,4 +330,7 @@ public class Country {
         return stockValue;
     }
 
+    public ScienceName getCurrentScience() {
+        return currentScience;
+    }
 }

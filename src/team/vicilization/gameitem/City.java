@@ -72,10 +72,8 @@ public class City implements Fightable{
         tempAllowedBuildings.add(BuildingType.COMMERCIAL_CERTER);
         tempAllowedBuildings.add(BuildingType.INDUSTRIAL_PARK);
         for(BuildingType type:tempAllowedBuildings){
-            if (!constructedBuildings.contains(type) && !this.producingBuilding.equals(type)) {
-                this.allowedBuildings.add(type);
-            }
-            if (country.getLearntScience().contains(GameItemConfig.BUILDING_REQUIRED_SCIENCE.get(type))) {
+            if (!constructedBuildings.contains(type) && !this.producingBuilding.equals(type)
+                    && country.getLearntScience().contains(GameItemConfig.BUILDING_REQUIRED_SCIENCE.get(type))) {
                 this.allowedBuildings.add(type);
             }
             //已建造
@@ -102,6 +100,10 @@ public class City implements Fightable{
                 this.allowedUnits.add(type);
             }
         }
+    }
+
+    public void updateFlowValue(){
+        this.calculateFlowValue();
     }
 
     private void calculateFlowValue() {
@@ -228,17 +230,14 @@ public class City implements Fightable{
     }
 
     public boolean belongsTo(Country country) {
-        if (this.country.equals(country)){
-            return true;
-        }else {
-            return false;
-        }
+        return this.country == country;
     }
     public boolean hasLandSquare(LandSquare landSquare) {
         return this.territory.contains(landSquare);
     }
 
     //------------------------------------------Fightable
+
     @Override
     public int getAttack() {
         return cityAttack;
@@ -294,7 +293,7 @@ public class City implements Fightable{
 
     @Override
     public void die() {
-        
+        this.country.loseCity(this);
     }
 
     @Override
