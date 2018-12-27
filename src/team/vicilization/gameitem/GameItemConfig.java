@@ -1,7 +1,9 @@
 package team.vicilization.gameitem;
 
+import team.vicilization.gameitem.building.BuildingType;
+import team.vicilization.gameitem.unit.UnitSubType;
 import team.vicilization.gamemap.ResourceType;
-import team.vicilization.mechanics.ScienceName;
+import team.vicilization.mechanics.science.ScienceName;
 
 import java.util.HashMap;
 

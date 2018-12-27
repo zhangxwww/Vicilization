@@ -1,8 +1,14 @@
 package team.vicilization.country;
 
-import team.vicilization.gameitem.*;
+import team.vicilization.gameitem.city.City;
+import team.vicilization.gameitem.city.CityName;
+import team.vicilization.gameitem.unit.*;
 import team.vicilization.gamemap.*;
-import team.vicilization.mechanics.*;
+import team.vicilization.mechanics.leader.LeaderName;
+import team.vicilization.mechanics.giant.*;
+import team.vicilization.mechanics.science.ScienceConfig;
+import team.vicilization.mechanics.science.ScienceName;
+import team.vicilization.mechanics.trader.Trader;
 import team.vicilization.util.Property;
 import team.vicilization.util.Position;
 

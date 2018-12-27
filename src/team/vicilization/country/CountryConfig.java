@@ -1,8 +1,8 @@
 package team.vicilization.country;
 
 
-import team.vicilization.gameitem.CityName;
-import team.vicilization.mechanics.LeaderName;
+import team.vicilization.gameitem.city.CityName;
+import team.vicilization.mechanics.leader.LeaderName;
 import team.vicilization.util.Position;
 
 import java.awt.*;
