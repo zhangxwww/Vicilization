@@ -45,10 +45,10 @@ public class GameStart extends State {
     }
 
     private void addStartGameButton() {
-        this.startGameButton = new JButton("Start");
-        this.startGameButton.setBounds(500, 650, 200, 100);
-        this.startGameButton.addActionListener(new ButtonListener());
-        this.startGameButton.setFont(new Font("Consolas", Font.BOLD, 30));
-        this.panel.add(startGameButton);
+        startGameButton = new JButton("Start");
+        startGameButton.setBounds(500, 650, 200, 100);
+        startGameButton.addActionListener(new ButtonListener());
+        startGameButton.setFont(new Font("Consolas", Font.BOLD, 30));
+        panel.add(startGameButton);
     }
 }

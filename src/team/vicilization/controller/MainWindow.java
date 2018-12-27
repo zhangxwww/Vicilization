@@ -3,7 +3,6 @@ package team.vicilization.controller;
 import javax.swing.*;
 import java.awt.*;
 
-import team.vicilization.mechanics.*;
 import team.vicilization.country.*;
 
 public class MainWindow extends javax.swing.JFrame {

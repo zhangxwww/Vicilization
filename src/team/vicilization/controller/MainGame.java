@@ -104,6 +104,7 @@ public class MainGame extends State {
             this.upperInfoArea.update();
             this.transView();
             this.mapArea.mapPanel.updateMap();
+            this.checkGiant();
             if (currentPlayer.getCities().size() > 0) {
                 selectCity(currentPlayer.getCities().get(0));
             } else if (currentPlayer.getUnits().size() > 0) {
@@ -464,6 +465,7 @@ public class MainGame extends State {
             this.units.remove(selectedUnit);
         }
         this.mapArea.mapPanel.updateMap();
+        this.unselectUnit();
     }
 
     private void transView() {
@@ -541,8 +543,80 @@ public class MainGame extends State {
         this.unselectUnit();
     }
 
-    private void recruitGiant(GiantName giant) {
-        // TODO
+    private void checkGiant() {
+        if (scientists.size() > 0) {
+            GiantName name = scientists.get(0);
+            if (currentPlayer.getGivenupScientist() != null
+                    && currentPlayer.getGivenupScientist() == name) {
+                return;
+            }
+            int cost = GiantConfig.GIANT_TYPE_COST.get(GiantType.SCIENTIST).getScientistValue();
+            if (currentPlayer.getStockValue().getScientistValue() >= cost) {
+                int result = showRecruitGiantDialog(name);
+                if (result == JOptionPane.OK_OPTION) {
+                    this.recruitGiant(name);
+                } else {
+                    this.currentPlayer.setGivenupScientist(name);
+                }
+            }
+        }
+        if (economists.size() > 0) {
+            GiantName name = economists.get(0);
+            if (currentPlayer.getGivenupEconomist() != null
+                    && currentPlayer.getGivenupEconomist() == name) {
+                return;
+            }
+            int cost = GiantConfig.GIANT_TYPE_COST.get(GiantType.ECONOMIST).getTraderValue();
+            if (currentPlayer.getStockValue().getTraderValue() >= cost) {
+                int result = showRecruitGiantDialog(name);
+                if (result == JOptionPane.OK_OPTION) {
+                    this.recruitGiant(name);
+                } else {
+                    this.currentPlayer.setGivenupEconomist(name);
+                }
+            }
+        }
+        if (engineers.size() > 0) {
+            GiantName name = engineers.get(0);
+            if (currentPlayer.getGivenupEngineer() != null
+                    && currentPlayer.getGivenupEngineer() == name) {
+                return;
+            }
+            int cost = GiantConfig.GIANT_TYPE_COST.get(GiantType.ENGINEER).getEngineerValue();
+            if (currentPlayer.getStockValue().getEngineerValue() >= cost) {
+                int result = showRecruitGiantDialog(name);
+                if (result == JOptionPane.OK_OPTION) {
+                    this.recruitGiant(name);
+                } else {
+                    this.currentPlayer.setGivenupEngineer(name);
+                }
+            }
+        }
+    }
+
+    private int showRecruitGiantDialog(GiantName name) {
+        String message = "Recruit " + name + " or not ?";
+        int result = JOptionPane.showConfirmDialog(this.panel, message,
+                "Recruit giant", JOptionPane.YES_NO_OPTION);
+        return result;
+    }
+
+    private void recruitGiant(GiantName name) {
+        this.currentPlayer.recruitGiant(name);
+        switch (GiantConfig.GIANT_NAME_TO_TYPE.get(name)) {
+            case SCIENTIST:
+                this.scientists.remove(name);
+                break;
+            case ECONOMIST:
+                this.economists.remove(name);
+                break;
+            case ENGINEER:
+                this.engineers.remove(name);
+                break;
+            default:
+                break;
+        }
+        this.upperInfoArea.update();
     }
 
     private void getAllowedBuildings() {
