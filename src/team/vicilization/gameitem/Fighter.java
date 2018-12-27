@@ -7,17 +7,18 @@ import team.vicilization.util.Position;
 
 import java.util.Vector;
 
-public abstract class Fighter extends Unit implements Fightable,Updateable {
+public abstract class Fighter extends Unit implements Fightable, Updateable {
+
     private boolean canUpdate;
 
-    public boolean calculateCanUpdate(Country country){
-        if(!GameItemConfig.UPDATE_NEED_SCIENCE.containsKey(this.subType)){
-            this.canUpdate=false;
-        }else {
-            if (country.getLearntScience().contains(GameItemConfig.UPDATE_NEED_SCIENCE.get(this.subType))){
-                this.canUpdate=true;
-            }else {
-                this.canUpdate=false;
+    public boolean calculateCanUpdate(Country country) {
+        if (!GameItemConfig.UPDATE_NEED_SCIENCE.containsKey(this.subType)) {
+            this.canUpdate = false;
+        } else {
+            if (country.getLearntScience().contains(GameItemConfig.UPDATE_NEED_SCIENCE.get(this.subType))) {
+                this.canUpdate = true;
+            } else {
+                this.canUpdate = false;
             }
         }
         return canUpdate;
@@ -105,5 +106,18 @@ public abstract class Fighter extends Unit implements Fightable,Updateable {
 
     public void setCanUpdate(boolean canUpdate) {
         this.canUpdate = canUpdate;
+    }
+
+    @Override
+    public boolean isUpgradable() {
+        if (!GameItemConfig.UPDATE_NEED_SCIENCE.containsKey(this.subType)) {
+            return false;
+        } else {
+            if (country.getLearntScience().contains(GameItemConfig.UPDATE_NEED_SCIENCE.get(this.subType))) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 }

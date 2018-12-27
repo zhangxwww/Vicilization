@@ -11,6 +11,7 @@ import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
 import java.util.Vector;
 import javax.swing.Timer;
 import java.util.Random;
@@ -61,12 +62,17 @@ public class MainGame extends State {
     private ImageIcon upgradeButtonIcon;
     private ImageIcon nextRoundButtonIcon;
 
+    private Vector<GiantName> scientists;
+    private Vector<GiantName> economists;
+    private Vector<GiantName> engineers;
+
     public MainGame(MainWindow mainWindow, CountryName[] countrys) {
         super(mainWindow);
         setNextState(StateType.Gameover);
 
         this.initIcons();
         this.initParams();
+        this.initGiants();
         this.initMapArea();
         this.initButtons();
         this.initLowerInfoArea();
@@ -93,6 +99,12 @@ public class MainGame extends State {
             this.synchronizeCitiesAndUnits();
             this.upperInfoArea.update();
             this.transView();
+        }
+        this.mapArea.mapPanel.updateMap();
+        if (currentPlayer.getCities().size() > 0) {
+            selectCity(currentPlayer.getCities().get(0));
+        } else if (currentPlayer.getUnits().size() > 0) {
+            selectUnit(currentPlayer.getUnits().get(0));
         }
     }
 
@@ -121,6 +133,22 @@ public class MainGame extends State {
         this.underProducingBuilding = BuildingType.NONE;
     }
 
+    private void initGiants() {
+        Vector<GiantName> giants = new Vector<>(Arrays.asList(GiantName.values()));
+        scientists = new Vector<>();
+        economists = new Vector<>();
+        engineers = new Vector<>();
+        for (GiantName name : giants) {
+            if (GiantConfig.GIANT_NAME_TO_TYPE.get(name) == GiantType.SCIENTIST) {
+                scientists.add(name);
+            } else if (GiantConfig.GIANT_NAME_TO_TYPE.get(name) == GiantType.ECONOMIST) {
+                economists.add(name);
+            } else {
+                engineers.add(name);
+            }
+        }
+    }
+
     private void initCountries(CountryName[] countrys) {
         this.countries = new Vector<>(2);
         this.units = new Vector<>();
@@ -131,6 +159,7 @@ public class MainGame extends State {
         }
         this.currentPlayer = this.countries.elementAt(0);
         this.enermy = this.countries.elementAt(1);
+        this.selectUnit(currentPlayer.getUnits().get(0));
     }
 
     private void initUnitsForOneCountry(Country country, int order) {
@@ -167,6 +196,9 @@ public class MainGame extends State {
         availableBuildings.setBounds(1440, 1000, 200, 40);
         availableUnits.setBounds(1220, 1000, 200, 40);
 
+        availableBuildings.setFont(new Font("Consolas", Font.PLAIN, 20));
+        availableUnits.setFont(new Font("Consolas", Font.PLAIN, 20));
+
         availableBuildings.addItemListener(listener);
         availableUnits.addItemListener(listener);
     }
@@ -177,27 +209,39 @@ public class MainGame extends State {
         nextRoundButton = new JButton(nextRoundButtonIcon);
         nextRoundButton.setBounds(1800, 940, 100, 100);
         nextRoundButton.addActionListener(listener);
+        nextRoundButton.setBorderPainted(false);
+        nextRoundButton.setContentAreaFilled(false);
         this.panel.add(nextRoundButton);
 
         unitUpgradeButton = new JButton(upgradeButtonIcon);
         unitUpgradeButton.setBounds(1220, 950, 36, 36);
         unitUpgradeButton.addActionListener(listener);
+        unitUpgradeButton.setBorderPainted(false);
+        unitUpgradeButton.setContentAreaFilled(false);
 
         unitMoveButton = new JButton(moveButtonIcon);
         unitMoveButton.setBounds(1260, 950, 36, 36);
         unitMoveButton.addActionListener(listener);
+        unitMoveButton.setBorderPainted(false);
+        unitMoveButton.setContentAreaFilled(false);
 
         unitFightButton = new JButton(attackButtonIcon);
         unitFightButton.setBounds(1300, 950, 36, 36);
         unitFightButton.addActionListener(listener);
+        unitFightButton.setBorderPainted(false);
+        unitFightButton.setContentAreaFilled(false);
 
         explorerBuildCityButton = new JButton(buildCityButtonIcon);
         explorerBuildCityButton.setBounds(1340, 950, 36, 36);
         explorerBuildCityButton.addActionListener(listener);
+        explorerBuildCityButton.setBorderPainted(false);
+        explorerBuildCityButton.setContentAreaFilled(false);
 
         constructorHarvestButton = new JButton(harvestButtonIcon);
         constructorHarvestButton.setBounds(1380, 950, 36, 36);
         constructorHarvestButton.addActionListener(listener);
+        constructorHarvestButton.setBorderPainted(false);
+        constructorHarvestButton.setContentAreaFilled(false);
     }
 
     private void initUpperInfoArea() {
@@ -256,16 +300,44 @@ public class MainGame extends State {
         this.lowerInfoArea.showUnitInfo(unit);
         if (!selectedUnit.isMovedThisTurn()) { // 没有移动，显示移动按钮
             this.panel.add(unitMoveButton);
+        } else {
+            try {
+                this.panel.remove(unitMoveButton);
+            } catch (Exception e) {
+            }
         }
         if (!selectedUnit.isAttackedThisTurn()
                 && selectedUnit.getType() == UnitType.FIGHTER) {
             Vector<LandSquare> attackSquares = calculateAttackSquares();
             if (attackSquares.size() > 0) {
                 this.panel.add(unitFightButton);
+            } else {
+                try {
+                    this.panel.remove(unitFightButton);
+                } catch (Exception e) {
+                }
+            }
+        }
+        if (selectedUnit.getType() == UnitType.FIGHTER
+                && ((Fighter) selectedUnit).isUpgradable()) {
+            this.panel.add(unitUpgradeButton);
+        } else {
+            try {
+                this.panel.remove(unitUpgradeButton);
+            } catch (Exception e) {
             }
         }
         if (selectedUnit.getSubType() == UnitSubType.EXPLORER) {
-            this.panel.add(explorerBuildCityButton);
+            LandSquare landSquare = this.mapArea.at(selectedUnit.getPosition());
+            if (!currentPlayer.hasLandSquare(landSquare)
+                    && !enermy.hasLandSquare(landSquare)) {
+                this.panel.add(explorerBuildCityButton);
+            } else {
+                try {
+                    this.panel.remove(explorerBuildCityButton);
+                } catch (Exception e) {
+                }
+            }
         }
         if (selectedUnit.getSubType() == UnitSubType.CONSTRUCTOR) {
             LandformType landformType = this.mapArea.at(
@@ -274,6 +346,11 @@ public class MainGame extends State {
                     || landformType == LandformType.RAINFOREST
                     || landformType == LandformType.MARSH) {
                 this.panel.add(constructorHarvestButton);
+            } else {
+                try {
+                    this.panel.remove(constructorHarvestButton);
+                } catch (Exception e) {
+                }
             }
         }
         this.panel.repaint();
@@ -289,6 +366,10 @@ public class MainGame extends State {
         }
         try {
             this.panel.remove(unitFightButton);
+        } catch (Exception e) {
+        }
+        try {
+            this.panel.remove(unitUpgradeButton);
         } catch (Exception e) {
         }
         try {
@@ -368,10 +449,6 @@ public class MainGame extends State {
         this.clearAllowedUnits();
     }
 
-    private void showScienceTree() {
-        // TODO
-    }
-
     private void harvest() {
         Constructor constructor = (Constructor) this.selectedUnit;
         constructor.reduceTimes();
@@ -411,6 +488,8 @@ public class MainGame extends State {
         if (fought.isDied()) {
             units.remove((Unit) fought);
         }
+        attacker.setAttackedThisTurn(true);
+        this.unselectUnit();
     }
 
     private void fight(Fightable fighter, City city) {
@@ -426,10 +505,8 @@ public class MainGame extends State {
         if (city.isDied()) {
             this.currentPlayer.occupyCity(city);
         }
-    }
-
-    private void showGiant() {
-        // TODO
+        attacker.setAttackedThisTurn(true);
+        this.unselectUnit();
     }
 
     private void recruitGiant(GiantName giant) {
@@ -437,6 +514,7 @@ public class MainGame extends State {
     }
 
     private void getAllowedBuildings() {
+        availableBuildings.removeAllItems();
         Vector<BuildingType> allowedBuilding = selectedCity.getAllowedBuildings();
         availableBuildings.addItem(BuildingType.NONE);
         for (BuildingType type : allowedBuilding) {
@@ -446,6 +524,7 @@ public class MainGame extends State {
     }
 
     private void getAllowedUnits() {
+        availableUnits.removeAllItems();
         Vector<UnitSubType> allowedUnits = selectedCity.getAllowedUnits();
         availableUnits.addItem(UnitSubType.NONE);
         for (UnitSubType type : allowedUnits) {
@@ -504,7 +583,7 @@ public class MainGame extends State {
                 attackSquares.add(this.mapArea.at(city.getLocation()));
             }
         }
-        return squares;
+        return attackSquares;
     }
 
     private void unitUpgrade() {
@@ -519,6 +598,7 @@ public class MainGame extends State {
             this.currentPlayer.addNewUnit(selectedUnit);
         }
         this.selectUnit(selectedUnit);
+        this.synchronizeCitiesAndUnits();
         this.mapArea.mapPanel.updateMap();
     }
 
@@ -580,8 +660,26 @@ public class MainGame extends State {
         private ImageIcon scienceIcon;
         private ImageIcon moneyIcon;
 
+        private JLabel scienceNameLabel;
+        private JLabel scienceProgressLabel;
+
+        private ImageIcon scientistIcon;
+        private ImageIcon economistIcon;
+        private ImageIcon engineerIcon;
+
+        private JLabel scientistLabel;
+        private JLabel economistLabel;
+        private JLabel engineerLabel;
+
+        private JLabel scientistNameLabel;
+        private JLabel economistNameLabel;
+        private JLabel engineerNameLabel;
+
+        private JLabel scientistProgressLabel;
+        private JLabel economistProgressLabel;
+        private JLabel engineerProgressLabel;
+
         public UpperInfoArea() {
-            // TODO science info
             super();
             this.setLayout(null);
             this.setOpaque(true);
@@ -606,6 +704,44 @@ public class MainGame extends State {
                 this.countryName_1.setFont(new Font("Consolas", Font.PLAIN, 25));
                 this.countryName_2.setFont(new Font("Consolas", Font.BOLD, 25));
             }
+            this.scienceNameLabel.setText(currentPlayer.getCurrentScience().toString());
+            this.scienceProgressLabel.setText(currentPlayer.getStockValue().getScience()
+                    + " / " + ScienceConfig.SCIENCE_COST.get(currentPlayer.getCurrentScience()));
+
+            if (scientists.size() > 0) {
+                GiantName scientist = scientists.get(0);
+                this.scientistNameLabel.setText(scientist.toString());
+                int total = GiantConfig.GIANT_TYPE_COST
+                        .get(GiantType.SCIENTIST).getScientistValue();
+                int cur = currentPlayer.getStockValue().getScientistValue();
+                this.scientistProgressLabel.setText(cur + " / " + total);
+            } else {
+                this.scientistNameLabel.setText("Nobody");
+                this.scientistProgressLabel.setText("0 / 0");
+            }
+            if (economists.size() > 0) {
+                GiantName economist = economists.get(0);
+                this.economistNameLabel.setText(economist.toString());
+                int total = GiantConfig.GIANT_TYPE_COST
+                        .get(GiantType.ECONOMIST).getTraderValue();
+                int cur = currentPlayer.getStockValue().getTraderValue();
+                this.economistProgressLabel.setText(cur + " / " + total);
+            } else {
+                this.economistNameLabel.setText("Nobody");
+                this.economistProgressLabel.setText("0 / 0");
+            }
+            if (engineers.size() > 0) {
+                GiantName engineer = engineers.get(0);
+                this.engineerNameLabel.setText(engineer.toString());
+                int total = GiantConfig.GIANT_TYPE_COST
+                        .get(GiantType.ENGINEER).getEngineerValue();
+                int cur = currentPlayer.getStockValue().getEngineerValue();
+                this.engineerProgressLabel.setText(cur + " / " + total);
+            } else {
+                this.engineerNameLabel.setText("Nobody");
+                this.engineerProgressLabel.setText("0 / 0");
+            }
+
             this.repaint();
         }
 
@@ -615,7 +751,7 @@ public class MainGame extends State {
             this.roundInfo = new JLabel();
 
             this.sciencePointInfo.setBounds(60, 0, 80, 50);
-            this.moneyInfo.setBounds(210, 0, 80, 50);
+            this.moneyInfo.setBounds(210, 0, 140, 50);
             this.roundInfo.setBounds(1840, 0, 40, 25);
 
             this.sciencePointInfo.setFont(new Font("Consolas", Font.PLAIN, 22));
@@ -630,16 +766,16 @@ public class MainGame extends State {
 
             this.sciencePointSymbolLabel.setBounds(0, 0, 50, 50);
             this.moneySymbolLabel.setBounds(150, 0, 50, 50);
-            this.roundSymbolLabel.setBounds(1780, 0, 60, 25);
+            this.roundSymbolLabel.setBounds(1760, 0, 80, 25);
 
-            this.roundSymbolLabel.setFont(new Font("Consolas", Font.BOLD, 12));
-            this.roundInfo.setFont(new Font("Consolas", Font.BOLD, 12));
+            this.roundSymbolLabel.setFont(new Font("Consolas", Font.BOLD, 20));
+            this.roundInfo.setFont(new Font("Consolas", Font.BOLD, 20));
 
             this.countryName_1 = new JLabel(countries.get(0).getCountryName().toString());
             this.countryName_2 = new JLabel(countries.get(1).getCountryName().toString());
 
-            this.countryName_1.setBounds(1500, 0, 200, 25);
-            this.countryName_2.setBounds(1500, 25, 200, 25);
+            this.countryName_1.setBounds(1600, 0, 100, 25);
+            this.countryName_2.setBounds(1600, 25, 100, 25);
 
             this.countryName_1.setFont(new Font("Consolas", Font.PLAIN, 25));
             this.countryName_2.setFont(new Font("Consolas", Font.PLAIN, 25));
@@ -647,10 +783,51 @@ public class MainGame extends State {
             this.countryName_1.setOpaque(true);
             this.countryName_2.setOpaque(true);
 
-            this.countryName_1.setBackground(CountryConfig.COLOR_OF_COUNTRY.
-                    get(countries.get(0).getCountryName().toString()));
-            this.countryName_2.setBackground(CountryConfig.COLOR_OF_COUNTRY.
-                    get(countries.get(1).getCountryName().toString()));
+            this.countryName_1.setForeground(CountryConfig.COLOR_OF_COUNTRY.
+                    get(countries.get(0).getCountryName()));
+            this.countryName_2.setForeground(CountryConfig.COLOR_OF_COUNTRY.
+                    get(countries.get(1).getCountryName()));
+
+            this.scienceNameLabel = new JLabel();
+            this.scienceProgressLabel = new JLabel();
+
+            this.scienceNameLabel.setBounds(400, 0, 200, 30);
+            this.scienceProgressLabel.setBounds(400, 30, 200, 20);
+
+            this.scienceNameLabel.setFont(new Font("Consolas", Font.PLAIN, 20));
+            this.scienceProgressLabel.setFont(new Font("Consolas", Font.PLAIN, 18));
+
+            this.scientistLabel = new JLabel(scientistIcon);
+            this.economistLabel = new JLabel(economistIcon);
+            this.engineerLabel = new JLabel(engineerIcon);
+
+            this.scientistNameLabel = new JLabel();
+            this.economistNameLabel = new JLabel();
+            this.engineerNameLabel = new JLabel();
+
+            this.scientistProgressLabel = new JLabel();
+            this.economistProgressLabel = new JLabel();
+            this.engineerProgressLabel = new JLabel();
+
+            this.scientistLabel.setBounds(650, 0, 50, 50);
+            this.economistLabel.setBounds(930, 0, 50, 50);
+            this.engineerLabel.setBounds(1210, 0, 50, 50);
+
+            this.scientistNameLabel.setBounds(710, 0, 210, 30);
+            this.economistNameLabel.setBounds(990, 0, 210, 30);
+            this.engineerNameLabel.setBounds(1270, 0, 210, 30);
+
+            this.scientistNameLabel.setFont(new Font("Consolas", Font.PLAIN, 20));
+            this.economistNameLabel.setFont(new Font("Consolas", Font.PLAIN, 20));
+            this.engineerNameLabel.setFont(new Font("Consolas", Font.PLAIN, 20));
+
+            this.scientistProgressLabel.setBounds(710, 30, 200, 20);
+            this.economistProgressLabel.setBounds(990, 30, 200, 20);
+            this.engineerProgressLabel.setBounds(1270, 30, 200, 20);
+
+            this.scientistProgressLabel.setFont(new Font("Consolas", Font.PLAIN, 18));
+            this.economistProgressLabel.setFont(new Font("Consolas", Font.PLAIN, 18));
+            this.engineerProgressLabel.setFont(new Font("Consolas", Font.PLAIN, 18));
 
             this.add(sciencePointSymbolLabel);
             this.add(moneySymbolLabel);
@@ -660,11 +837,25 @@ public class MainGame extends State {
             this.add(roundInfo);
             this.add(countryName_1);
             this.add(countryName_2);
+            this.add(scienceNameLabel);
+            this.add(scienceProgressLabel);
+            this.add(scientistLabel);
+            this.add(economistLabel);
+            this.add(engineerLabel);
+            this.add(scientistNameLabel);
+            this.add(economistNameLabel);
+            this.add(engineerNameLabel);
+            this.add(scientistProgressLabel);
+            this.add(economistProgressLabel);
+            this.add(engineerProgressLabel);
         }
 
         private void initIcons() {
             this.scienceIcon = new ImageIcon("./Resource/info/science.png");
             this.moneyIcon = new ImageIcon("./Resource/info/money.png");
+            this.scientistIcon = new ImageIcon("./Resource/info/scientist.png");
+            this.economistIcon = new ImageIcon("./Resource/info/economist.png");
+            this.engineerIcon = new ImageIcon("./Resource/info/engineer.png");
         }
     }
 
@@ -712,7 +903,7 @@ public class MainGame extends State {
 
         public LowerInfoArea() {
             super();
-            this.setBounds(20, 940, 710, 100);
+            this.setBounds(470, 940, 710, 100);
             this.setLayout(null);
             this.initIcons();
             this.initLabels();
@@ -856,11 +1047,6 @@ public class MainGame extends State {
             this.producingLabel.setBounds(450, 20, 50, 50);
             this.producingItemLabel.setBounds(510, 20, 200, 30);
             this.progressLabel.setBounds(510, 50, 200, 20);
-
-            this.progressLabel.setOpaque(true);
-            this.producingItemLabel.setOpaque(true);
-            this.progressLabel.setBackground(Color.RED);
-            this.producingItemLabel.setBackground(Color.BLUE);
 
             this.unitTypeInfo.setFont(new Font("Consolas", Font.BOLD, 20));
             this.attackInfo.setFont(new Font("Consolas", Font.PLAIN, 18));
@@ -1217,7 +1403,7 @@ public class MainGame extends State {
                         case SWORDSMAN:
                             square.setIcon(swordsman_icon);
                             break;
-                        case SCOUT:
+                        case ASSASSIN:
                             square.setIcon(scout_icon);
                             break;
                         default:
@@ -1260,7 +1446,7 @@ public class MainGame extends State {
                     case SWORDSMAN:
                         square.setIcon(swordsman_icon);
                         break;
-                    case SCOUT:
+                    case ASSASSIN:
                         square.setIcon(scout_icon);
                         break;
                     default:
@@ -1292,6 +1478,7 @@ public class MainGame extends State {
                                 if (u.getCountry() == currentPlayer) {
                                     found = true;
                                     unselectCity();
+                                    unselectUnit();
                                     selectUnit(u);
                                     break;
                                 }
@@ -1302,6 +1489,7 @@ public class MainGame extends State {
                                 if (c.getCountry() == currentPlayer) {
                                     found = true;
                                     unselectUnit();
+                                    unselectCity();
                                     selectCity(c);
                                     break;
                                 }

@@ -1,8 +1,5 @@
 package team.vicilization.gameitem;
 
-
-import team.vicilization.country.Country;
-import team.vicilization.util.Position;
 import team.vicilization.util.Property;
 
 public class Building {
@@ -23,7 +20,4 @@ public class Building {
 
         buildingInfo=new BuildingInfo(type);
     }
-
-
-
 }

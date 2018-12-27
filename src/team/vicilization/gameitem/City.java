@@ -6,7 +6,6 @@ import team.vicilization.gamemap.LandSquare;
 import team.vicilization.util.Position;
 import team.vicilization.util.Property;
 
-import javax.swing.*;
 import java.util.Vector;
 
 public class City implements Fightable{
@@ -32,7 +31,6 @@ public class City implements Fightable{
     private int recovery;
     private Vector<BuildingType> allowedBuildings;
     private Vector<UnitSubType> allowedUnits;
-
 
     public boolean isProducing;
 
@@ -87,13 +85,19 @@ public class City implements Fightable{
         Vector<UnitSubType> tempAllowedUnits=new Vector<UnitSubType>(20);
         tempAllowedUnits.add(UnitSubType.ARCHER);
         tempAllowedUnits.add(UnitSubType.CONSTRUCTOR);
-        if (population != 1) {
-            this.allowedUnits.add(UnitSubType.EXPLORER);
-        }
+        tempAllowedUnits.add(UnitSubType.KNIGHT);
+        tempAllowedUnits.add(UnitSubType.FOOTMAN);
+        tempAllowedUnits.add(UnitSubType.ASSASSIN);
+        tempAllowedUnits.add(UnitSubType.EXPLORER);
+        tempAllowedUnits.add(UnitSubType.SPEARMAN);
+        tempAllowedUnits.add(UnitSubType.SWORDSMAN);
         for (UnitSubType type:tempAllowedUnits){
             if (country.getLearntScience().contains(GameItemConfig.UNIT_REQUIRED_SCIENCE.get(type))) {
                 this.allowedUnits.add(type);
             }
+        }
+        if (population < 2) {
+            this.allowedUnits.remove(UnitSubType.EXPLORER);
         }
     }
 
@@ -126,6 +130,7 @@ public class City implements Fightable{
         }
         this.flowValue.addProperty(buildingFlowValue);
     }
+
     private void updateStock() {
         calculateFlowValue();
         stockValue.addProperty(flowValue);
@@ -156,10 +161,11 @@ public class City implements Fightable{
         //处理科技和各种点数
 
     }
+
     private void recover() {
         int initHealth = 100;
-        if (cityHealth < initHealth - recovery) {
-            cityHealth += recovery;
+        if (cityHealth < initHealth - this.getRecovery()) {
+            cityHealth += this.getRecovery();
         } else {
             cityHealth = initHealth;
         }
@@ -172,6 +178,7 @@ public class City implements Fightable{
         //重置移动力
 
     }
+
     public UnitSubType cityStartTurn(){
         finishProduceBuilding();
         return finishProduceUnit();
@@ -183,11 +190,13 @@ public class City implements Fightable{
         this.producingUnit=type;
         this.setIsProducing(true);
     }
+
     public void produce(BuildingType type){
         this.producingItem=new BuildingInfo(type);
         this.setIsProducing(true);
         this.producingBuilding=type;
     }
+
     private void finishProduceBuilding(){
         if(producingBuilding!=BuildingType.NONE) {
             if (stockValue.getProductivity() >= producingItem.getProductivityCost()) {
@@ -200,6 +209,7 @@ public class City implements Fightable{
             }
         }
     }
+
     private UnitSubType finishProduceUnit(){
         if (producingUnit!=UnitSubType.NONE) {
             if (stockValue.getProductivity() >= producingItem.getProductivityCost()) {
@@ -221,21 +231,10 @@ public class City implements Fightable{
         return UnitSubType.NONE;
     }
 
-    //public void produce(Producable production) {
-
-    //}
-
-    public void addNewUnit(Unit unit) {
-
-    }
-
-    public void addNewBuilding(BuildingType buildingType) {
-
-    }
-
     public boolean belongsTo(Country country) {
         return this.country == country;
     }
+
     public boolean hasLandSquare(LandSquare landSquare) {
         return this.territory.contains(landSquare);
     }
@@ -244,11 +243,13 @@ public class City implements Fightable{
 
     @Override
     public int getAttack() {
+        this.cityAttack=5*this.getPopulation();
         return cityAttack;
     }
 
     @Override
     public int getDefence() {
+        this.cityDefence=5*this.getPopulation();
         return cityDefence;
     }
 
@@ -310,74 +311,59 @@ public class City implements Fightable{
     public CityName getCityName() {
         return name;
     }
-
-
     public boolean isProducing() {
         return this.isProducing;
     }
     public void setIsProducing(boolean b){
         this.isProducing=b;
     }
-
-
     public Property getFlowValue() {
         return flowValue;
     }
-
-
-
     public Property getStockValue() {
         return stockValue;
     }
-
     public int getPopulation() {
         return population;
     }
-
     public BuildingType getProducingBuilding() {
         return producingBuilding;
     }
-
     public ProducableInfo getProducingItem() {
         return producingItem;
     }
-
     public Country getCountry() {
         return country;
     }
-
     public UnitSubType getProducingUnit() {
         return producingUnit;
     }
-
     public Vector<BuildingType> getConstructedBuildings() {
         return constructedBuildings;
     }
-
     public Vector<BuildingType> getAllowedBuildings() {
         calculateAllowedBuildings();
         return allowedBuildings;
     }
-
     public Vector<LandSquare> getTerritory() {
         return territory;
     }
-
     public Vector<UnitSubType> getAllowedUnits() {
         calculateAllowedUnits();
         return allowedUnits;
     }
-
     public void setCityHealth(int cityHealth) {
         this.cityHealth = cityHealth;
     }
-
-  
     public Position getLocation() {
         return location;
     }
-
     public void setPopulation(int population) {
         this.population = population;
+    }
+
+    public int getRecovery() {
+        this.recovery=10+2*this.getPopulation();
+        return recovery;
     }
 }

@@ -9,7 +9,7 @@ public enum UnitSubType {
     KNIGHT,
     FOOTMAN,
     ARCHER,
-    SCOUT,
+    ASSASSIN,
     SWORDSMAN;
 
     @Override

@@ -39,6 +39,7 @@ public class Country {
         this.totalTradeRoutes = 0;
 
         this.learntScience = new Vector<>();
+        this.learntScience.add(ScienceName.NONE);
 
         this.countryResource = new HashMap<String, Integer>() {
         };
@@ -99,6 +100,18 @@ public class Country {
                 case SPEARMAN:
                     this.addNewUnit(
                             new Spearman(
+                                    this.nearestAvailable(city.getLocation(), map, enemyCountry),
+                                    this));
+                    break;
+                case ASSASSIN:
+                    this.addNewUnit(
+                            new Assassin(
+                                    this.nearestAvailable(city.getLocation(), map, enemyCountry),
+                                    this));
+                    break;
+                case SWORDSMAN:
+                    this.addNewUnit(
+                            new SwordsMan(
                                     this.nearestAvailable(city.getLocation(), map, enemyCountry),
                                     this));
                     break;
@@ -258,7 +271,7 @@ public class Country {
     }
 
     public boolean judgeScienceVictory() {
-        return this.learntScience.contains(ScienceName.AEROSPACE);
+        return this.learntScience.contains(ScienceName.BUDDHISM);
     }
 
     public boolean hasCity(City city) {
