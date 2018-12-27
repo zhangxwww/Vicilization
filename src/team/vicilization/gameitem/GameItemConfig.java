@@ -1,7 +1,9 @@
 package team.vicilization.gameitem;
 
+import team.vicilization.gameitem.building.BuildingType;
+import team.vicilization.gameitem.unit.UnitSubType;
 import team.vicilization.gamemap.ResourceType;
-import team.vicilization.mechanics.ScienceName;
+import team.vicilization.mechanics.science.ScienceName;
 
 import java.util.HashMap;
 
@@ -119,7 +121,7 @@ public class GameItemConfig {
             put(UnitSubType.EXPLORER, 4);
             put(UnitSubType.ARCHER, 4);
             put(UnitSubType.CONSTRUCTOR, 4);
-            put(UnitSubType.FOOTMAN, 4);
+            put(UnitSubType.FOOTMAN, 9);
             put(UnitSubType.SPEARMAN, 4);
             put(UnitSubType.SWORDSMAN, 4);
             put(UnitSubType.ASSASSIN, 7);

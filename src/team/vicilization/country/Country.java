@@ -1,8 +1,14 @@
 package team.vicilization.country;
 
-import team.vicilization.gameitem.*;
+import team.vicilization.gameitem.city.City;
+import team.vicilization.gameitem.city.CityName;
+import team.vicilization.gameitem.unit.*;
 import team.vicilization.gamemap.*;
-import team.vicilization.mechanics.*;
+import team.vicilization.mechanics.leader.LeaderName;
+import team.vicilization.mechanics.giant.*;
+import team.vicilization.mechanics.science.ScienceConfig;
+import team.vicilization.mechanics.science.ScienceName;
+import team.vicilization.mechanics.trader.Trader;
 import team.vicilization.util.Property;
 import team.vicilization.util.Position;
 
@@ -10,7 +16,7 @@ import java.util.*;
 
 public class Country {
     //========================Attributes======================//
-    private LeaderName leaderName; //TODO change to Leader
+    private LeaderName leaderName;
     private Vector<City> cities;
     private Vector<Unit> units;
 
@@ -124,7 +130,6 @@ public class Country {
         }
         this.updateStock();
         this.finishScience();
-        // TODO 这里要执行计算存量流量、推进项目、城市恢复等一系列会在每一回合开始执行的任务
     }
 
     public void undateFlow() {
@@ -178,12 +183,6 @@ public class Country {
         this.stockValue.addProperty(this.flowValue);
     }
 
-    /*
-        public void pushProject() {
-            // TODO Country: science, giant
-            // TODO City: push project
-        }
-    */
     private void calculateFlowValue() {
         this.flowValue = new Property();
         for (City city : cities) {
@@ -226,6 +225,7 @@ public class Country {
 
     public void occupyCity(City city) {
         this.cities.add(city);
+        city.setCountry(this);
     }
 
     public void loseCity(City city) {

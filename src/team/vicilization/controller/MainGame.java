@@ -2,8 +2,12 @@ package team.vicilization.controller;
 
 
 import team.vicilization.gameitem.*;
+import team.vicilization.gameitem.building.BuildingType;
+import team.vicilization.gameitem.city.City;
+import team.vicilization.gameitem.unit.*;
 import team.vicilization.gamemap.*;
-import team.vicilization.mechanics.*;
+import team.vicilization.mechanics.giant.*;
+import team.vicilization.mechanics.science.*;
 import team.vicilization.country.*;
 import team.vicilization.util.Position;
 
@@ -87,7 +91,7 @@ public class MainGame extends State {
         this.unselectUnit();
         this.mapArea.mapPanel.updateMap();
 
-        if (judgeVectory()) {
+        if (judgeVictory()) {
             this.mainWindow.convertToNextState(currentPlayer);
         } else {
             round++;
@@ -99,12 +103,12 @@ public class MainGame extends State {
             this.synchronizeCitiesAndUnits();
             this.upperInfoArea.update();
             this.transView();
-        }
-        this.mapArea.mapPanel.updateMap();
-        if (currentPlayer.getCities().size() > 0) {
-            selectCity(currentPlayer.getCities().get(0));
-        } else if (currentPlayer.getUnits().size() > 0) {
-            selectUnit(currentPlayer.getUnits().get(0));
+            this.mapArea.mapPanel.updateMap();
+            if (currentPlayer.getCities().size() > 0) {
+                selectCity(currentPlayer.getCities().get(0));
+            } else if (currentPlayer.getUnits().size() > 0) {
+                selectUnit(currentPlayer.getUnits().get(0));
+            }
         }
     }
 
@@ -276,7 +280,7 @@ public class MainGame extends State {
         }
     }
 
-    private boolean judgeVectory() {
+    private boolean judgeVictory() {
         if (this.currentPlayer.judgeScienceVictory()) {
             // science victory
             return true;
@@ -479,8 +483,33 @@ public class MainGame extends State {
         Position defencerPos = defencer.getPosition();
         int attack = attacker.getAttack();
         int defence = defencer.getDefence();
+        if (((Fighter) fighter).getSubType() == UnitSubType.KNIGHT
+                && ((Fighter) fought).getSubType() == UnitSubType.SPEARMAN) {
+            defence += 10;
+        } else if (((Fighter) fighter).getSubType() == UnitSubType.SPEARMAN
+                && ((Fighter) fought).getSubType() == UnitSubType.KNIGHT) {
+            attack += 10;
+        } else if (((Fighter) fighter).getSubType() == UnitSubType.KNIGHT
+                && (((Fighter) fought).getSubType() == UnitSubType.FOOTMAN
+                || ((Fighter) fought).getSubType() == UnitSubType.SWORDSMAN)) {
+            attack += 10;
+        } else if ((((Fighter) fighter).getSubType() == UnitSubType.FOOTMAN
+                || ((Fighter) fighter).getSubType() == UnitSubType.SWORDSMAN)
+                && ((Fighter) fought).getSubType() == UnitSubType.KNIGHT) {
+            defence += 10;
+        } else if ((((Fighter) fighter).getSubType() == UnitSubType.FOOTMAN
+                || ((Fighter) fighter).getSubType() == UnitSubType.SWORDSMAN)
+                && ((Fighter) fought).getSubType() == UnitSubType.SPEARMAN) {
+            attack += 10;
+        } else if ((((Fighter) fighter).getSubType() == UnitSubType.SPEARMAN
+                && (((Fighter) fought).getSubType() == UnitSubType.FOOTMAN
+                || ((Fighter) fought).getSubType() == UnitSubType.SWORDSMAN))) {
+            defence += 10;
+        }
         defence += this.mapArea.at(defencerPos).getDefenceBuff();
-        fighter.injure(defence);
+        if (((Fighter) fighter).getSubType() != UnitSubType.ARCHER) {
+            fighter.injure(defence);
+        }
         fought.injure(attack);
         if (fighter.isDied()) {
             units.remove((Unit) fighter);
@@ -497,13 +526,16 @@ public class MainGame extends State {
         Position position = city.getLocation();
         int attack = fighter.getAttack();
         int defence = city.getDefence();
-        fighter.injure(defence);
+        if (((Fighter) fighter).getSubType() != UnitSubType.ARCHER) {
+            fighter.injure(defence);
+        }
         city.injure(attack);
         if (fighter.isDied()) {
             units.remove((Unit) fighter);
         }
         if (city.isDied()) {
             this.currentPlayer.occupyCity(city);
+
         }
         attacker.setAttackedThisTurn(true);
         this.unselectUnit();
@@ -704,10 +736,14 @@ public class MainGame extends State {
                 this.countryName_1.setFont(new Font("Consolas", Font.PLAIN, 25));
                 this.countryName_2.setFont(new Font("Consolas", Font.BOLD, 25));
             }
-            this.scienceNameLabel.setText(currentPlayer.getCurrentScience().toString());
-            this.scienceProgressLabel.setText(currentPlayer.getStockValue().getScience()
-                    + " / " + ScienceConfig.SCIENCE_COST.get(currentPlayer.getCurrentScience()));
-
+            try {
+                this.scienceNameLabel.setText(currentPlayer.getCurrentScience().toString());
+                this.scienceProgressLabel.setText(currentPlayer.getStockValue().getScience()
+                        + " / " + ScienceConfig.SCIENCE_COST.get(currentPlayer.getCurrentScience()));
+            } catch (Exception e) {
+                this.scienceNameLabel.setText("");
+                this.scienceProgressLabel.setText(" 0 / 0");
+            }
             if (scientists.size() > 0) {
                 GiantName scientist = scientists.get(0);
                 this.scientistNameLabel.setText(scientist.toString());

@@ -1,6 +1,6 @@
 package team.vicilization.util;
 
-import team.vicilization.gameitem.BuildingType;
+import team.vicilization.gameitem.building.BuildingType;
 import team.vicilization.gameitem.GameItemConfig;
 
 public class Property {
