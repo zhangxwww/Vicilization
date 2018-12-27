@@ -225,6 +225,7 @@ public class Country {
 
     public void occupyCity(City city) {
         this.cities.add(city);
+        city.setCountry(this);
     }
 
     public void loseCity(City city) {

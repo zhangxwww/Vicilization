@@ -535,6 +535,7 @@ public class MainGame extends State {
         }
         if (city.isDied()) {
             this.currentPlayer.occupyCity(city);
+
         }
         attacker.setAttackedThisTurn(true);
         this.unselectUnit();

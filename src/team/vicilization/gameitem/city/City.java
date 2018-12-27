@@ -365,6 +365,9 @@ public class City implements Fightable {
         this.population = population;
     }
 
+    public void setCountry(Country country) {
+        this.country = country;
+    }
     public int getRecovery() {
         this.recovery=10+2*this.getPopulation();
         return recovery;
