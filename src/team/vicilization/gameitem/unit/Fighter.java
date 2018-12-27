@@ -1,6 +1,7 @@
 package team.vicilization.gameitem.unit;
 
 import team.vicilization.country.Country;
+import team.vicilization.gameitem.Fightable;
 import team.vicilization.gameitem.GameItemConfig;
 import team.vicilization.gamemap.GameMap;
 import team.vicilization.gamemap.LandSquare;

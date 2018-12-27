@@ -1,4 +1,4 @@
-package team.vicilization.gameitem.unit;
+package team.vicilization.gameitem;
 
 import team.vicilization.gamemap.GameMap;
 import team.vicilization.gamemap.LandSquare;
