@@ -7,12 +7,13 @@ import java.util.Vector;
 import static java.lang.Math.sqrt;
 
 public class GameMap {
-    //先取一列，再取列中每一行
+    //分别储存地块、地形、地貌、资源组成的地图
     private Vector<Vector<LandSquare>> landSquares;
     private Vector<Vector<TerrainType>> terrainMap;
     private Vector<Vector<LandformType>> landformMap;
     private Vector<Vector<ResourceType>> resourceMap;
 
+    //储存温度和湿度组成的地图
     private Vector<Vector<Double>> temperatureMap;
     private Vector<Vector<Double>> moistureMap;
 
@@ -70,19 +71,9 @@ public class GameMap {
             }
             System.out.print('\n');
         }
-        /*
-        System.out.println("Printing resourceMap");
-        for (int i = 0; i < GameMapConfig.MAP_HEIGHT; i++) {
-            for (int j = 0; j < GameMapConfig.MAP_WIDTH; j++) {
-                System.out.print(this.landSquares.get(j).get(i).getResourceType());
-                System.out.print("\t");
-            }
-            System.out.print('\n');
-        }
-        */
     }
 
-    //=====================取某一元素=========================//
+    //=====================取某一地块=========================//
     public LandSquare getSquare(int x, int y) {
         return this.landSquares.get(x).get(y);
     }
@@ -91,6 +82,7 @@ public class GameMap {
         return this.landSquares.get(position.getX()).get(position.getY());
     }
 
+    //=====================判断位置合法=========================//
     public boolean isLegalPosition(int x, int y) {
         return ((x >= 0) && (x < GameMapConfig.MAP_WIDTH)
                 && (y >= 0) && (y < GameMapConfig.MAP_HEIGHT));
@@ -196,6 +188,7 @@ public class GameMap {
     }
 
     //=====================生成普通地形=========================//
+    // 先依概率生成丘陵
     private void initTerrain_PLAIN_HILL() {
         for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
             for (int j = 0; j < GameMapConfig.MAP_HEIGHT; j++) {
@@ -207,6 +200,7 @@ public class GameMap {
     }
 
     //=====================随机生成地貌=========================//
+    // 根据温度和湿度的分布不同依概率生成冻土、草原、森林、雨林、沙漠
     private void initLandform() {
         for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
             for (int j = 0; j < GameMapConfig.MAP_HEIGHT; j++) {
@@ -243,7 +237,8 @@ public class GameMap {
         }
     }
 
-    //=====================随机生成资源==========================//
+    //=====================（随机）生成资源==========================//
+    // 目前没有完成“资源”，因此均为NONE
     private void initResource() {
         for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
             for (int j = 0; j < GameMapConfig.MAP_HEIGHT; j++) {
@@ -252,7 +247,10 @@ public class GameMap {
         }
     }
 
-    //=====================山河湖 抵消其他==========================//
+    //=====================随机生成山河湖==========================//
+    // 生成山河湖后覆盖替换其他地形
+    // 河流从山发源，河流尽头生成湖泊
+    // 山、河流在GamemapConfig中储存了特定的几种形状，
     private void clearForTerr(int x, int y, TerrainType terr) throws IndexOutOfBoundsException {
         if (((terrainMap.get(x).get(y) == TerrainType.RIVER_ROW)
                 || (terrainMap.get(x).get(y) == TerrainType.RIVER_COL)
