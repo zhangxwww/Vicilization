@@ -49,7 +49,7 @@ public class Country {
 
         this.countryResource = new HashMap<String, Integer>() {
         };
-        this.currentScience = ScienceName.ARITHMETIC;
+        this.currentScience = ScienceName.ARITHMETIC;           // 初始科技为ARITHMETIC
         this.flowValue = new Property();
         this.stockValue = new Property();
 
@@ -59,6 +59,8 @@ public class Country {
         Collections.shuffle(availableNames);
     }
 
+    // 每回合结束后由主控制类对各国调用，完成回合结束时需要进行的任务
+    // 主要为分别调用国家各个单位、城市的回合结束方法
     public void endOfCurrentRound() {
         for (Unit u : units) {
             u.unitEndOfTurn();
@@ -68,6 +70,12 @@ public class Country {
         }
     }
 
+    // 每回合结束后由主控制类对各国调用，完成回合结束时需要进行的任务
+    // 主要为分别调用国家各个单位、城市的回合开始方法
+    // 按照原本游戏习惯，每回合开始进行流量存量结算，进行科技等推进
+    //
+    // 此处注意到，城市的回合开始方法会产生返回值，是生产出的单位
+    // 生产出的单位由国家new出来，位置由nearestAvailable()方法给出
     public void readyForNewRound(GameMap map, Country enemyCountry) {
         UnitSubType temp;
         for (City city : cities) {
