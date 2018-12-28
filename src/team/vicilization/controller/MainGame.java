@@ -264,6 +264,7 @@ public class MainGame extends State {
         this.panel.add(mapArea);
     }
 
+    // 同步units和cities
     private void synchronizeCitiesAndUnits() {
         this.units.clear();
         this.cities.clear();
@@ -468,6 +469,7 @@ public class MainGame extends State {
         this.unselectUnit();
     }
 
+    // 切换玩家时切换视角
     private void transView() {
         Position position;
         if (this.currentPlayer.getCities().size() != 0) {
@@ -543,6 +545,7 @@ public class MainGame extends State {
         this.unselectUnit();
     }
 
+    // 检查是否可以招募伟人
     private void checkGiant() {
         if (scientists.size() > 0) {
             GiantName name = scientists.get(0);
@@ -661,6 +664,7 @@ public class MainGame extends State {
         this.panel.repaint();
     }
 
+    // 绘制单位可以到达的区域
     private void drawAccesseble() {
         Vector<LandSquare> squares = selectedUnit.
                 getAvailableLocation(this.mapArea.getMap());
@@ -750,6 +754,7 @@ public class MainGame extends State {
         }
     }
 
+    // 面板上方的区域
     private class UpperInfoArea extends JPanel {
         // show flow value, resource count ... here
         private JLabel sciencePointInfo;
@@ -969,6 +974,7 @@ public class MainGame extends State {
         }
     }
 
+    // 面板下方的区域
     private class LowerInfoArea extends JPanel {
         // show selected unit / city info
         private JLabel unitTypeInfo;
@@ -1216,6 +1222,7 @@ public class MainGame extends State {
             this.add(mapPanel);
         }
 
+
         public void addUnitInMap(Unit unit, Position position) {
             this.mapPanel.addUnit(unit, position);
         }
@@ -1253,7 +1260,6 @@ public class MainGame extends State {
         }
 
         private class MapPanel extends JPanel {
-            private Position bias;
             private GameMap map;
 
             private ImageIcon hill_desert_icon;

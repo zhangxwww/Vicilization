@@ -11,13 +11,21 @@ import team.vicilization.country.*;
 
 public class Setting extends State {
 
+    // 确认
     private static JButton confirmButton;
+
+    // 两组选择国家的按钮
     private static Vector<JRadioButton> chooseCountryButton_1;
     private static Vector<JRadioButton> chooseCountryButton_2;
+
+    // 对应两个玩家的两个button group
     private ButtonGroup chooseCountryButtonGroup_1;
     private ButtonGroup chooseCountryButtonGroup_2;
+
+    // 显示提示信息
     private JLabel chooseLeaderLabel;
 
+    // 两位玩家选择的国家
     private CountryName[] selectedCountryNames;
 
     public Setting(MainWindow mainWindow) {
