@@ -245,7 +245,6 @@ public class GameMap {
     //
     // initTerrain_RIDGE_RIVER_LAKE 负责调用applyRiver, applyRidge
     // clearForTerr 为辅助方法
-    // 该部分涉及Config的取用、地图越界的判断等，详见技术文档
     private void clearForTerr(int x, int y, TerrainType terr) throws IndexOutOfBoundsException {
         if (((terrainMap.get(x).get(y) == TerrainType.RIVER_ROW)
                 || (terrainMap.get(x).get(y) == TerrainType.RIVER_COL)
