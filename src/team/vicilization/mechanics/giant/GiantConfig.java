@@ -5,6 +5,7 @@ import team.vicilization.util.Property;
 import java.util.HashMap;
 
 public class GiantConfig {
+    // 记录了各个伟人分别属于哪一类伟人
     public static final HashMap<GiantName, GiantType> GIANT_NAME_TO_TYPE = new HashMap<GiantName, GiantType>() {
         {
             put(GiantName.ALBERT_EINSTEIN, GiantType.SCIENTIST);
@@ -20,6 +21,7 @@ public class GiantConfig {
         }
     };
 
+    // 记录了招募伟人带来的加成
     public static final HashMap<GiantType, Property> GIANT_TYPE_BONUS = new HashMap<GiantType, Property>() {
         {
             put(GiantType.ECONOMIST, new Property(0, 100, 0, 0, 0, 0, 0));
@@ -28,6 +30,7 @@ public class GiantConfig {
         }
     };
 
+    // 记录了招募伟人需要消耗的伟人点数
     public static final HashMap<GiantType, Property> GIANT_TYPE_COST = new HashMap<GiantType, Property>() {
         {
             put(GiantType.ECONOMIST, new Property(0, 0, 0, 0, 0, 50, 0));
@@ -36,6 +39,7 @@ public class GiantConfig {
         }
     };
 
+    // 私有化构造函数防止出现以外的对象
     private GiantConfig() {
     }
 }

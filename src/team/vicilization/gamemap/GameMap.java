@@ -17,7 +17,6 @@ public class GameMap {
     private Vector<Vector<Double>> temperatureMap;
     private Vector<Vector<Double>> moistureMap;
 
-    //=====================构造函数=========================//
     public GameMap() {
         this.landSquares = new Vector<>(GameMapConfig.MAP_WIDTH);
         this.landformMap = new Vector<>(GameMapConfig.MAP_WIDTH);
@@ -42,7 +41,10 @@ public class GameMap {
                 this.moistureMap.get(i).add(0.0);
             }
         }
-
+        // 依概率初始化温度和湿度后，先生成基础的平原/丘陵地形
+        // 在该基础上，依照温度湿度分布生成地貌
+        // 最后生成山峰和河流，该生成会覆盖原有的地形地貌
+        // “资源”暂未实现，但接口已经留好
         this.initTemperature();
         this.initMoisture();
         this.initTerrain_PLAIN_HILL();
@@ -50,30 +52,12 @@ public class GameMap {
         this.initResource();
         this.initTerrain_RIDGE_RIVER_LAKE();
 
+        // 最后用已有的地形图、地貌图来初始化每一个单元格
         this.initLandSquare();
     }
 
-    //=====================test=========================//
-    public void testPrint() {
-        System.out.println("Printing terrainMap");
-        for (int i = 0; i < GameMapConfig.MAP_HEIGHT; i++) {
-            for (int j = 0; j < GameMapConfig.MAP_WIDTH; j++) {
-                System.out.print(this.landSquares.get(j).get(i).getTerrainType());
-                System.out.print("\t");
-            }
-            System.out.print('\n');
-        }
-        System.out.println("Printing landformMap");
-        for (int i = 0; i < GameMapConfig.MAP_HEIGHT; i++) {
-            for (int j = 0; j < GameMapConfig.MAP_WIDTH; j++) {
-                System.out.print(this.landSquares.get(j).get(i).getLandformType());
-                System.out.print("\t");
-            }
-            System.out.print('\n');
-        }
-    }
-
-    //=====================取某一地块=========================//
+    //========================取地块===========================//
+    // 可以按照util.Position类的对象来查找，也可以重载为按列数x行数y查找
     public LandSquare getSquare(int x, int y) {
         return this.landSquares.get(x).get(y);
     }
@@ -83,6 +67,7 @@ public class GameMap {
     }
 
     //=====================判断位置合法=========================//
+    // 与getSquare相同，可按Position或按行列重载数判断位置是否合法
     public boolean isLegalPosition(int x, int y) {
         return ((x >= 0) && (x < GameMapConfig.MAP_WIDTH)
                 && (y >= 0) && (y < GameMapConfig.MAP_HEIGHT));
@@ -94,6 +79,9 @@ public class GameMap {
 
 
     //=====================初始化温度分布=======================//
+    // 具体算法为：每一列独立随机生成一个温度峰值的位置
+    // 随后对每列的峰值位置做宽度为五列的加权滑动平均，获一定的平滑性
+    // 获得各列峰值位置后，各列的温度独立按照规律线性分布
     private void initTemperature() {
         Vector<Integer> temperatureLoc = new Vector<>(GameMapConfig.MAP_WIDTH);
         Vector<Double> temperaturePeak = new Vector<>(GameMapConfig.MAP_WIDTH);
@@ -166,6 +154,9 @@ public class GameMap {
     }
 
     //=====================初始化降水分布=======================//
+    // 在全球的左1/3和右1/3区域内分别生成一个随机的降水中心
+    // 降水中心的降水量在GamemapConfig中有规定
+    // 各个单元格的降水则按两处降水中心线性插值
     private void initMoisture() {
         int moistureX1 = (int) (Math.random() * GameMapConfig.MAP_WIDTH * 0.33);
         int moistureX2 = (int) ((2 + Math.random()) * GameMapConfig.MAP_WIDTH * 0.33);
@@ -188,7 +179,7 @@ public class GameMap {
     }
 
     //=====================生成普通地形=========================//
-    // 先依概率生成丘陵
+    // 先依概率生成丘陵，其余部分为平原
     private void initTerrain_PLAIN_HILL() {
         for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
             for (int j = 0; j < GameMapConfig.MAP_HEIGHT; j++) {
@@ -238,7 +229,7 @@ public class GameMap {
     }
 
     //=====================（随机）生成资源==========================//
-    // 目前没有完成“资源”，因此均为NONE
+    // 时间原因目前还没有完成“资源”有关的内容，因此均为NONE
     private void initResource() {
         for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
             for (int j = 0; j < GameMapConfig.MAP_HEIGHT; j++) {
@@ -247,10 +238,13 @@ public class GameMap {
         }
     }
 
-    //=====================随机生成山河湖==========================//
+    //======================随机生成山河湖==========================//
     // 生成山河湖后覆盖替换其他地形
     // 河流从山发源，河流尽头生成湖泊
-    // 山、河流在GamemapConfig中储存了特定的几种形状，
+    // 山、河流在GamemapConfig中储存了特定的几种形状
+    //
+    // initTerrain_RIDGE_RIVER_LAKE 负责调用applyRiver, applyRidge
+    // clearForTerr 为辅助方法
     private void clearForTerr(int x, int y, TerrainType terr) throws IndexOutOfBoundsException {
         if (((terrainMap.get(x).get(y) == TerrainType.RIVER_ROW)
                 || (terrainMap.get(x).get(y) == TerrainType.RIVER_COL)
@@ -304,7 +298,8 @@ public class GameMap {
         }
     }
 
-    //=====================初始化LandSquare=========================//
+    //=======================初始化LandSquare=========================//
+    // 分别根据terrainMap和landformMap及各点位置初始化单元格
     private void initLandSquare() {
         for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
             for (int j = 0; j < GameMapConfig.MAP_HEIGHT; j++) {
