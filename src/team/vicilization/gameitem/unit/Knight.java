@@ -8,6 +8,5 @@ public class Knight extends Fighter {
     public Knight(Position position, Country country) {
         super(position, country,UnitSubType.KNIGHT);
         setSubType(UnitSubType.KNIGHT);
-
     }
 }

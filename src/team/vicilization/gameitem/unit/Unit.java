@@ -38,10 +38,7 @@ public abstract class Unit implements Movable{
         this.movedThisTurn = false;
         this.attackedThisTurn = false;
     }
-    
-    public void delete(){
 
-    }
 
     public void recover(){
         int initHealth=GameItemConfig.UNIT_HEALTH.get(this.subType);

@@ -13,23 +13,23 @@ public abstract class Fighter extends Unit implements Fightable, Updateable {
 
     private boolean canUpdate;
 
-    public boolean calculateCanUpdate(Country country) {
+    @Override
+    public boolean isUpgradable() {
         if (!GameItemConfig.UPDATE_NEED_SCIENCE.containsKey(this.subType)) {
-            this.canUpdate = false;
+            return false;
         } else {
             if (country.getLearntScience().contains(GameItemConfig.UPDATE_NEED_SCIENCE.get(this.subType))) {
-                this.canUpdate = true;
+                return true;
             } else {
-                this.canUpdate = false;
+                return false;
             }
         }
-        return canUpdate;
     }
 
     public Fighter(Position position, Country country, UnitSubType unitSubType) {
         super(position, country, UnitType.FIGHTER, unitSubType);
         setType(UnitType.FIGHTER);
-        calculateCanUpdate(country);
+        isUpgradable();
     }
 
     //---------------------------Fightable
@@ -110,16 +110,4 @@ public abstract class Fighter extends Unit implements Fightable, Updateable {
         this.canUpdate = canUpdate;
     }
 
-    @Override
-    public boolean isUpgradable() {
-        if (!GameItemConfig.UPDATE_NEED_SCIENCE.containsKey(this.subType)) {
-            return false;
-        } else {
-            if (country.getLearntScience().contains(GameItemConfig.UPDATE_NEED_SCIENCE.get(this.subType))) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
 }
