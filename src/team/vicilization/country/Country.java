@@ -35,6 +35,10 @@ public class Country {
 
     private Vector<CityName> availableNames;
 
+    private GiantName givenupScientist;
+    private GiantName givenupEconomist;
+    private GiantName givenupEngineer;
+
     public Country(CountryName countryName) {
         this.countryName = countryName;
         this.leaderName = CountryConfig.LEADER_OF_COUNTRY.get(countryName);
@@ -57,6 +61,10 @@ public class Country {
                 CountryConfig.CITIES_OF_COUNTRY.get(this.countryName)
         );
         Collections.shuffle(availableNames);
+
+        this.givenupScientist = null;
+        this.givenupEconomist = null;
+        this.givenupEngineer = null;
     }
 
     // 每回合结束后由主控制类对各国调用，完成回合结束时需要进行的任务
@@ -233,6 +241,7 @@ public class Country {
 
     public void occupyCity(City city) {
         this.cities.add(city);
+        city.setCountry(this);
     }
 
     public void loseCity(City city) {
@@ -279,8 +288,24 @@ public class Country {
         GiantType type = GiantConfig.GIANT_NAME_TO_TYPE.get(giantName);
         if ((type == GiantType.ECONOMIST) || (type == GiantType.SCIENTIST)) {
             this.stockValue.addProperty(GiantConfig.GIANT_TYPE_BONUS.get(type));
-        }else{
+        } else {
             this.cities.get(0).getStockValue().addProperty(GiantConfig.GIANT_TYPE_BONUS.get(type));
+        }
+        switch (GiantConfig.GIANT_NAME_TO_TYPE.get(giantName)) {
+            case SCIENTIST:
+                this.getStockValue().setScientistValue(getStockValue().getScientistValue()
+                        - GiantConfig.GIANT_TYPE_COST.get(GiantType.SCIENTIST).getScientistValue());
+                break;
+            case ECONOMIST:
+                this.getStockValue().setTraderValue(getStockValue().getTraderValue()
+                        - GiantConfig.GIANT_TYPE_COST.get(GiantType.ECONOMIST).getTraderValue());
+                break;
+            case ENGINEER:
+                this.getStockValue().setEngineerValue(getStockValue().getEngineerValue()
+                        - GiantConfig.GIANT_TYPE_COST.get(GiantType.ENGINEER).getEngineerValue());
+                break;
+            default:
+                break;
         }
     }
 
@@ -352,5 +377,29 @@ public class Country {
 
     public ScienceName getCurrentScience() {
         return currentScience;
+    }
+
+    public GiantName getGivenupScientist() {
+        return givenupScientist;
+    }
+
+    public GiantName getGivenupEconomist() {
+        return givenupEconomist;
+    }
+
+    public GiantName getGivenupEngineer() {
+        return givenupEngineer;
+    }
+
+    public void setGivenupScientist(GiantName givenupScientist) {
+        this.givenupScientist = givenupScientist;
+    }
+
+    public void setGivenupEconomist(GiantName givenupEconomist) {
+        this.givenupEconomist = givenupEconomist;
+    }
+
+    public void setGivenupEngineer(GiantName givenupEngineer) {
+        this.givenupEngineer = givenupEngineer;
     }
 }

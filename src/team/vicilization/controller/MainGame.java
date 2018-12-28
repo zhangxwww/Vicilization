@@ -91,7 +91,7 @@ public class MainGame extends State {
         this.unselectUnit();
         this.mapArea.mapPanel.updateMap();
 
-        if (judgeVectory()) {
+        if (judgeVictory()) {
             this.mainWindow.convertToNextState(currentPlayer);
         } else {
             round++;
@@ -103,12 +103,13 @@ public class MainGame extends State {
             this.synchronizeCitiesAndUnits();
             this.upperInfoArea.update();
             this.transView();
-        }
-        this.mapArea.mapPanel.updateMap();
-        if (currentPlayer.getCities().size() > 0) {
-            selectCity(currentPlayer.getCities().get(0));
-        } else if (currentPlayer.getUnits().size() > 0) {
-            selectUnit(currentPlayer.getUnits().get(0));
+            this.mapArea.mapPanel.updateMap();
+            this.checkGiant();
+            if (currentPlayer.getCities().size() > 0) {
+                selectCity(currentPlayer.getCities().get(0));
+            } else if (currentPlayer.getUnits().size() > 0) {
+                selectUnit(currentPlayer.getUnits().get(0));
+            }
         }
     }
 
@@ -263,6 +264,7 @@ public class MainGame extends State {
         this.panel.add(mapArea);
     }
 
+    // 同步units和cities
     private void synchronizeCitiesAndUnits() {
         this.units.clear();
         this.cities.clear();
@@ -280,7 +282,7 @@ public class MainGame extends State {
         }
     }
 
-    private boolean judgeVectory() {
+    private boolean judgeVictory() {
         if (this.currentPlayer.judgeScienceVictory()) {
             // science victory
             return true;
@@ -464,8 +466,10 @@ public class MainGame extends State {
             this.units.remove(selectedUnit);
         }
         this.mapArea.mapPanel.updateMap();
+        this.unselectUnit();
     }
 
+    // 切换玩家时切换视角
     private void transView() {
         Position position;
         if (this.currentPlayer.getCities().size() != 0) {
@@ -483,8 +487,33 @@ public class MainGame extends State {
         Position defencerPos = defencer.getPosition();
         int attack = attacker.getAttack();
         int defence = defencer.getDefence();
+        if (((Fighter) fighter).getSubType() == UnitSubType.KNIGHT
+                && ((Fighter) fought).getSubType() == UnitSubType.SPEARMAN) {
+            defence += 10;
+        } else if (((Fighter) fighter).getSubType() == UnitSubType.SPEARMAN
+                && ((Fighter) fought).getSubType() == UnitSubType.KNIGHT) {
+            attack += 10;
+        } else if (((Fighter) fighter).getSubType() == UnitSubType.KNIGHT
+                && (((Fighter) fought).getSubType() == UnitSubType.FOOTMAN
+                || ((Fighter) fought).getSubType() == UnitSubType.SWORDSMAN)) {
+            attack += 10;
+        } else if ((((Fighter) fighter).getSubType() == UnitSubType.FOOTMAN
+                || ((Fighter) fighter).getSubType() == UnitSubType.SWORDSMAN)
+                && ((Fighter) fought).getSubType() == UnitSubType.KNIGHT) {
+            defence += 10;
+        } else if ((((Fighter) fighter).getSubType() == UnitSubType.FOOTMAN
+                || ((Fighter) fighter).getSubType() == UnitSubType.SWORDSMAN)
+                && ((Fighter) fought).getSubType() == UnitSubType.SPEARMAN) {
+            attack += 10;
+        } else if ((((Fighter) fighter).getSubType() == UnitSubType.SPEARMAN
+                && (((Fighter) fought).getSubType() == UnitSubType.FOOTMAN
+                || ((Fighter) fought).getSubType() == UnitSubType.SWORDSMAN))) {
+            defence += 10;
+        }
         defence += this.mapArea.at(defencerPos).getDefenceBuff();
-        fighter.injure(defence);
+        if (((Fighter) fighter).getSubType() != UnitSubType.ARCHER) {
+            fighter.injure(defence);
+        }
         fought.injure(attack);
         if (fighter.isDied()) {
             units.remove((Unit) fighter);
@@ -501,20 +530,96 @@ public class MainGame extends State {
         Position position = city.getLocation();
         int attack = fighter.getAttack();
         int defence = city.getDefence();
-        fighter.injure(defence);
+        if (((Fighter) fighter).getSubType() != UnitSubType.ARCHER) {
+            fighter.injure(defence);
+        }
         city.injure(attack);
         if (fighter.isDied()) {
             units.remove((Unit) fighter);
         }
         if (city.isDied()) {
             this.currentPlayer.occupyCity(city);
+
         }
         attacker.setAttackedThisTurn(true);
         this.unselectUnit();
     }
 
-    private void recruitGiant(GiantName giant) {
-        // TODO
+    // 检查是否可以招募伟人
+    private void checkGiant() {
+        if (scientists.size() > 0) {
+            GiantName name = scientists.get(0);
+            if (currentPlayer.getGivenupScientist() != null
+                    && currentPlayer.getGivenupScientist() == name) {
+                return;
+            }
+            int cost = GiantConfig.GIANT_TYPE_COST.get(GiantType.SCIENTIST).getScientistValue();
+            if (currentPlayer.getStockValue().getScientistValue() >= cost) {
+                int result = showRecruitGiantDialog(name);
+                if (result == JOptionPane.OK_OPTION) {
+                    this.recruitGiant(name);
+                } else {
+                    this.currentPlayer.setGivenupScientist(name);
+                }
+            }
+        }
+        if (economists.size() > 0) {
+            GiantName name = economists.get(0);
+            if (currentPlayer.getGivenupEconomist() != null
+                    && currentPlayer.getGivenupEconomist() == name) {
+                return;
+            }
+            int cost = GiantConfig.GIANT_TYPE_COST.get(GiantType.ECONOMIST).getTraderValue();
+            if (currentPlayer.getStockValue().getTraderValue() >= cost) {
+                int result = showRecruitGiantDialog(name);
+                if (result == JOptionPane.OK_OPTION) {
+                    this.recruitGiant(name);
+                } else {
+                    this.currentPlayer.setGivenupEconomist(name);
+                }
+            }
+        }
+        if (engineers.size() > 0) {
+            GiantName name = engineers.get(0);
+            if (currentPlayer.getGivenupEngineer() != null
+                    && currentPlayer.getGivenupEngineer() == name) {
+                return;
+            }
+            int cost = GiantConfig.GIANT_TYPE_COST.get(GiantType.ENGINEER).getEngineerValue();
+            if (currentPlayer.getStockValue().getEngineerValue() >= cost) {
+                int result = showRecruitGiantDialog(name);
+                if (result == JOptionPane.OK_OPTION) {
+                    this.recruitGiant(name);
+                } else {
+                    this.currentPlayer.setGivenupEngineer(name);
+                }
+            }
+        }
+    }
+
+    private int showRecruitGiantDialog(GiantName name) {
+        String message = "Recruit " + name + " or not ?";
+        int result = JOptionPane.showConfirmDialog(this.panel, message,
+                "Recruit giant", JOptionPane.YES_NO_OPTION);
+        return result;
+    }
+
+    private void recruitGiant(GiantName name) {
+        this.currentPlayer.recruitGiant(name);
+        switch (GiantConfig.GIANT_NAME_TO_TYPE.get(name)) {
+            case SCIENTIST:
+                this.scientists.remove(name);
+                break;
+            case ECONOMIST:
+                this.economists.remove(name);
+                break;
+            case ENGINEER:
+                this.engineers.remove(name);
+                break;
+            default:
+                break;
+        }
+        this.upperInfoArea.update();
     }
 
     private void getAllowedBuildings() {
@@ -559,6 +664,7 @@ public class MainGame extends State {
         this.panel.repaint();
     }
 
+    // 绘制单位可以到达的区域
     private void drawAccesseble() {
         Vector<LandSquare> squares = selectedUnit.
                 getAvailableLocation(this.mapArea.getMap());
@@ -648,6 +754,7 @@ public class MainGame extends State {
         }
     }
 
+    // 面板上方的区域
     private class UpperInfoArea extends JPanel {
         // show flow value, resource count ... here
         private JLabel sciencePointInfo;
@@ -708,10 +815,14 @@ public class MainGame extends State {
                 this.countryName_1.setFont(new Font("Consolas", Font.PLAIN, 25));
                 this.countryName_2.setFont(new Font("Consolas", Font.BOLD, 25));
             }
-            this.scienceNameLabel.setText(currentPlayer.getCurrentScience().toString());
-            this.scienceProgressLabel.setText(currentPlayer.getStockValue().getScience()
-                    + " / " + ScienceConfig.SCIENCE_COST.get(currentPlayer.getCurrentScience()));
-
+            try {
+                this.scienceNameLabel.setText(currentPlayer.getCurrentScience().toString());
+                this.scienceProgressLabel.setText(currentPlayer.getStockValue().getScience()
+                        + " / " + ScienceConfig.SCIENCE_COST.get(currentPlayer.getCurrentScience()));
+            } catch (Exception e) {
+                this.scienceNameLabel.setText("");
+                this.scienceProgressLabel.setText(" 0 / 0");
+            }
             if (scientists.size() > 0) {
                 GiantName scientist = scientists.get(0);
                 this.scientistNameLabel.setText(scientist.toString());
@@ -863,6 +974,7 @@ public class MainGame extends State {
         }
     }
 
+    // 面板下方的区域
     private class LowerInfoArea extends JPanel {
         // show selected unit / city info
         private JLabel unitTypeInfo;
@@ -1110,6 +1222,7 @@ public class MainGame extends State {
             this.add(mapPanel);
         }
 
+
         public void addUnitInMap(Unit unit, Position position) {
             this.mapPanel.addUnit(unit, position);
         }
@@ -1147,7 +1260,6 @@ public class MainGame extends State {
         }
 
         private class MapPanel extends JPanel {
-            private Position bias;
             private GameMap map;
 
             private ImageIcon hill_desert_icon;

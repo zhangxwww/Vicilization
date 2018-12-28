@@ -8,9 +8,12 @@ import java.awt.event.ActionListener;
 public class GameStart extends State {
 
     private static JButton startGameButton;
+
+    // 背景图片相关
     private JPanel backGroundPanel;
     private JLabel backGroundLabel;
 
+    // 开始游戏
     public GameStart(MainWindow mainWindow) {
         super(mainWindow);
         this.setNextState(StateType.Setting);
@@ -21,12 +24,14 @@ public class GameStart extends State {
 
     private class ButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
+            // 按下按钮后进入setting 状态
             if (event.getSource() == GameStart.startGameButton) {
                 mainWindow.convertToNextState();
             }
         }
     }
 
+    // 设置背景
     private void setBackgournd() {
         this.backGroundPanel = new JPanel() {
             public void paintComponent(Graphics graphics) {
@@ -45,9 +50,10 @@ public class GameStart extends State {
     }
 
     private void addStartGameButton() {
-        this.startGameButton = new JButton("Start");
-        this.startGameButton.setBounds(100, 200, 100, 50);
-        this.startGameButton.addActionListener(new ButtonListener());
-        this.panel.add(startGameButton);
+        startGameButton = new JButton("Start");
+        startGameButton.setBounds(500, 650, 200, 100);
+        startGameButton.addActionListener(new ButtonListener());
+        startGameButton.setFont(new Font("Consolas", Font.BOLD, 30));
+        panel.add(startGameButton);
     }
 }
