@@ -148,10 +148,12 @@ public class Country {
         this.finishScience();
     }
 
+    // 对外的更新流量接口
     public void undateFlow() {
         this.calculateFlowValue();
     }
 
+    // 判断是否拥有地块
     public boolean hasLandSquare(LandSquare landSquare) {
         for (City city : cities) {
             if (city.hasLandSquare(landSquare)) {
@@ -161,6 +163,7 @@ public class Country {
         return false;
     }
 
+    // 找出城市生产单位后能放入的最近单元格
     private Position nearestAvailable(Position root, GameMap map, Country enemyCountry) {
         Vector<LandSquare> availablePosition = new Vector<>();
         for (int i = 0; i < GameMapConfig.MAP_WIDTH; i++) {
@@ -194,11 +197,13 @@ public class Country {
         return position;
     }
 
+    // 更新存量，只在回合初进行
     private void updateStock() {
         this.calculateFlowValue();
         this.stockValue.addProperty(this.flowValue);
     }
 
+    // 计算流量
     private void calculateFlowValue() {
         this.flowValue = new Property();
         for (City city : cities) {
@@ -207,6 +212,7 @@ public class Country {
         }
     }
 
+    // 建立城市
     public City buildNewCity(Position position, GameMap map, Country enemyCountry) {
         Vector<LandSquare> newTerritory = new Vector<>();
         int x = position.getX();
@@ -239,23 +245,28 @@ public class Country {
         return tempCity;
     }
 
+    // 征服城市
     public void occupyCity(City city) {
         this.cities.add(city);
         city.setCountry(this);
     }
 
+    // 失去城市
     public void loseCity(City city) {
         this.cities.remove(city);
     }
 
+    // 获得新单位
     public void addNewUnit(Unit unit) {
         this.units.add(unit);
     }
 
+    // 删除单位
     public void deleteUnit(Unit unit) {
         this.units.remove(unit);
     }
 
+    // 建造者采集地貌
     public void harvestLandform(Position position, LandformType landformType) {
         City city = cities.get(0);
         int distance = 2500;
@@ -269,12 +280,7 @@ public class Country {
         city.getStockValue().addProperty(GameMapConfig.LANDFORM_HARVEST.get(landformType));
     }
 
-    /*
-        public void selectScience(ScienceName scienceName) {
-            this.currentScience = scienceName;
-        }
-    */
-
+    // 科技研究完毕进行下一个
     private void finishScience() {
         if ((this.currentScience != null)
                 && (this.stockValue.getScience() >= ScienceConfig.SCIENCE_COST.get(this.currentScience))) {
@@ -284,6 +290,7 @@ public class Country {
         }
     }
 
+    // 招募伟人
     public void recruitGiant(GiantName giantName) {
         GiantType type = GiantConfig.GIANT_NAME_TO_TYPE.get(giantName);
         if ((type == GiantType.ECONOMIST) || (type == GiantType.SCIENTIST)) {
@@ -309,10 +316,12 @@ public class Country {
         }
     }
 
+    // 判断科技胜利
     public boolean judgeScienceVictory() {
         return this.learntScience.contains(ScienceName.BUDDHISM);
     }
 
+    // 判断拥有城市
     public boolean hasCity(City city) {
         return this.cities.contains(city);
     }
