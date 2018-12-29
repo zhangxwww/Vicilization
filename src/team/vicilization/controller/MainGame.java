@@ -1,14 +1,19 @@
 package team.vicilization.controller;
 
 
-import team.vicilization.gameitem.*;
+import team.vicilization.country.Country;
+import team.vicilization.country.CountryConfig;
+import team.vicilization.country.CountryName;
+import team.vicilization.gameitem.Fightable;
+import team.vicilization.gameitem.GameItemConfig;
 import team.vicilization.gameitem.building.BuildingType;
 import team.vicilization.gameitem.city.City;
 import team.vicilization.gameitem.unit.*;
 import team.vicilization.gamemap.*;
-import team.vicilization.mechanics.giant.*;
-import team.vicilization.mechanics.science.*;
-import team.vicilization.country.*;
+import team.vicilization.mechanics.giant.GiantConfig;
+import team.vicilization.mechanics.giant.GiantName;
+import team.vicilization.mechanics.giant.GiantType;
+import team.vicilization.mechanics.science.ScienceConfig;
 import team.vicilization.util.Position;
 
 import javax.swing.*;
@@ -16,9 +21,8 @@ import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Arrays;
-import java.util.Vector;
-import javax.swing.Timer;
 import java.util.Random;
+import java.util.Vector;
 
 
 public class MainGame extends State {

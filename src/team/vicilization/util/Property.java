@@ -1,7 +1,7 @@
 package team.vicilization.util;
 
-import team.vicilization.gameitem.building.BuildingType;
 import team.vicilization.gameitem.GameItemConfig;
+import team.vicilization.gameitem.building.BuildingType;
 
 public class Property {
     private int productivity;

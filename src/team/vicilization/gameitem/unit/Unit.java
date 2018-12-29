@@ -7,7 +7,6 @@ import team.vicilization.gamemap.GameMapConfig;
 import team.vicilization.gamemap.LandSquare;
 import team.vicilization.util.Position;
 
-
 import java.util.Vector;
 
 public abstract class Unit implements Movable {

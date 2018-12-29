@@ -1,7 +1,6 @@
 package team.vicilization.controller;
 
 import javax.swing.*;
-import java.awt.*;
 
 abstract class State {
 

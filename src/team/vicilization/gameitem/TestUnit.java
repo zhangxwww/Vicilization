@@ -4,7 +4,6 @@ import team.vicilization.country.Country;
 import team.vicilization.country.CountryName;
 import team.vicilization.gameitem.city.City;
 import team.vicilization.gameitem.city.CityName;
-import team.vicilization.gameitem.unit.Constructor;
 import team.vicilization.gameitem.unit.Footman;
 import team.vicilization.gameitem.unit.UnitSubType;
 import team.vicilization.gamemap.GameMap;

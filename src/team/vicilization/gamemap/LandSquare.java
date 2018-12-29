@@ -2,8 +2,6 @@ package team.vicilization.gamemap;
 
 import team.vicilization.util.Position;
 
-import javax.swing.*;
-
 public class LandSquare {
     //========================Attributes======================//
     private TerrainType terrainType;
