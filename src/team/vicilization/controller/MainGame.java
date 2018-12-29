@@ -331,7 +331,9 @@ public class MainGame extends State {
             }
         }
         if (selectedUnit.getType() == UnitType.FIGHTER
-                && ((Fighter) selectedUnit).isUpgradable()) {
+                && ((Fighter) selectedUnit).isUpgradable()
+                && currentPlayer.getStockValue().getMoney()
+                >= GameItemConfig.UNIT_MONEY_COST.get(selectedUnit.getSubType())) {
             this.panel.add(unitUpgradeButton);
         } else {
             try {
@@ -705,7 +707,10 @@ public class MainGame extends State {
     private void unitUpgrade() {
         Position position = selectedUnit.getPosition();
         UnitSubType subType = selectedUnit.getSubType();
-        currentPlayer.deleteUnit(selectedUnit);
+        int cost = GameItemConfig.UNIT_MONEY_COST.get(subType);
+        int money = this.currentPlayer.getStockValue().getMoney();
+        this.currentPlayer.getStockValue().setMoney(money - cost);
+        this.currentPlayer.deleteUnit(selectedUnit);
         this.units.remove(selectedUnit);
         this.unselectUnit();
         this.unprepareAttack();
@@ -715,6 +720,7 @@ public class MainGame extends State {
         }
         this.selectUnit(selectedUnit);
         this.synchronizeCitiesAndUnits();
+        this.upperInfoArea.update();
         this.mapArea.mapPanel.updateMap();
     }
 
