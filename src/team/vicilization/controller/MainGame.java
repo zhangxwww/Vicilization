@@ -1,14 +1,19 @@
 package team.vicilization.controller;
 
 
-import team.vicilization.gameitem.*;
+import team.vicilization.country.Country;
+import team.vicilization.country.CountryConfig;
+import team.vicilization.country.CountryName;
+import team.vicilization.gameitem.Fightable;
+import team.vicilization.gameitem.GameItemConfig;
 import team.vicilization.gameitem.building.BuildingType;
 import team.vicilization.gameitem.city.City;
 import team.vicilization.gameitem.unit.*;
 import team.vicilization.gamemap.*;
-import team.vicilization.mechanics.giant.*;
-import team.vicilization.mechanics.science.*;
-import team.vicilization.country.*;
+import team.vicilization.mechanics.giant.GiantConfig;
+import team.vicilization.mechanics.giant.GiantName;
+import team.vicilization.mechanics.giant.GiantType;
+import team.vicilization.mechanics.science.ScienceConfig;
 import team.vicilization.util.Position;
 
 import javax.swing.*;
@@ -16,9 +21,8 @@ import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Arrays;
-import java.util.Vector;
-import javax.swing.Timer;
 import java.util.Random;
+import java.util.Vector;
 
 
 public class MainGame extends State {
@@ -327,7 +331,9 @@ public class MainGame extends State {
             }
         }
         if (selectedUnit.getType() == UnitType.FIGHTER
-                && ((Fighter) selectedUnit).isUpgradable()) {
+                && ((Fighter) selectedUnit).isUpgradable()
+                && currentPlayer.getStockValue().getMoney()
+                >= GameItemConfig.UNIT_MONEY_COST.get(selectedUnit.getSubType())) {
             this.panel.add(unitUpgradeButton);
         } else {
             try {
@@ -701,7 +707,10 @@ public class MainGame extends State {
     private void unitUpgrade() {
         Position position = selectedUnit.getPosition();
         UnitSubType subType = selectedUnit.getSubType();
-        currentPlayer.deleteUnit(selectedUnit);
+        int cost = GameItemConfig.UNIT_MONEY_COST.get(subType);
+        int money = this.currentPlayer.getStockValue().getMoney();
+        this.currentPlayer.getStockValue().setMoney(money - cost);
+        this.currentPlayer.deleteUnit(selectedUnit);
         this.units.remove(selectedUnit);
         this.unselectUnit();
         this.unprepareAttack();
@@ -711,6 +720,7 @@ public class MainGame extends State {
         }
         this.selectUnit(selectedUnit);
         this.synchronizeCitiesAndUnits();
+        this.upperInfoArea.update();
         this.mapArea.mapPanel.updateMap();
     }
 

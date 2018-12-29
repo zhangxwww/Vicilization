@@ -4,15 +4,19 @@ import team.vicilization.gameitem.city.City;
 import team.vicilization.gameitem.city.CityName;
 import team.vicilization.gameitem.unit.*;
 import team.vicilization.gamemap.*;
+import team.vicilization.mechanics.giant.GiantConfig;
+import team.vicilization.mechanics.giant.GiantName;
+import team.vicilization.mechanics.giant.GiantType;
 import team.vicilization.mechanics.leader.LeaderName;
-import team.vicilization.mechanics.giant.*;
 import team.vicilization.mechanics.science.ScienceConfig;
 import team.vicilization.mechanics.science.ScienceName;
 import team.vicilization.mechanics.trader.Trader;
-import team.vicilization.util.Property;
 import team.vicilization.util.Position;
+import team.vicilization.util.Property;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Vector;
 
 public class Country {
     //========================Attributes======================//

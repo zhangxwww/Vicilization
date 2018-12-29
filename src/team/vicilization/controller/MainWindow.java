@@ -1,9 +1,9 @@
 package team.vicilization.controller;
 
-import javax.swing.*;
-import java.awt.*;
+import team.vicilization.country.Country;
+import team.vicilization.country.CountryName;
 
-import team.vicilization.country.*;
+import javax.swing.*;
 
 public class MainWindow extends javax.swing.JFrame {
 
