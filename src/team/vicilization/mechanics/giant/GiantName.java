@@ -1,6 +1,7 @@
 package team.vicilization.mechanics.giant;
 
 public enum GiantName {
+    // 伟人姓名枚举类
     ALBERT_EINSTEIN,
     ERWIN_SCHRODINGER,
     ALAN_TURING,
