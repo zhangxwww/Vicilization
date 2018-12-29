@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 public class CountryConfig {
+    // 记录默认城市领土
     public static final Vector<Position> DEFAULT_TERRITORY = new Vector<>() {
         {
             add(new Position(1, 0));
@@ -37,6 +38,8 @@ public class CountryConfig {
             add(new Position(-2, -1));
         }
     };
+
+    // 国家配色
     public static final HashMap<CountryName, Color> COLOR_OF_COUNTRY = new HashMap<>() {
         {
             put(CountryName.INDIA, Color.PINK);
@@ -44,6 +47,7 @@ public class CountryConfig {
         }
     };
 
+    // 记录国家领导人
     public static final HashMap<CountryName, LeaderName> LEADER_OF_COUNTRY = new HashMap<>() {
         {
             put(CountryName.INDIA, LeaderName.GANDHI);
@@ -51,6 +55,7 @@ public class CountryConfig {
         }
     };
 
+    // 一个国家所能拥有的城市名
     public static final HashMap<CountryName, Vector> CITIES_OF_COUNTRY = new HashMap<>() {
         {
             put(CountryName.INDIA, new Vector<CityName>() {
@@ -80,6 +85,7 @@ public class CountryConfig {
         }
     };
 
+    // 私有化构造函数以免出现意外的对象
     private CountryConfig() {
     }
 }

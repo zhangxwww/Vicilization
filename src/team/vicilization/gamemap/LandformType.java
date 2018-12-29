@@ -1,13 +1,14 @@
 package team.vicilization.gamemap;
 
 public enum LandformType {
-    NONE, //Specially for ridge, river and lake
+    NONE,
     GRASSLANDS,
     FOREST,
     RAINFOREST,
     FROZENGROUND,
     DESERT,
     MARSH;
+    //其中NONE用于表示被山河湖覆盖地形后留下的地貌
 
     public int getMobilityCost() {
         return GameMapConfig.LANDFORM_MOBILITY_COST.get(this);

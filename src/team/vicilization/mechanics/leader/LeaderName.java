@@ -1,6 +1,7 @@
 package team.vicilization.mechanics.leader;
 
 public enum LeaderName {
+    // 伟人名称枚举类
     GANDHI,
     ROOSEVELT;
 
