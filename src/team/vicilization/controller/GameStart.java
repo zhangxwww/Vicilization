@@ -44,7 +44,7 @@ public class GameStart extends State {
                         this);
             }
         };
-        this.backGroundPanel.setBounds(0,0,1920,1080);
+        this.backGroundPanel.setBounds(0, 0, 1920, 1080);
         this.backGroundPanel.setLayout(null);
         this.panel.add(this.backGroundPanel);
     }

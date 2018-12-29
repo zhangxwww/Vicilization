@@ -6,7 +6,7 @@ import team.vicilization.util.Position;
 
 public class Spearman extends Fighter {
     public Spearman(Position position, Country country) {
-        super(position, country,UnitSubType.SPEARMAN);
+        super(position, country, UnitSubType.SPEARMAN);
         setSubType(UnitSubType.SPEARMAN);
 
     }

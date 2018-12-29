@@ -7,7 +7,7 @@ import team.vicilization.mechanics.science.ScienceName;
 public class BuildingInfo extends ProducableInfo {
     private ScienceName requiredScience;
 
-    public BuildingInfo(BuildingType buildingType){
+    public BuildingInfo(BuildingType buildingType) {
         this.setRequiredScience(GameItemConfig.BUILDING_REQUIRED_SCIENCE.get(buildingType));
         super.setMoneyCost(GameItemConfig.BUILDING_MONEY_COST.get(buildingType));
         super.setProductivityCost(GameItemConfig.BUILDING_PRODUCTIVITY_COST.get(buildingType));

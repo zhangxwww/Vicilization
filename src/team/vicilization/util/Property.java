@@ -22,14 +22,14 @@ public class Property {
         this.engineerValue = 0;
     }
 
-    public Property(BuildingType type){
-        this.productivity= GameItemConfig.BUILDING_FLOW_PRODUCTIVITY.get(type);
-        this.money =GameItemConfig.BUILDING_FLOW_MONEY.get(type);
-        this.food =GameItemConfig.BUILDING_FLOW_FOOD.get(type);
-        this.science=GameItemConfig.BUILDING_FLOW_SCIENCE.get(type) ;
-        this.scientistValue=GameItemConfig.BUILDING_FLOW_SCIENTIST_VALUE.get(type) ;
-        this.traderValue=GameItemConfig.BUILDING_FLOW_TRADER_VALUE.get(type) ;
-        this.engineerValue =GameItemConfig.BUILDING_FLOW_ENGINEER_VALUE.get(type);
+    public Property(BuildingType type) {
+        this.productivity = GameItemConfig.BUILDING_FLOW_PRODUCTIVITY.get(type);
+        this.money = GameItemConfig.BUILDING_FLOW_MONEY.get(type);
+        this.food = GameItemConfig.BUILDING_FLOW_FOOD.get(type);
+        this.science = GameItemConfig.BUILDING_FLOW_SCIENCE.get(type);
+        this.scientistValue = GameItemConfig.BUILDING_FLOW_SCIENTIST_VALUE.get(type);
+        this.traderValue = GameItemConfig.BUILDING_FLOW_TRADER_VALUE.get(type);
+        this.engineerValue = GameItemConfig.BUILDING_FLOW_ENGINEER_VALUE.get(type);
 
     }
 
@@ -45,13 +45,13 @@ public class Property {
     }
 
     public void addProperty(Property property) {
-        this.productivity+=property.productivity;
-        this.money+=property.money;
-        this.science+=property.science;
-        this.food+=property.food;
-        this.scientistValue+=property.scientistValue;
-        this.traderValue+=property.traderValue;
-        this.engineerValue+=property.engineerValue;
+        this.productivity += property.productivity;
+        this.money += property.money;
+        this.science += property.science;
+        this.food += property.food;
+        this.scientistValue += property.scientistValue;
+        this.traderValue += property.traderValue;
+        this.engineerValue += property.engineerValue;
     }
 
     public int getProductivity() {

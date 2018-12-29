@@ -8,78 +8,78 @@ import team.vicilization.mechanics.science.ScienceName;
 import java.util.HashMap;
 
 public class GameItemConfig {
-    public static final HashMap<BuildingType,Integer> BUILDING_PRODUCTIVITY_COST= new HashMap<BuildingType,Integer>(){
+    public static final HashMap<BuildingType, Integer> BUILDING_PRODUCTIVITY_COST = new HashMap<BuildingType, Integer>() {
         {
-            put(BuildingType.ACADEMY,30);
-            put(BuildingType.COMMERCIAL_CERTER,30);
-            put(BuildingType.INDUSTRIAL_PARK,30);
+            put(BuildingType.ACADEMY, 30);
+            put(BuildingType.COMMERCIAL_CERTER, 30);
+            put(BuildingType.INDUSTRIAL_PARK, 30);
         }
     };
-    public static final HashMap<BuildingType,Integer> BUILDING_MONEY_COST= new HashMap<BuildingType,Integer>(){
+    public static final HashMap<BuildingType, Integer> BUILDING_MONEY_COST = new HashMap<BuildingType, Integer>() {
         {
-            put(BuildingType.ACADEMY,180);
-            put(BuildingType.COMMERCIAL_CERTER,180);
-            put(BuildingType.INDUSTRIAL_PARK,180);
+            put(BuildingType.ACADEMY, 180);
+            put(BuildingType.COMMERCIAL_CERTER, 180);
+            put(BuildingType.INDUSTRIAL_PARK, 180);
         }
     };
-    public static final HashMap<BuildingType,ScienceName> BUILDING_REQUIRED_SCIENCE= new HashMap<BuildingType, ScienceName>(){
+    public static final HashMap<BuildingType, ScienceName> BUILDING_REQUIRED_SCIENCE = new HashMap<BuildingType, ScienceName>() {
         {
-            put(BuildingType.ACADEMY,ScienceName.GEOMETRY);
-            put(BuildingType.COMMERCIAL_CERTER,ScienceName.CALCULUS);
+            put(BuildingType.ACADEMY, ScienceName.GEOMETRY);
+            put(BuildingType.COMMERCIAL_CERTER, ScienceName.CALCULUS);
             put(BuildingType.INDUSTRIAL_PARK, ScienceName.PROBABILITY);
         }
     };
-    public static final HashMap<BuildingType,Integer> BUILDING_FLOW_PRODUCTIVITY=new HashMap<BuildingType,Integer>(){
+    public static final HashMap<BuildingType, Integer> BUILDING_FLOW_PRODUCTIVITY = new HashMap<BuildingType, Integer>() {
         {
-            put(BuildingType.ACADEMY,0);
-            put(BuildingType.COMMERCIAL_CERTER,0);
-            put(BuildingType.INDUSTRIAL_PARK,2);
+            put(BuildingType.ACADEMY, 0);
+            put(BuildingType.COMMERCIAL_CERTER, 0);
+            put(BuildingType.INDUSTRIAL_PARK, 2);
         }
     };
-    public static final HashMap<BuildingType,Integer> BUILDING_FLOW_MONEY=new HashMap<BuildingType,Integer>(){
+    public static final HashMap<BuildingType, Integer> BUILDING_FLOW_MONEY = new HashMap<BuildingType, Integer>() {
         {
-            put(BuildingType.ACADEMY,0);
-            put(BuildingType.COMMERCIAL_CERTER,10);
-            put(BuildingType.INDUSTRIAL_PARK,0);
+            put(BuildingType.ACADEMY, 0);
+            put(BuildingType.COMMERCIAL_CERTER, 10);
+            put(BuildingType.INDUSTRIAL_PARK, 0);
         }
     };
-    public static final HashMap<BuildingType,Integer> BUILDING_FLOW_FOOD=new HashMap<BuildingType,Integer>(){
+    public static final HashMap<BuildingType, Integer> BUILDING_FLOW_FOOD = new HashMap<BuildingType, Integer>() {
         {
-            put(BuildingType.ACADEMY,0);
-            put(BuildingType.COMMERCIAL_CERTER,0);
-            put(BuildingType.INDUSTRIAL_PARK,0);
+            put(BuildingType.ACADEMY, 0);
+            put(BuildingType.COMMERCIAL_CERTER, 0);
+            put(BuildingType.INDUSTRIAL_PARK, 0);
         }
     };
-    public static final HashMap<BuildingType,Integer> BUILDING_FLOW_SCIENCE=new HashMap<BuildingType,Integer>(){
+    public static final HashMap<BuildingType, Integer> BUILDING_FLOW_SCIENCE = new HashMap<BuildingType, Integer>() {
         {
-            put(BuildingType.ACADEMY,2);
-            put(BuildingType.COMMERCIAL_CERTER,0);
-            put(BuildingType.INDUSTRIAL_PARK,0);
+            put(BuildingType.ACADEMY, 2);
+            put(BuildingType.COMMERCIAL_CERTER, 0);
+            put(BuildingType.INDUSTRIAL_PARK, 0);
         }
     };
-    public static final HashMap<BuildingType,Integer> BUILDING_FLOW_SCIENTIST_VALUE=new HashMap<BuildingType,Integer>(){
+    public static final HashMap<BuildingType, Integer> BUILDING_FLOW_SCIENTIST_VALUE = new HashMap<BuildingType, Integer>() {
         {
-            put(BuildingType.ACADEMY,1);
-            put(BuildingType.COMMERCIAL_CERTER,0);
-            put(BuildingType.INDUSTRIAL_PARK,0);
+            put(BuildingType.ACADEMY, 1);
+            put(BuildingType.COMMERCIAL_CERTER, 0);
+            put(BuildingType.INDUSTRIAL_PARK, 0);
         }
     };
-    public static final HashMap<BuildingType,Integer> BUILDING_FLOW_TRADER_VALUE=new HashMap<BuildingType,Integer>(){
+    public static final HashMap<BuildingType, Integer> BUILDING_FLOW_TRADER_VALUE = new HashMap<BuildingType, Integer>() {
         {
-            put(BuildingType.ACADEMY,0);
-            put(BuildingType.COMMERCIAL_CERTER,1);
-            put(BuildingType.INDUSTRIAL_PARK,0);
+            put(BuildingType.ACADEMY, 0);
+            put(BuildingType.COMMERCIAL_CERTER, 1);
+            put(BuildingType.INDUSTRIAL_PARK, 0);
         }
     };
-    public static final HashMap<BuildingType,Integer> BUILDING_FLOW_ENGINEER_VALUE=new HashMap<BuildingType,Integer>(){
+    public static final HashMap<BuildingType, Integer> BUILDING_FLOW_ENGINEER_VALUE = new HashMap<BuildingType, Integer>() {
         {
-            put(BuildingType.ACADEMY,0);
-            put(BuildingType.COMMERCIAL_CERTER,0);
-            put(BuildingType.INDUSTRIAL_PARK,1);
+            put(BuildingType.ACADEMY, 0);
+            put(BuildingType.COMMERCIAL_CERTER, 0);
+            put(BuildingType.INDUSTRIAL_PARK, 1);
         }
     };
 
-    public static final HashMap<UnitSubType, Integer> UNIT_HEALTH = new HashMap<UnitSubType, Integer>(){
+    public static final HashMap<UnitSubType, Integer> UNIT_HEALTH = new HashMap<UnitSubType, Integer>() {
         {
             put(UnitSubType.KNIGHT, 120);
             put(UnitSubType.EXPLORER, 100);
@@ -91,7 +91,7 @@ public class GameItemConfig {
             put(UnitSubType.ASSASSIN, 100);
         }
     };
-    public static final HashMap<UnitSubType, Integer> UNIT_ATTACK = new HashMap<UnitSubType, Integer>(){
+    public static final HashMap<UnitSubType, Integer> UNIT_ATTACK = new HashMap<UnitSubType, Integer>() {
         {
             put(UnitSubType.KNIGHT, 40);
             put(UnitSubType.EXPLORER, 0);
@@ -103,7 +103,7 @@ public class GameItemConfig {
             put(UnitSubType.ASSASSIN, 60);
         }
     };
-    public static final HashMap<UnitSubType, Integer> UNIT_DEFENCE = new HashMap<UnitSubType, Integer>(){
+    public static final HashMap<UnitSubType, Integer> UNIT_DEFENCE = new HashMap<UnitSubType, Integer>() {
         {
             put(UnitSubType.KNIGHT, 30);
             put(UnitSubType.EXPLORER, 0);
@@ -115,7 +115,7 @@ public class GameItemConfig {
             put(UnitSubType.ASSASSIN, 5);
         }
     };
-    public static final HashMap<UnitSubType, Integer> UNIT_MOBILITY = new HashMap<UnitSubType, Integer>(){
+    public static final HashMap<UnitSubType, Integer> UNIT_MOBILITY = new HashMap<UnitSubType, Integer>() {
         {
             put(UnitSubType.KNIGHT, 6);
             put(UnitSubType.EXPLORER, 4);
@@ -127,7 +127,7 @@ public class GameItemConfig {
             put(UnitSubType.ASSASSIN, 7);
         }
     };
-    public static final HashMap<UnitSubType, Integer> UNIT_PRODUCTIVITY_COST = new HashMap<UnitSubType, Integer>(){
+    public static final HashMap<UnitSubType, Integer> UNIT_PRODUCTIVITY_COST = new HashMap<UnitSubType, Integer>() {
         {
             put(UnitSubType.KNIGHT, 25);
             put(UnitSubType.EXPLORER, 25);
@@ -139,19 +139,19 @@ public class GameItemConfig {
             put(UnitSubType.ASSASSIN, 20);
         }
     };
-    public static final HashMap<UnitSubType, Integer> UNIT_MONEY_COST = new HashMap<UnitSubType, Integer>(){
+    public static final HashMap<UnitSubType, Integer> UNIT_MONEY_COST = new HashMap<UnitSubType, Integer>() {
         {
             put(UnitSubType.KNIGHT, 150);
             put(UnitSubType.EXPLORER, 200);
             put(UnitSubType.ARCHER, 120);
-            put(UnitSubType.CONSTRUCTOR,100);
+            put(UnitSubType.CONSTRUCTOR, 100);
             put(UnitSubType.FOOTMAN, 100);
             put(UnitSubType.SPEARMAN, 70);
             put(UnitSubType.SWORDSMAN, 130);
             put(UnitSubType.ASSASSIN, 110);
         }
     };
-    public static final HashMap<UnitSubType, ScienceName> UNIT_REQUIRED_SCIENCE = new HashMap<UnitSubType, ScienceName>(){
+    public static final HashMap<UnitSubType, ScienceName> UNIT_REQUIRED_SCIENCE = new HashMap<UnitSubType, ScienceName>() {
         {
             put(UnitSubType.KNIGHT, ScienceName.CALCULUS);
             put(UnitSubType.EXPLORER, ScienceName.NONE);
@@ -163,7 +163,7 @@ public class GameItemConfig {
             put(UnitSubType.ASSASSIN, ScienceName.ALGEBRA);
         }
     };
-    public static final HashMap<UnitSubType, ResourceType> UNIT_REQUIRED_RESOURCE = new HashMap<UnitSubType, ResourceType>(){
+    public static final HashMap<UnitSubType, ResourceType> UNIT_REQUIRED_RESOURCE = new HashMap<UnitSubType, ResourceType>() {
         {
             put(UnitSubType.KNIGHT, ResourceType.NONE);
             put(UnitSubType.EXPLORER, ResourceType.NONE);
@@ -176,24 +176,25 @@ public class GameItemConfig {
         }
     };
 
-    public static final HashMap<UnitSubType, Integer> UNIT_RECOVERY = new HashMap<UnitSubType, Integer>(){
+    public static final HashMap<UnitSubType, Integer> UNIT_RECOVERY = new HashMap<UnitSubType, Integer>() {
         {
             put(UnitSubType.EXPLORER, 8);
             put(UnitSubType.CONSTRUCTOR, 8);
             put(UnitSubType.KNIGHT, 8);
             put(UnitSubType.ARCHER, 5);
             put(UnitSubType.FOOTMAN, 10);
-            put(UnitSubType.SPEARMAN,8);
+            put(UnitSubType.SPEARMAN, 8);
             put(UnitSubType.SWORDSMAN, 15);
             put(UnitSubType.ASSASSIN, 50);
         }
     };
 
-    public static final HashMap<UnitSubType,ScienceName> UPDATE_NEED_SCIENCE=new HashMap<UnitSubType, ScienceName>(){
+    public static final HashMap<UnitSubType, ScienceName> UPDATE_NEED_SCIENCE = new HashMap<UnitSubType, ScienceName>() {
         {
             put(UnitSubType.FOOTMAN, ScienceName.STATISTICS);
         }
     };
 
-    private GameItemConfig(){}
+    private GameItemConfig() {
+    }
 }
