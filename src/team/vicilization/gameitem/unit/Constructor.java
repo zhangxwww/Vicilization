@@ -2,7 +2,6 @@ package team.vicilization.gameitem.unit;
 
 import team.vicilization.country.Country;
 import team.vicilization.util.Position;
-import team.vicilization.gamemap.ResourceType;
 
 public class Constructor extends Folk {
     private int times;

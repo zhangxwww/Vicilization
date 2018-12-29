@@ -4,8 +4,6 @@ import team.vicilization.util.Position;
 
 import java.util.Vector;
 
-import static java.lang.Math.sqrt;
-
 public class GameMap {
     //分别储存地块、地形、地貌、资源组成的地图
     private Vector<Vector<LandSquare>> landSquares;

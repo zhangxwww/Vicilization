@@ -2,8 +2,8 @@ package team.vicilization.gameitem.unit;
 
 import team.vicilization.gameitem.GameItemConfig;
 import team.vicilization.gameitem.ProducableInfo;
+import team.vicilization.gamemap.ResourceType;
 import team.vicilization.mechanics.science.ScienceName;
-import team.vicilization.gamemap.*;
 
 public class UnitInfo extends ProducableInfo {
     //========================Attributes======================//

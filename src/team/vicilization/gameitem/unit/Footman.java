@@ -1,7 +1,6 @@
 package team.vicilization.gameitem.unit;
 
 import team.vicilization.country.Country;
-import team.vicilization.gamemap.ResourceType;
 import team.vicilization.util.Position;
 
 

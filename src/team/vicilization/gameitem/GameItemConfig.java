@@ -99,7 +99,7 @@ public class GameItemConfig {
             put(UnitSubType.CONSTRUCTOR, 0);
             put(UnitSubType.FOOTMAN, 40);
             put(UnitSubType.SPEARMAN, 50);
-            put(UnitSubType.SWORDSMAN, 40);
+            put(UnitSubType.SWORDSMAN, 50);
             put(UnitSubType.ASSASSIN, 60);
         }
     };

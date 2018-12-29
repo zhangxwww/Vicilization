@@ -3,7 +3,6 @@ package team.vicilization.gamemap;
 import team.vicilization.util.Property;
 
 import java.util.HashMap;
-import java.util.Vector;
 
 
 public class GameMapConfig {
