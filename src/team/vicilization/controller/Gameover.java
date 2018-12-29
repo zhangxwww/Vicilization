@@ -4,6 +4,7 @@ import team.vicilization.country.Country;
 import team.vicilization.country.CountryName;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -22,8 +23,9 @@ public class Gameover extends State {
 
     private void addRestartButton() {
         this.restartButton = new JButton("Restart");
-        this.restartButton.setBounds(100, 100, 100, 50);
+        this.restartButton.setBounds(860, 500, 200, 50);
         this.restartButton.addActionListener(new ButtonListener());
+        this.restartButton.setFont(new Font("Consolas", Font.BOLD, 25));
         this.panel.add(restartButton);
     }
 
@@ -31,7 +33,8 @@ public class Gameover extends State {
         this.victoryLabel = new JLabel();
         String vectory = name.toString() + " wins";
         this.victoryLabel.setText(vectory);
-        this.victoryLabel.setBounds(30, 30, 100, 100);
+        this.victoryLabel.setBounds(860, 400, 200, 100);
+        this.victoryLabel.setFont(new Font("Consolas", Font.BOLD, 25));
         this.panel.add(victoryLabel);
     }
 
