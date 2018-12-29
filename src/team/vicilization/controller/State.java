@@ -13,7 +13,7 @@ abstract class State {
     public State(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
         this.panel = new JPanel();
-        this.panel.setBounds(0,0,1920,1080);
+        this.panel.setBounds(0, 0, 1920, 1080);
         this.panel.setLayout(null);
     }
 

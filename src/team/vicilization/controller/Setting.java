@@ -1,6 +1,7 @@
 package team.vicilization.controller;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -11,13 +12,21 @@ import team.vicilization.country.*;
 
 public class Setting extends State {
 
+    // 确认
     private static JButton confirmButton;
+
+    // 两组选择国家的按钮
     private static Vector<JRadioButton> chooseCountryButton_1;
     private static Vector<JRadioButton> chooseCountryButton_2;
+
+    // 对应两个玩家的两个button group
     private ButtonGroup chooseCountryButtonGroup_1;
     private ButtonGroup chooseCountryButtonGroup_2;
+
+    // 显示提示信息
     private JLabel chooseLeaderLabel;
 
+    // 两位玩家选择的国家
     private CountryName[] selectedCountryNames;
 
     public Setting(MainWindow mainWindow) {
@@ -30,7 +39,8 @@ public class Setting extends State {
 
     private void addLabels() {
         this.chooseLeaderLabel = new JLabel("Choose leader");
-        this.chooseLeaderLabel.setBounds(100, 100, 200, 200);
+        this.chooseLeaderLabel.setBounds(860, 200, 200, 200);
+        this.chooseLeaderLabel.setFont(new Font("Consolas", Font.BOLD, 25));
         this.panel.add(chooseLeaderLabel);
     }
 
@@ -41,7 +51,8 @@ public class Setting extends State {
 
     private void addConfirmButton() {
         this.confirmButton = new JButton("Confirm");
-        this.confirmButton.setBounds(100, 400, 100, 50);
+        this.confirmButton.setBounds(860, 600, 200, 50);
+        this.confirmButton.setFont(new Font("Consolas", Font.BOLD, 25));
         this.confirmButton.addActionListener(new ButtonListener());
         this.panel.add(confirmButton);
     }
@@ -58,8 +69,10 @@ public class Setting extends State {
             String name = CountryName.values()[i].toString();
             JRadioButton btn_1 = new JRadioButton(name);
             JRadioButton btn_2 = new JRadioButton(name);
-            btn_1.setBounds(200 * i + 200, 300, 100, 50);
-            btn_2.setBounds(200 * i + 200, 400, 100, 50);
+            btn_1.setBounds(200 * i + 800, 400, 200, 50);
+            btn_2.setBounds(200 * i + 800, 500, 200, 50);
+            btn_1.setFont(new Font("Consolas", Font.BOLD, 25));
+            btn_2.setFont(new Font("Consolas", Font.BOLD, 25));
             if (i == 0) {
                 btn_1.setSelected(true);
             } else {

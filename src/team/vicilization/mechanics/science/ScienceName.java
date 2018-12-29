@@ -1,6 +1,7 @@
 package team.vicilization.mechanics.science;
 
 public enum ScienceName {
+    // 科技名称枚举类
     NONE,
     ARITHMETIC,
     GEOMETRY,

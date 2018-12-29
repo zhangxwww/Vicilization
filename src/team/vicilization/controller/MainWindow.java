@@ -22,6 +22,7 @@ public class MainWindow extends javax.swing.JFrame {
         this.add(currentPanel);
     }
 
+    // 状态机切换
     public void convertToNextState(CountryName[] countryNames) {
         this.remove(currentPanel);
         this.repaint();
@@ -31,6 +32,7 @@ public class MainWindow extends javax.swing.JFrame {
         this.revalidate();
     }
 
+    // 状态机切换
     public void convertToNextState(Country country) {
         this.remove(currentPanel);
         this.repaint();
@@ -40,6 +42,7 @@ public class MainWindow extends javax.swing.JFrame {
         this.revalidate();
     }
 
+    // 状态机切换
     public void convertToNextState() {
         this.remove(currentPanel);
         this.repaint();

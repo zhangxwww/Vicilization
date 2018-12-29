@@ -1,8 +1,8 @@
 package team.vicilization.util;
 
 public class Position {
-    private int x;
-    private int y;
+    private int x; // 列数 从左到右
+    private int y; // 行数 从上到下
 
     public Position() {
         this.x = 0;
@@ -32,7 +32,7 @@ public class Position {
         return y;
     }
 
-    public void setX(int x){
+    public void setX(int x) {
         this.x = x;
     }
 

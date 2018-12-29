@@ -8,8 +8,8 @@ public class Building {
     private Property buildingFlowValue;
     private BuildingInfo buildingInfo;
 
-    public Building(BuildingType type){
-        this.type=type;
+    public Building(BuildingType type) {
+        this.type = type;
 
         buildingFlowValue.setProductivity(GameItemConfig.BUILDING_FLOW_PRODUCTIVITY.get(type));
         buildingFlowValue.setMoney(GameItemConfig.BUILDING_FLOW_MONEY.get(type));
@@ -19,6 +19,6 @@ public class Building {
         buildingFlowValue.setTraderValue(GameItemConfig.BUILDING_FLOW_TRADER_VALUE.get(type));
         buildingFlowValue.setEngineerValue(GameItemConfig.BUILDING_FLOW_ENGINEER_VALUE.get(type));
 
-        buildingInfo=new BuildingInfo(type);
+        buildingInfo = new BuildingInfo(type);
     }
 }

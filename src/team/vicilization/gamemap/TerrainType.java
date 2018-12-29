@@ -10,8 +10,8 @@ public enum TerrainType {
     RIVER_NE,
     RIVER_NW,
     RIVER_SE,
-    RIVER_SW,
-    ;
+    RIVER_SW;
+    // 多种RIVE对应不同方向和形状的河流，便于绘制GUI
 
     public int getMobilityCost() {
         return GameMapConfig.TERRAIN_MOBILITY_COST.get(this);

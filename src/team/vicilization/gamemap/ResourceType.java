@@ -1,7 +1,7 @@
 package team.vicilization.gamemap;
 
 public enum ResourceType {
-
+    // 暂未完成该部分
     NONE/*,
     HORSE,
     IRON,

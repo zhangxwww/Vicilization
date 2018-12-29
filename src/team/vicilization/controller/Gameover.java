@@ -10,14 +10,14 @@ import java.awt.event.ActionListener;
 public class Gameover extends State {
 
     private static JButton restartButton;
-    private JLabel vectoryLabel;
+    private JLabel victoryLabel;
 
     public Gameover(MainWindow mainWindow, Country country) {
         super(mainWindow);
         setNextState(StateType.GameStart);
 
         this.addRestartButton();
-        this.addVectoryLabel(country.getCountryName());
+        this.addVictoryLabel(country.getCountryName());
     }
 
     private void addRestartButton() {
@@ -27,12 +27,12 @@ public class Gameover extends State {
         this.panel.add(restartButton);
     }
 
-    private void addVectoryLabel(CountryName name) {
-        this.vectoryLabel = new JLabel();
+    private void addVictoryLabel(CountryName name) {
+        this.victoryLabel = new JLabel();
         String vectory = name.toString() + " wins";
-        this.vectoryLabel.setText(vectory);
-        this.vectoryLabel.setBounds(30, 30, 100, 100);
-        this.panel.add(vectoryLabel);
+        this.victoryLabel.setText(vectory);
+        this.victoryLabel.setBounds(30, 30, 100, 100);
+        this.panel.add(victoryLabel);
     }
 
     private class ButtonListener implements ActionListener {
