@@ -699,10 +699,10 @@ public class MainGame extends State {
     private void unitUpgrade() {
         Position position = selectedUnit.getPosition();
         UnitSubType subType = selectedUnit.getSubType();
-        this.unselectUnit();
-        this.unprepareAttack();
         currentPlayer.deleteUnit(selectedUnit);
         this.units.remove(selectedUnit);
+        this.unselectUnit();
+        this.unprepareAttack();
         if (subType == UnitSubType.FOOTMAN) {
             this.selectedUnit = new SwordsMan(position, currentPlayer);
             this.currentPlayer.addNewUnit(selectedUnit);
