@@ -290,12 +290,14 @@ public class MainGame extends State {
                 && startGame[(round + 1) % 2]) {
             // war victory
             return true;
-        } else if (round == 1000) {
+        } else if (round >= 1000) {
             // time victory
-            return true;
-        } else {
-            return false;
+            if (this.currentPlayer.getStockValue().getMoney()
+                    > this.enermy.getStockValue().getMoney()) {
+                return true;
+            }
         }
+        return false;
     }
 
     private void selectUnit(Unit unit) {
