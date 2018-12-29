@@ -10,7 +10,7 @@ import team.vicilization.util.Position;
 
 import java.util.Vector;
 
-public abstract class Unit implements Movable{
+public abstract class Unit implements Movable {
     //-------------------------------------Attributes
     protected UnitType type;
     protected UnitSubType subType;
@@ -20,32 +20,32 @@ public abstract class Unit implements Movable{
     protected UnitInfo unitInfo;
 
     protected int unitRecover;
-    
+
     protected boolean movedThisTurn;
     protected boolean attackedThisTurn;
 
 
-    public Unit(Position position, Country country,UnitType unitType,UnitSubType unitSubType) {
+    public Unit(Position position, Country country, UnitType unitType, UnitSubType unitSubType) {
         this.position = position;
         this.country = country;
-        this.type= unitType;
-        this.subType=unitSubType;
-        this.unitInfo=new UnitInfo(unitSubType);
-        this.health= GameItemConfig.UNIT_HEALTH.get(unitSubType);
+        this.type = unitType;
+        this.subType = unitSubType;
+        this.unitInfo = new UnitInfo(unitSubType);
+        this.health = GameItemConfig.UNIT_HEALTH.get(unitSubType);
 
-        this.unitRecover=GameItemConfig.UNIT_RECOVERY.get(subType);
+        this.unitRecover = GameItemConfig.UNIT_RECOVERY.get(subType);
 
         this.movedThisTurn = false;
         this.attackedThisTurn = false;
     }
 
 
-    public void recover(){
-        int initHealth=GameItemConfig.UNIT_HEALTH.get(this.subType);
-        if (health<initHealth-this.getUnitRecover()){
-            health+=this.getUnitRecover();
-        }else {
-            health=initHealth;
+    public void recover() {
+        int initHealth = GameItemConfig.UNIT_HEALTH.get(this.subType);
+        if (health < initHealth - this.getUnitRecover()) {
+            health += this.getUnitRecover();
+        } else {
+            health = initHealth;
         }
     }
 
@@ -54,6 +54,7 @@ public abstract class Unit implements Movable{
     public Position currentLocation() {
         return position;
     }
+
     @Override
     public int getMobility() {
         return unitInfo.getMobility();
@@ -66,56 +67,60 @@ public abstract class Unit implements Movable{
 
     @Override
     public Vector<LandSquare> getAvailableLocation(GameMap map) {
-        class locationStack{
+        class locationStack {
             LandSquare[] stackLandsquare = new LandSquare[100];
             int[] resiMobility = new int[100];
-            int landPtr=0;
-            int resiPtr=0;
-            public void push(int a){
-                resiMobility[resiPtr]=a;
+            int landPtr = 0;
+            int resiPtr = 0;
+
+            public void push(int a) {
+                resiMobility[resiPtr] = a;
                 resiPtr++;
             }
-            public void push(LandSquare land){
-                stackLandsquare[landPtr]=land;
+
+            public void push(LandSquare land) {
+                stackLandsquare[landPtr] = land;
                 landPtr++;
             }
-            public LandSquare popLandsquare(){
-                if (landPtr==0){
+
+            public LandSquare popLandsquare() {
+                if (landPtr == 0) {
                     return null;
-                }else {
+                } else {
                     landPtr--;
                     LandSquare landSqr = stackLandsquare[landPtr];
                     return landSqr;
                 }
             }
-            public int popResimobility(){
-                if(resiPtr==0){
+
+            public int popResimobility() {
+                if (resiPtr == 0) {
                     return -100;
-                }else {
+                } else {
                     resiPtr--;
                     return resiMobility[resiPtr];
                 }
             }
 
 
-            public Vector<LandSquare> getStackAvailableLocation(){
-                Vector<LandSquare> availableSquare=new Vector<LandSquare>();
-                int Mobility=getMobility();
-                Position currPosition=getPosition();
+            public Vector<LandSquare> getStackAvailableLocation() {
+                Vector<LandSquare> availableSquare = new Vector<LandSquare>();
+                int Mobility = getMobility();
+                Position currPosition = getPosition();
                 push(map.getSquare(currPosition.getX(), currPosition.getY()));
                 push(Mobility);
 
 
-                while (true){
-                    LandSquare A=popLandsquare();
-                    int B=popResimobility();
-                    if(B==-100){
+                while (true) {
+                    LandSquare A = popLandsquare();
+                    int B = popResimobility();
+                    if (B == -100) {
                         break;
-                    }else if(B>=0){
-                        if(!availableSquare.contains(A)) {
+                    } else if (B >= 0) {
+                        if (!availableSquare.contains(A)) {
                             availableSquare.add(A);
                         }
-                        Position p=A.getPosition();
+                        Position p = A.getPosition();
 
                         if (p.getX() + 1 < GameMapConfig.MAP_WIDTH) {
                             Position p1 = new Position(p.getX() + 1, p.getY() + 0);
@@ -159,29 +164,30 @@ public abstract class Unit implements Movable{
                 return availableSquare;
             }
         }
-        locationStack myStack=new locationStack();
+        locationStack myStack = new locationStack();
         return myStack.getStackAvailableLocation();
         //待验证
     }
+
     @Override
     public void moveTo(Position pos) {
         this.setPosition(pos);
-        this.movedThisTurn=true;
+        this.movedThisTurn = true;
         this.setMobility(0);
     }
-    
 
 
-//------------------------------------------End/Start Turn
-    public void unitEndOfTurn(){
-        if (this.type==UnitType.FIGHTER) {
+    //------------------------------------------End/Start Turn
+    public void unitEndOfTurn() {
+        if (this.type == UnitType.FIGHTER) {
             this.recover();
         }
-        this.movedThisTurn=false;
-        this.attackedThisTurn=false;
+        this.movedThisTurn = false;
+        this.attackedThisTurn = false;
         this.setMobility(GameItemConfig.UNIT_MOBILITY.get(subType));
     }
-    public void unitStartTurn(){
+
+    public void unitStartTurn() {
     }
 
     public int getHealth() {
@@ -226,15 +232,16 @@ public abstract class Unit implements Movable{
         return unitInfo;
     }
 
-    public int getAttack(){
+    public int getAttack() {
         return this.unitInfo.getAttack();
     }
-    public int getDefence(){
-        return  this.unitInfo.getDefence();
+
+    public int getDefence() {
+        return this.unitInfo.getDefence();
     }
 
     public int getUnitRecover() {
-        this.unitRecover=GameItemConfig.UNIT_RECOVERY.get(subType);
+        this.unitRecover = GameItemConfig.UNIT_RECOVERY.get(subType);
         return unitRecover;
     }
 
@@ -245,6 +252,7 @@ public abstract class Unit implements Movable{
     public void setAttackedThisTurn(boolean attackedThisTurn) {
         this.attackedThisTurn = attackedThisTurn;
     }
+
     public boolean isMovedThisTurn() {
         return movedThisTurn;
     }

@@ -31,7 +31,7 @@ public class LandSquare {
 
     // ===================开采Resource================//
     // resource未能按计划完成
-    ResourceType exploit(){
+    ResourceType exploit() {
         ResourceType result = this.resourceType;
         this.resourceType = ResourceType.NONE;
         this.calculateAll();
@@ -51,7 +51,7 @@ public class LandSquare {
 
     //=======================Calculate Methods=====================//
     // 为便于计算属性值，用calculateAll一次性调用全部计算函数更新属性值
-    private void calculateAll(){
+    private void calculateAll() {
         this.calMobilityCost();
         this.calDefenceBuff();
         this.calFoodYield();

@@ -32,7 +32,7 @@ public class Position {
         return y;
     }
 
-    public void setX(int x){
+    public void setX(int x) {
         this.x = x;
     }
 

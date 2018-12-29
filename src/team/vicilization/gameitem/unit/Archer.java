@@ -5,7 +5,7 @@ import team.vicilization.util.Position;
 
 public class Archer extends Fighter {
     public Archer(Position position, Country country) {
-        super(position, country,UnitSubType.ARCHER);
+        super(position, country, UnitSubType.ARCHER);
         setSubType(UnitSubType.ARCHER);
     }
 }

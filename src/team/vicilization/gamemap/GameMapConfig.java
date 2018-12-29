@@ -25,7 +25,7 @@ public class GameMapConfig {
             {{0, 0}, {0, 1}, {0, 2}, {1, 2}},
             {{0, 0}, {1, 0}},
             {{0, 0}, {-1, 0}, {-2, 0}},
-            {{0, 0}, {-1, 0}, {-1, -1}, {1, 0}, {1, 1}, {1,2}},
+            {{0, 0}, {-1, 0}, {-1, -1}, {1, 0}, {1, 1}, {1, 2}},
             {{0, 0}, {0, -1}, {1, -1}},
             {{0, 0}, {0, -1}, {1, -1}, {1, 0}, {-1, 0}, {-2, 0}, {-2, -1}, {-2, -2}, {-2, -3}},
             {{0, 0}, {0, 1}, {-1, 1}}
@@ -238,9 +238,9 @@ public class GameMapConfig {
     // 以下hashmap记录了清理特定地形获得的加成
     public static final HashMap<LandformType, Property> LANDFORM_HARVEST = new HashMap<LandformType, Property>() {
         {
-            put(LandformType.FOREST,       new Property(8,0,0,0,0,0,0));
-            put(LandformType.RAINFOREST,   new Property(5,0,5,0,0,0,0));
-            put(LandformType.MARSH,        new Property(0,0,8,0,0,0,0));
+            put(LandformType.FOREST, new Property(8, 0, 0, 0, 0, 0, 0));
+            put(LandformType.RAINFOREST, new Property(5, 0, 5, 0, 0, 0, 0));
+            put(LandformType.MARSH, new Property(0, 0, 8, 0, 0, 0, 0));
             // put(LandformType.NONE,         new Property(0,0,0,0,0,0,0));
             // put(LandformType.GRASSLANDS,   new Property(0,0,0,0,0,0,0));
             // put(LandformType.FROZENGROUND, new Property(0,0,0,0,0,0,0));
