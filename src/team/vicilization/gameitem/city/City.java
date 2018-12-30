@@ -117,10 +117,10 @@ public class City implements Fightable {
         //地块产出
         Property territoryFlowValue = new Property();
         for (LandSquare land : territory) {
-            territoryFlowValue.setFood(land.getFoodYield());
-            territoryFlowValue.setMoney(land.getMoneyYield());
-            territoryFlowValue.setScience(land.getScienceYield());
-            territoryFlowValue.setProductivity(land.getProductivityYield());
+            territoryFlowValue.setFood(territoryFlowValue.getFood() + land.getFoodYield());
+            territoryFlowValue.setMoney(territoryFlowValue.getMoney() + land.getMoneyYield());
+            territoryFlowValue.setScience(territoryFlowValue.getScience() + land.getScienceYield());
+            territoryFlowValue.setProductivity(territoryFlowValue.getProductivity() + land.getProductivityYield());
         }
         this.flowValue.addProperty(territoryFlowValue);
         //人口产出
