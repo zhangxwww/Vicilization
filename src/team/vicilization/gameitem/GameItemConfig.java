@@ -10,9 +10,9 @@ import java.util.HashMap;
 public class GameItemConfig {
     public static final HashMap<BuildingType, Integer> BUILDING_PRODUCTIVITY_COST = new HashMap<BuildingType, Integer>() {
         {
-            put(BuildingType.ACADEMY, 30);
-            put(BuildingType.COMMERCIAL_CERTER, 30);
-            put(BuildingType.INDUSTRIAL_PARK, 30);
+            put(BuildingType.ACADEMY, 200);
+            put(BuildingType.COMMERCIAL_CERTER, 400);
+            put(BuildingType.INDUSTRIAL_PARK, 600);
         }
     };
     public static final HashMap<BuildingType, Integer> BUILDING_MONEY_COST = new HashMap<BuildingType, Integer>() {
@@ -33,7 +33,7 @@ public class GameItemConfig {
         {
             put(BuildingType.ACADEMY, 0);
             put(BuildingType.COMMERCIAL_CERTER, 0);
-            put(BuildingType.INDUSTRIAL_PARK, 2);
+            put(BuildingType.INDUSTRIAL_PARK, 10);
         }
     };
     public static final HashMap<BuildingType, Integer> BUILDING_FLOW_MONEY = new HashMap<BuildingType, Integer>() {
@@ -52,7 +52,7 @@ public class GameItemConfig {
     };
     public static final HashMap<BuildingType, Integer> BUILDING_FLOW_SCIENCE = new HashMap<BuildingType, Integer>() {
         {
-            put(BuildingType.ACADEMY, 2);
+            put(BuildingType.ACADEMY, 10);
             put(BuildingType.COMMERCIAL_CERTER, 0);
             put(BuildingType.INDUSTRIAL_PARK, 0);
         }
@@ -93,14 +93,14 @@ public class GameItemConfig {
     };
     public static final HashMap<UnitSubType, Integer> UNIT_ATTACK = new HashMap<UnitSubType, Integer>() {
         {
-            put(UnitSubType.KNIGHT, 40);
+            put(UnitSubType.KNIGHT, 50);
             put(UnitSubType.EXPLORER, 0);
-            put(UnitSubType.ARCHER, 50);
+            put(UnitSubType.ARCHER, 30);
             put(UnitSubType.CONSTRUCTOR, 0);
             put(UnitSubType.FOOTMAN, 40);
-            put(UnitSubType.SPEARMAN, 50);
+            put(UnitSubType.SPEARMAN, 40);
             put(UnitSubType.SWORDSMAN, 50);
-            put(UnitSubType.ASSASSIN, 60);
+            put(UnitSubType.ASSASSIN, 40);
         }
     };
     public static final HashMap<UnitSubType, Integer> UNIT_DEFENCE = new HashMap<UnitSubType, Integer>() {
@@ -111,7 +111,7 @@ public class GameItemConfig {
             put(UnitSubType.CONSTRUCTOR, 0);
             put(UnitSubType.FOOTMAN, 30);
             put(UnitSubType.SPEARMAN, 30);
-            put(UnitSubType.SWORDSMAN, 50);
+            put(UnitSubType.SWORDSMAN, 40);
             put(UnitSubType.ASSASSIN, 5);
         }
     };
@@ -124,19 +124,19 @@ public class GameItemConfig {
             put(UnitSubType.FOOTMAN, 4);
             put(UnitSubType.SPEARMAN, 4);
             put(UnitSubType.SWORDSMAN, 4);
-            put(UnitSubType.ASSASSIN, 7);
+            put(UnitSubType.ASSASSIN, 5);
         }
     };
     public static final HashMap<UnitSubType, Integer> UNIT_PRODUCTIVITY_COST = new HashMap<UnitSubType, Integer>() {
         {
-            put(UnitSubType.KNIGHT, 25);
-            put(UnitSubType.EXPLORER, 25);
-            put(UnitSubType.ARCHER, 15);
-            put(UnitSubType.CONSTRUCTOR, 15);
-            put(UnitSubType.FOOTMAN, 15);
-            put(UnitSubType.SPEARMAN, 10);
-            put(UnitSubType.SWORDSMAN, 25);
-            put(UnitSubType.ASSASSIN, 20);
+            put(UnitSubType.KNIGHT, 200);
+            put(UnitSubType.EXPLORER, 400);
+            put(UnitSubType.ARCHER, 100);
+            put(UnitSubType.CONSTRUCTOR, 250);
+            put(UnitSubType.FOOTMAN, 100);
+            put(UnitSubType.SPEARMAN, 150);
+            put(UnitSubType.SWORDSMAN, 200);
+            put(UnitSubType.ASSASSIN, 150);
         }
     };
     public static final HashMap<UnitSubType, Integer> UNIT_MONEY_COST = new HashMap<UnitSubType, Integer>() {
@@ -180,10 +180,10 @@ public class GameItemConfig {
         {
             put(UnitSubType.EXPLORER, 8);
             put(UnitSubType.CONSTRUCTOR, 8);
-            put(UnitSubType.KNIGHT, 8);
-            put(UnitSubType.ARCHER, 5);
+            put(UnitSubType.KNIGHT, 10);
+            put(UnitSubType.ARCHER, 10);
             put(UnitSubType.FOOTMAN, 10);
-            put(UnitSubType.SPEARMAN, 8);
+            put(UnitSubType.SPEARMAN, 10);
             put(UnitSubType.SWORDSMAN, 15);
             put(UnitSubType.ASSASSIN, 50);
         }
