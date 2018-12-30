@@ -128,7 +128,7 @@ public class City implements Fightable {
         populationFlowValue.setProductivity(this.population);
         populationFlowValue.setScience(this.population);
         populationFlowValue.setMoney(this.population);
-        populationFlowValue.setFood(-this.population);
+        populationFlowValue.setFood(-this.population * 20);
         this.flowValue.addProperty(populationFlowValue);
         //建筑产出
         Property buildingFlowValue = new Property();
@@ -146,20 +146,20 @@ public class City implements Fightable {
 
 
         //处理食物  人口
-        if (stockValue.getFood() >= 5) {
-            while (stockValue.getFood() >= 5) {
+        if (stockValue.getFood() >= 150) {
+            while (stockValue.getFood() >= 150) {
                 this.population += 1;
-                stockValue.setFood(stockValue.getFood() - 5);
+                stockValue.setFood(stockValue.getFood() - 150);
             }
         }
 
-        if (stockValue.getFood() <= -5) {
-            while (stockValue.getFood() <= -5) {
+        if (stockValue.getFood() <= 0) {
+            while (stockValue.getFood() <= 0) {
                 if (this.population == 1) {
                     break;
                 }
                 this.population -= 1;
-                stockValue.setFood(stockValue.getFood() + 5);
+                stockValue.setFood(stockValue.getFood() + 140);
             }
         }
         //处理钱
@@ -271,8 +271,8 @@ public class City implements Fightable {
             for (int i = 0; i <= j; i++) {
                 Position p1 = new Position(currentLocation.getX() + i, currentLocation.getY() + attackRange - i);
                 Position p2 = new Position(currentLocation.getX() - i, currentLocation.getY() - attackRange + i);
-                Position p3 = new Position(currentLocation.getX() + attackRange - i, currentLocation.getY() + i);
-                Position p4 = new Position(currentLocation.getX() - attackRange + i, currentLocation.getY() - i);
+                Position p3 = new Position(currentLocation.getX() + attackRange - i, currentLocation.getY() - i);
+                Position p4 = new Position(currentLocation.getX() - attackRange + i, currentLocation.getY() + i);
                 if (map.isLegalPosition(p1)) {
                     availableSquare.add(map.getSquare(p1));
                 }

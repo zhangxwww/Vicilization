@@ -61,8 +61,8 @@ public abstract class Fighter extends Unit implements Fightable, Updateable {
             for (int i = 0; i <= j; i++) {
                 Position p1 = new Position(currentLocation.getX() + i, currentLocation.getY() + attackRange - i);
                 Position p2 = new Position(currentLocation.getX() - i, currentLocation.getY() - attackRange + i);
-                Position p3 = new Position(currentLocation.getX() + attackRange - i, currentLocation.getY() + i);
-                Position p4 = new Position(currentLocation.getX() - attackRange + i, currentLocation.getY() - i);
+                Position p3 = new Position(currentLocation.getX() + attackRange - i, currentLocation.getY() - i);
+                Position p4 = new Position(currentLocation.getX() - attackRange + i, currentLocation.getY() + i);
                 if (map.isLegalPosition(p1)) {
                     availableSquare.add(map.getSquare(p1));
                 }
